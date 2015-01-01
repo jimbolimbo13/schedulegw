@@ -14,6 +14,8 @@ gem 'high_voltage'
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
 gem 'pg'
+gem 'figaro' #puts env variables in config/application.yml
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_20]

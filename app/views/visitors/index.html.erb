@@ -1,2 +1,80 @@
-<h3>Welcome</h3>
-<p><%= link_to 'Users:', users_path %> <%= User.count %> registered</p>
+<div id='wrapper'>
+		<div id='content'>
+		<div id='leftbox'>
+			<div id='chosenclassesbox'>
+				<!-- <div style='text-align:left; width:100%; color:black;'>Schedule:</div> -->
+				
+				<ul id='chosenclasseslist'>
+				</ul>
+				
+			</div>
+			<div id='classlist'>
+				All Classes:
+				
+				<!-- <button onclick='addnewclass()' style='float:right'>Add New Class</button> -->
+				<br/>
+				<div>
+					<img src="/plusbutton.png" height=20 width=20 style='margin-left:1%;'>
+					<span class='classname'>Class</span>
+					<span class='ratings'>Ratings</span>
+				</div>
+				<ul id='classlisttarget'>
+					<li style="overflow:hidden;">
+						<img src="/plusbutton.png" height="20" width="20" id="42287">
+						<span class="classname">6362 Adjudicatory Criminal Pro.</span><span class="profname">Fairfax</span><span class="ratings"><a href="https://my.law.gwu.edu/Evaluations/page%20library/ByFaculty.aspx?Source=%2fEvaluations%2fdefault.aspx&IID=13802" target="_blank"><button class="GWU_btn"> GWU </button></a></span>
+					</li>
+				</ul>
+				<div style='text-align:center; width:100%; margin:auto'>Hold Shift and Click to Flag any class as Incorrect.</div>
+			</div>
+		</div>
+
+
+		<div id='schedule'>
+			<div id='scheduletop'>
+				<div id='blank_block' class='no_mobile'></div>
+				<div id='days_header'> 
+					<div class='day'>Sun</div>
+					<div class='day'>Mon</div>
+					<div class='day'>Tue</div>
+					<div class='day'>Wed</div>
+					<div class='day'>Thu</div>
+					<div class='day'>Fri</div>
+					<div class='day'>Sat</div>
+				</div>
+			</div>
+			<div id='schedulebottom'>
+				<div id='timeaxis'>
+					<div class='axistime' id='first_axistime'>8:00am--</div>
+					<div class='axistime'>9:00am--</div>
+					<div class='axistime'>10:00am--</div>
+					<div class='axistime'>11:00am--</div>
+					<div class='axistime'>12:00n--</div>
+					<div class='axistime'>1:00pm--</div>
+					<div class='axistime'>2:00pm--</div>
+					<div class='axistime'>3:00pm--</div>
+					<div class='axistime'>4:00pm--</div>
+					<div class='axistime'>5:00pm--</div>
+					<div class='axistime'>6:00pm--</div>
+					<div class='axistime'>7:00pm--</div>
+					<div class='axistime'>8:00pm--</div>
+					<div class='axistime' id='last_axistime'>9:00pm--</div>
+				</div>
+				<div id='canvas'>
+
+				</div>
+			</div>
+			<div id='final_div'>
+				Finals:
+					<div id='final_anchor'>
+					</div>
+			</div>
+			<div>Save Your Schedule and view CRNs for these classes by clicking "Save" in the top right corner.</div>
+		</div>
+	</div>
+	<div id='google_ad_footer'>
+		<ins class="adsbygoogle"
+	     style="display:inline-block;width:728px;height:90px;"
+	     data-ad-client="ca-pub-2138846449062972"
+	     data-ad-slot="7436008426"></ins>
+ 	</div>
+</div>
