@@ -21,9 +21,42 @@ sliced_text = orig_text.scan(/\n.+/).map{ |s| s}
 
 sliced_text.each { |line|
 
+	$frag = nil
+
 	if line =~ /\d{5}/i
 		$crn = nil
-		$frag = nil
+		$gwid = nil
+		$section = nil
+		$class_name = nil
+		$class_hours = nil
+		$days = nil
+		$start_time = nil
+		$end_time = nil
+		$prof_name = nil
+		
+
+		#reset all of the day start/end times 
+		$day1_start = nil
+		$day1_end = nil
+
+		$day2_start = nil
+		$day2_end = nil
+		
+		$day3_start = nil
+		$day3_end = nil
+		
+		$day4_start = nil
+		$day4_end = nil
+
+		$day5_start = nil
+		$day5_end = nil
+
+		$day6_start = nil
+		$day6_end = nil
+
+		$day7_start = nil
+		$day7_end = nil
+
 		#has 5 digits, so it's the start of a line and class data
 
 		#puts "line:'#{line}'"
@@ -31,7 +64,7 @@ sliced_text.each { |line|
 		line.scan(/\s?+(\d{5})\s+(\d{4})\s+(\d{2})\s+([A-Za-z\/\-]+[^\d]+)(\d\.\d)\s+:?(OR|TO)?(:?(\s+\d\.\d\s+)?)(([MTWRF]+|TBA)(:?(\s[MTWRFBA]+)?))\s+(:?(TBA)?)(:?(\d{4})?)(:?(\s+-\s+(\d{4})(\D\D))?)\s+(\w+)\s?+/) { 
 			|m| 
 			#puts "#{m.inspect}"
-			puts $~.captures
+			puts "\n\n\n"
 			puts "CRN: #{$1}"
 			$crn = $1.to_i
 
@@ -43,49 +76,65 @@ sliced_text.each { |line|
 
 			$hours = $5 ? $5.slice(0,1).to_i : nil		
 
-			days = $9 ? $9.gsub!(/\s+/, '') : nil
-			$days = days
+			$days = $9 #? $9.gsub(/\b\s\b/, '') : nil
 
-			puts "$gwid: #{$gwid}" 
-			puts "$section: #{$section}"
-			puts "$class_name: #{$class_name}"
-			puts "$hours: #{$hours}"
-			puts "$days: #{$days}"
+			ampm = $20
+			orig_start_time = $15
+			orig_end_time = $19 
 
-			puts "$10: '#{$10}'"
-			puts "?: #{$11}"
-			puts "$12: #{$12}"
-			puts "?: '#{$13}'"
-			puts "$14: '#{$14}'"
+			case ampm 
+			when 'pm' 
+				$end_time = orig_end_time.to_i + 1200
 
-			puts "$15: '#{$15}'"
-
+				#if start time is before end time, and start time is under 1200, add 1200 to it
+				if ((orig_start_time.to_i < orig_end_time.to_i) && (orig_start_time.to_i < 1200))
+					$start_time = orig_start_time.to_i + 1200
+				else
+					$start_time = orig_start_time.to_i
+				end
+			else
+				$start_time = orig_start_time.to_i
+				$end_time = orig_end_time.to_i
+			end 
 			
-
-			#puts "start_time: #{start_time}"
-
-			puts "?: '#{$16}'"
-			puts "?: '#{$17}'"
-			puts "?: '#{$18}'"
-
-
-			puts "end time: #{$19}"
-			puts "am/pm: #{$20}"
-			puts "professor: #{$21}"
+			$professor = $21
+			
 		
 		}
 
-		
-
-
 		#check for variable hours indicated by the phrase "1.0 or 2.0" or "1.0 to 3.0"
 		if line =~ /\d\.\d\s(:?OR|TO)\s\d\.\d/
-			$class_hours = 'variable'
-			$class_hours_set = true
+			$hours = 'variable'
 		end
 
 		#assign the time captured to each day captured so far. Alt times and days mentioned on the next line (frag) will be added below
-
+		if (($days != 'TBA') && ($days != nil))
+			$days.scan(/(\w)/) { |s|
+				case $1
+				when 'U'
+					$day1_start = $start_time
+					$day1_end = $end_time
+				when 'M'
+					$day2_start = $start_time
+					$day2_end = $end_time
+				when 'T'
+					$day3_start = $start_time
+					$day3_end = $end_time
+				when 'W'
+					$day4_start = $start_time
+					$day4_end = $end_time
+				when 'R'
+					$day5_start = $start_time
+					$day5_end = $end_time
+				when 'F'
+					$day6_start = $start_time
+					$day6_end = $end_time
+				when 'S'
+					$day7_start = $start_time
+					$day7_end = $end_time
+				end
+			}
+		end
 
 
 	else 
@@ -93,36 +142,127 @@ sliced_text.each { |line|
 		#puts "Fragment or continuation of previous line: '#{$crn}'"
 		#puts line
 		$frag = line
+		puts "line: '#{line}'"
+
+			#this case is the fragment is more class meeting times (very important.)
+		case $frag 
+		when $frag =~ /\s+([MTWRF]+)\s+(\d{4})\s+.\s+(\d{4})(\D\D)\s+[A-Za-z-\/]+/
+			
+			$frag.scan(/\s+([MTWRF]+)\s+(\d{4})\s+.\s+(\d{4})(\D\D)\s+[A-Za-z-\/]+/) {
+				|s|
+				$days = $1 
+				
+				#adjust for am/pm
+				orig_start_time = $2
+				orig_end_time = $3 
+				ampm = $4
+				case ampm 
+				when 'pm' 
+					$end_time = orig_end_time.to_i + 1200
+
+					#if start time is before end time, and start time is under 1200, add 1200 to it
+					if ((orig_start_time.to_i < orig_end_time.to_i) && (orig_start_time.to_i < 1200))
+						$start_time = orig_start_time.to_i + 1200
+					else
+						$start_time = orig_start_time.to_i
+					end
+				else
+					$start_time = orig_start_time.to_i
+					$end_time = orig_end_time.to_i
+				end 
+
+				#add to the day. 
+				if (($days != 'TBA') && ($days != nil))
+				$days.scan(/(\w)/) { |s|
+					case $1
+					when 'U'
+						$day1_start = $start_time
+						$day1_end = $end_time
+					when 'M'
+						$day2_start = $start_time
+						$day2_end = $end_time
+					when 'T'
+						$day3_start = $start_time
+						$day3_end = $end_time
+					when 'W'
+						$day4_start = $start_time
+						$day4_end = $end_time
+					when 'R'
+						$day5_start = $start_time
+						$day5_end = $end_time
+					when 'F'
+						$day6_start = $start_time
+						$day6_end = $end_time
+					when 'S'
+						$day7_start = $start_time
+						$day7_end = $end_time
+					end
+				}
+			end
+
+			}
+			
+		#matches LL.Ms ONLY
+		when $frag =~ /LL.Ms\s+ONLY/
+			$llm_only = true
+
+		#matches (J.D.s only)
+		when $frag =~ /\(J.D.s only\)/
+			$jd_only = true
+		
+		#matches (class sub name) except (J.D.s only)
+		when $frag =~ /(\(.+[^J.D.s only]\))/
+			$class_name_2 = $1.rstrip.lstrip
+
+		#matches alternat or modified schedule lines
+		when $frag =~ /(alternat*|modified)?/
+			$alt_schedule = true
+		else 
+			#just save it as additional info if it doesn't match a pattern
+			$additional_info = $frag
+		end	
 
 	end
 
 	#commit to the database all globals here for this class
+	
 	puts "CRN: '#{$crn}'"
-	# puts "gwid: '#{$gwid}'"
-	# puts "section:'#{$section}"
-	# # puts "class_name: '#{$classname}'"
-	# puts "class_hours: '#{$class_hours}'"
-	# # puts "start_time: '#{$start_time}'"
-	# # puts "end_time: '#{$end_time}'"
-	# # puts "Prof 0: '#{$prof_name.inspect}'"
-	puts "Fragment: '#{$frag}'"
+	puts "$gwid: #{$gwid}" 
+	puts "$section: #{$section}"
+	puts "$class_name: #{$class_name}"
+	puts "$hours: #{$hours}"
+	puts "days: #{$days}"
 
-	#unset all globals except crn here
-	$gwid = nil
-	$section = nil
-	$class_name = nil
-	$class_hours = nil
-	$start_time = nil
-	$end_time = nil
-	$prof_name = nil
+	puts "day1_start: #{$day1_start}"
+	puts "day1_end: #{$day1_end}"
+
+	puts "day2_start: #{$day2_start}"
+	puts "day2_end: #{$day2_end}"
+
+	puts "day3_start: #{$day3_start}"
+	puts "day3_end: #{$day3_end}"
+
+	puts "day4_start: #{$day4_start}"
+	puts "day4_end: #{$day4_end}"
+
+	puts "day5_start: #{$day5_start}"
+	puts "day5_end: #{$day5_end}"
+
+	puts "day6_start: #{$day6_start}"
+	puts "day6_end: #{$day6_end}"
+
+	puts "day7_start: #{$day7_start}"
+	puts "day7_end: #{$day7_end}"
+
+	puts "llm_only #{$llm_only}"
+	puts "jd_only #{$jd_only}"
+
+	puts "$class_name_2: #{$class_name_2}"
+	puts "alt schedule: #{$alt_schedule}"
+
+	puts "additional info: '#{$frag}'"
 
 
-	$section_set = nil
-	$class_name_set = nil
-	$class_hours_set = nil
-	$start_time_set = nil
-	$end_time_set = nil
-	$prof_name_set = nil
 }
 
 
