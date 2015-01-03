@@ -32,23 +32,19 @@ sliced_text.each { |line|
 			|m| 
 			puts "#{m.inspect}"
 			puts "CRN: #{$1}"
-			$crn = $1
+			$crn = $1.to_i
 			puts "gwid: #{$2}"
 			puts "section: #{$3}"
-			puts "class name: #{$4}"
-			puts "hours: #{$5}"
-			puts "?: #{$6}"
-			puts "?: #{$7}"
-			puts "?: #{$8}"
-			days = $9.gsub!(/\s/,'')
 
+			class_name = $4 ? $4.rstrip : nil
+			puts "class name:#{class_name}"
+	
+			hours = $5 ? $5.slice(0,1).to_i	: nil		
+			puts "hours: #{hours}"
+
+			days = $9 ? $9.gsub(/\s+/,'') : nil
 			puts "days: #{days}"
 			
-			puts "?: #{$10}"
-			puts "?: #{$11}"
-			puts "?: #{$12}"
-			puts "?: #{$13}"
-			puts "?: #{$14}"
 			puts "start_time: #{$15}"
 			puts "?: #{$16}"
 			puts "?: #{$17}"
