@@ -30,25 +30,45 @@ sliced_text.each { |line|
 
 		line.scan(/\s?+(\d{5})\s+(\d{4})\s+(\d{2})\s+([A-Za-z\/\-]+[^\d]+)(\d\.\d)\s+:?(OR|TO)?(:?(\s+\d\.\d\s+)?)(([MTWRF]+|TBA)(:?(\s[MTWRFBA]+)?))\s+(:?(TBA)?)(:?(\d{4})?)(:?(\s+-\s+(\d{4})(\D\D))?)\s+(\w+)\s?+/) { 
 			|m| 
-			puts "#{m.inspect}"
+			#puts "#{m.inspect}"
+			puts $~.captures
 			puts "CRN: #{$1}"
 			$crn = $1.to_i
-			puts "gwid: #{$2}"
-			puts "section: #{$3}"
 
-			class_name = $4 ? $4.rstrip : nil
-			puts "class name:#{class_name}"
-	
-			hours = $5 ? $5.slice(0,1).to_i	: nil		
-			puts "hours: #{hours}"
+			$gwid = $2 ? $2.to_i : nil
 
-			days = $9 ? $9.gsub(/\s+/,'') : nil
-			puts "days: #{days}"
+			$section = $3 ? $3.to_i : nil
+
+			$class_name = $4 ? $4.rstrip.to_s : nil
+
+			$hours = $5 ? $5.slice(0,1).to_i : nil		
+
+			days = $9 ? $9.gsub!(/\s+/, '') : nil
+			$days = days
+
+			puts "$gwid: #{$gwid}" 
+			puts "$section: #{$section}"
+			puts "$class_name: #{$class_name}"
+			puts "$hours: #{$hours}"
+			puts "$days: #{$days}"
+
+			puts "$10: '#{$10}'"
+			puts "?: #{$11}"
+			puts "$12: #{$12}"
+			puts "?: '#{$13}'"
+			puts "$14: '#{$14}'"
+
+			puts "$15: '#{$15}'"
+
 			
-			puts "start_time: #{$15}"
-			puts "?: #{$16}"
-			puts "?: #{$17}"
-			puts ": #{$18}"
+
+			#puts "start_time: #{start_time}"
+
+			puts "?: '#{$16}'"
+			puts "?: '#{$17}'"
+			puts "?: '#{$18}'"
+
+
 			puts "end time: #{$19}"
 			puts "am/pm: #{$20}"
 			puts "professor: #{$21}"
@@ -63,6 +83,9 @@ sliced_text.each { |line|
 			$class_hours = 'variable'
 			$class_hours_set = true
 		end
+
+		#assign the time captured to each day captured so far. Alt times and days mentioned on the next line (frag) will be added below
+
 
 
 	else 
