@@ -15,6 +15,8 @@ gem 'omniauth'
 gem 'omniauth-google-oauth2'
 gem 'pg'
 gem 'figaro' #puts env variables in config/application.yml
+gem 'yomu' #pulls pdf to text, essential to scraper. 
+
 
 group :development do
   gem 'better_errors'
