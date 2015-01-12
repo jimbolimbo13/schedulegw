@@ -160,9 +160,9 @@
 
 				#this case is the fragment is more class meeting times (very important.)
 			case $frag 
-			when $frag =~ /\s+([MTWRF]+)\s+(\d{4})\s+.\s+(\d{4})(\D\D)\s+[A-Za-z-\/]+/
+			when $frag =~ /\s+([MTWRF]+)\s+(\d{4})\s+.\s+(\d{4})(\D\D)\s+[A-Za-z\/-]+/
 				
-				$frag.scan(/\s+([MTWRF]+)\s+(\d{4})\s+.\s+(\d{4})(\D\D)\s+[A-Za-z-\/]+/) {
+				$frag.scan(/\s+([MTWRF]+)\s+(\d{4})\s+.\s+(\d{4})(\D\D)\s+[A-Za-z\/-]+/) {
 					|s|
 					$days = $1 
 					
@@ -210,7 +210,7 @@
 						when 'S'
 							$day7_start = $start_time
 							$day7_end = $end_time
-						end
+					end
 					}
 				end
 
@@ -311,7 +311,13 @@
 			course.additional_info = $additional_info
 
 		course.save!
+
+		Course.delete_all(:crn => nil)
 	}
+
+	
+
+
 
 
 
