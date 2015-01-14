@@ -208,73 +208,60 @@ layout
 */
 
 
-#schedule {
+#schedule-container {
 	display:inline-block;
 	width:63%;
 	height:100%;
+	min-height:500px;
 	margin:0px;
 	padding:0px;
 	float:right;
+	background:yellow;
 	font-family:'Oxygen', sans-serif;
 }
 
-/*SCHEDULE TOP SETS THE WIDTH OF THE RIGHT COLUMN*/
-#scheduletop {
-	width:730px;
-	min-width:100%;
-	margin-left:1%;
-	float:left;
-	height:3%;
-}
-
-#blank_block {
-	display:inline-block;
-	width:9%; /*same as the times*/
+#time-col {
+	display: inline-block;
 	height:100%;
+	width:8%;
+	background:red;
 }
 
-#days_header {
+#time-table {
+	display:table;
+	height:100%;
+	min-height:500px;
+	.time_segment {
+		display:table-row;
+		text-align: right;
+		margin-top:7.65%;
+	}
+}
+
+#cal-col {
 	display:inline-block;
-	width:90%; /*Same width as the canvas*/
-	text-align:center;
+	height:100%;
+	min-height:200px;
+	width:91%;
+	background:blue;
+	float:right;
 }
 
-.day {
-	font-family: 'Playfair Display SC', serif;
-	width:13.7%;	
-	display:inline-block;
-}
-
-#schedulebottom {
-	width:100%;
-	/*height:85%;*/
-	height:780px;
-}
-
-#timeaxis {
-	display:inline-block;
-	margin:0px;
-	padding:0px;
-	width:10%;
-	height:95%;
-}
-
-.axistime {
+#days-header {
+	height:10%;
+	background:white;
 	display:block;
-	width:74%;
-	margin:0px;
-	padding:0px;
-	font-size: 12px;
-	height:7.69%; /* 1/13th of the space for each slot*/
-	text-align:right;
-}
-
-#first_axistime {
-	margin-top:-5px;
-}
-
-#last_axistime {
 	
+	.day_header_name {
+		display:inline-block;
+	}
+}
+
+#days-cols {
+	display:block;
+	height:89%;
+	background:black;
+	width:100%;
 }
 
 #canvas {
@@ -299,42 +286,6 @@ layout
 	-webkit-box-shadow: 5px 5px 10px 0px rgba(87,87,87,1);
 	-moz-box-shadow: 5px 5px 10px 0px rgba(87,87,87,1);
 	box-shadow: 5px 5px 10px 0px rgba(87,87,87,1);
-
-}
-
-#canvas .sunday {
-	position:absolute;
-	left:.5%;
-}
-
-#canvas .monday {
-	position:absolute;
-	left:14.28%;
-}
-
-#canvas .tuesday {
-	position:absolute;
-	left:28.57%;
-}
-
-#canvas .wednesday {
-	position:absolute;
-	left:42.857%;
-}
-
-#canvas .thursday {
-	position:absolute;
-	left:57.1428%;
-}
-
-#canvas .friday {
-	position:absolute;
-	left:71.4285%;
-}
-
-#canvas .saturday {
-	position:absolute;
-	left:85.7142857%;
 }
 
 #final_div {
