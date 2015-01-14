@@ -47,6 +47,10 @@
 			$start_time = nil
 			$end_time = nil
 			$prof_name = nil
+			$alt_schedule = nil
+			$additional_info = nil
+			$course_name_2 = nil
+			$professor = nil
 			
 
 			#reset all of the day start/end times 
@@ -112,7 +116,6 @@
 				end 
 				
 				$professor = $21
-				
 			
 			}
 
@@ -159,8 +162,7 @@
 			puts "line: '#{line}'"
 
 				#this case is the fragment is more class meeting times (very important.)
-			case $frag 
-			when $frag =~ /\s+([MTWRF]+)\s+(\d{4})\s+.\s+(\d{4})(\D\D)\s+[A-Za-z\/-]+/
+			if $frag =~ /\s+([MTWRF]+)\s+(\d{4})\s+.\s+(\d{4})(\D\D)\s+[A-Za-z\/-]+/
 				
 				$frag.scan(/\s+([MTWRF]+)\s+(\d{4})\s+.\s+(\d{4})(\D\D)\s+[A-Za-z\/-]+/) {
 					|s|
@@ -215,26 +217,30 @@
 				end
 
 				}
-				
+			end 
+
 			#matches LL.Ms ONLY
-			when $frag =~ /LL.Ms\s+ONLY/
+			if $frag =~ /LL.Ms\s+ONLY/
 				$llm_only = true
+			end 
 
 			#matches (J.D.s only)
-			when $frag =~ /\(J.D.s only\)/
+			if $frag =~ /\(J.D.s only\)/
 				$jd_only = true
-			
+			end
+
 			#matches (class sub name) except (J.D.s only)
-			when $frag =~ /(\(.+[^J.D.s only]\))/
+			if $frag =~ /(\(.+[^J.D.s only]\))/
 				$course_name_2 = $1.rstrip.lstrip
+			end 
 
 			#matches alternat or modified schedule lines
-			when $frag =~ /(alternat*|modified)?/
+			if $frag =~ /(alternat|modified)/
 				$alt_schedule = true
-			else 
-				#just save it as additional info if it doesn't match a pattern
-				$additional_info = $frag
-			end	
+			end  
+			
+			#just save it as additional info if it doesn't match a pattern
+			$additional_info = $frag.strip
 
 		end
 
@@ -309,8 +315,9 @@
 			course.jd_only = $jd_only
 			course.alt_schedule = $alt_schedule
 			course.additional_info = $additional_info
+			course.professor = $professor
 
-		course.save!
+		course.save! unless (course.manual_lock == true) 
 
 		Course.delete_all(:crn => nil)
 	}

@@ -7,4 +7,9 @@ class ApiController < ApplicationController
 			format.html #index.html.erb
 		end
 	end
+
+	private 
+		def params 
+			
+		end
 end
