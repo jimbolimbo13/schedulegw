@@ -35,23 +35,16 @@ ul {
 	float:left;
 }
 
-#google_ad_footer {
-	width:100%;
-	text-align:center;
-	padding-bottom:1px;
-	height:91px;
-	margin-bottom:10px;
-	margin-top:10px;
+#chosenclassesbox {
+	#chosenclasseslist {
+		list-style-type: none;
+		img {
+			display:inline-block;
+		}
+	}
+	
 }
 
-#google_ad_side {
-	margin-top:20px;
-	display:inline-block;
-	min-width:300px;
-	width:23%;
-	text-align:center;
-	float:right;
-}
 
 #wrapper {
 	margin:0;
@@ -148,7 +141,7 @@ ul {
 	background-color: #FFFFFF ;
 	color:black;
 	float:left;
-	max-height:88%;
+	max-height:500px;
 	min-height:65%;
 	width:100%;
 	margin:0px;
@@ -159,7 +152,7 @@ ul {
 	overflow-y:scroll;
 }
 
-#chosenclassesbox {
+#classesbox {
 	border:solid;
 	border-radius:3px;
 	background-color: #FFCE80 ;
@@ -181,7 +174,7 @@ ul {
 .profname {
 	margin-left:1%;
 	color:black;
-	text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
+	/*text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;*/
 
 }
 
@@ -207,61 +200,143 @@ sections of the
 layout
 */
 
+$column_width: 11%;
+$row_height:7.6923076923%;
 
 #schedule-container {
 	display:inline-block;
+	position:relative;
 	width:63%;
 	height:100%;
 	min-height:500px;
 	margin:0px;
 	padding:0px;
 	float:right;
-	background:yellow;
+	background:#eee;
 	font-family:'Oxygen', sans-serif;
 }
 
-#time-col {
-	display: inline-block;
-	height:100%;
-	width:8%;
-	background:red;
-}
-
-#time-table {
-	display:table;
-	height:100%;
-	min-height:500px;
-	.time_segment {
-		display:table-row;
-		text-align: right;
-		margin-top:7.65%;
-	}
-}
-
-#cal-col {
-	display:inline-block;
-	height:100%;
-	min-height:200px;
-	width:91%;
-	background:blue;
-	float:right;
-}
-
-#days-header {
-	height:10%;
-	background:white;
+#schedule_header {
 	display:block;
-	
-	.day_header_name {
-		display:inline-block;
-	}
-}
-
-#days-cols {
-	display:block;
-	height:89%;
-	background:black;
 	width:100%;
+	height:10%;
+	overflow:hidden;
+	padding-top:0;
+	padding-bottom:0;
+	padding-left:auto;
+	padding-right:auto;
+	margin:0;
+}
+
+.schedule_column_header {
+	display:inline-block;
+	width: $column_width;
+	height:100%;
+	background:white;
+	text-align: center;
+	text-decoration: underline;
+	padding:0;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+#schedule_columns_container {
+	position:relative;
+	background: url('canvas.png');
+	background-size: contain;
+	background-repeat: repeat-x;
+	max-height:500px;
+	display:block;
+	min-width:100%;
+	height:780px;
+	margin:0;
+	padding:0;
+}
+
+.time_indicator {
+	position:absolute;
+	min-height:1%;
+}
+
+#time_indicator_0 {
+	top:0;
+}
+#time_indicator_1 {
+	top:$row_height;
+}
+#time_indicator_2 { //10am
+	top:$row_height*2;
+}
+#time_indicator_3 {
+	top:$row_height*3;
+}
+#time_indicator_4 { //noon
+	top:$row_height*4;
+}
+#time_indicator_5 { //one pm
+	top:$row_height*5;
+}
+#time_indicator_6 {
+	top:$row_height*6;
+}
+#time_indicator_7 {
+	top:$row_height*7;
+}
+#time_indicator_8 { //four pm
+	top:$row_height*8;
+}
+#time_indicator_9 { //five pm
+	top:$row_height*9;
+}
+#time_indicator_10 { //six pm
+	top:$row_height*10;
+}
+#time_indicator_11 {
+	top:$row_height*11;
+}
+#time_indicator_12 { //8 pm
+	top:$row_height*12;
+}
+#time_indicator_13 { //9pm
+	top:$row_height*13;
+}
+
+.schedule_column {
+	display:inline-block;
+	position:relative;
+	text-align:center;
+	height:100%;
+	width: $column_width;
+	top:0;
+	bottom:0;
+	margin:0;
+	padding:0;
+	
+}
+
+#c12345 {
+	background:yellow;
+	top:0%;
+}
+
+#c54321 {
+	background:orange;
+	top:90%;
+}
+
+#test {
+	background:blue;
+	top:69.23076923%;
+}
+
+.scheduled_course {
+	position:absolute;
+	background:white;
+	min-height:1%;
+	border:1px solid black;
+	-webkit-box-shadow: 5px 5px 10px 0px rgba(87,87,87,1);
+	-moz-box-shadow: 5px 5px 10px 0px rgba(87,87,87,1);
+	box-shadow: 5px 5px 10px 0px rgba(87,87,87,1);
 }
 
 #canvas {
@@ -297,38 +372,7 @@ layout
 	padding:5px;
 }
 
-/*FOR GET_Books PAGE*/
 
-#right_footer div {
-	display:block;
-	margin-right:auto;
-	margin-left:auto;
-	width:100%; 
-}
-
-#right_footer button {
-	-webkit-box-shadow: 5px 5px 10px 0px rgba(189,189,189,1);
-	-moz-box-shadow: 5px 5px 10px 0px rgba(189,189,189,1);
-	box-shadow: 5px 5px 10px 0px rgba(189,189,189,1);
-	background-color:#85A7D3;
-	font-size: 1em;
-	margin:5px;
-	border-radius:0px;
-	width:100%;
-	padding:.2em;
-}
-
-#right_footer select {
-	-webkit-box-shadow: 5px 5px 10px 0px rgba(189,189,189,1);
-	-moz-box-shadow: 5px 5px 10px 0px rgba(189,189,189,1);
-	box-shadow: 5px 5px 10px 0px rgba(189,189,189,1);
-	width:100%;
-	background-color:#85A7D3;
-	font-size: 1em;
-	margin:5px;
-	border-radius:0px;
-	padding:.2em;
-}
 
 
 
