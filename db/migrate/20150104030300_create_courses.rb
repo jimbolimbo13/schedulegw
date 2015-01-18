@@ -1,6 +1,5 @@
 class CreateCourses < ActiveRecord::Migration
   def change
-  	drop_table :courses
   	create_table :courses do |t|
   		t.string :crn
     	t.string :gwid
@@ -28,6 +27,7 @@ class CreateCourses < ActiveRecord::Migration
     	t.boolean :alt_schedule
     	t.text :additional_info
     	t.boolean :manual_lock
+        t.string :professor
       	t.timestamps
     end
     add_index(:courses, :crn, unique: true)
