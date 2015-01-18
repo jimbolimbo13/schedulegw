@@ -5,26 +5,37 @@
 	require 'active_record'
 	require 'pg'
 	
-	ActiveRecord::Base.establish_connection(
-	  adapter:  'postgresql', # or 'postgresql' or 'sqlite3'
-	  database: 'omniauth_development',
-	  username: 'omniauth',
-	  password: '',
-	  host:     'localhost'
-	)
+	if Rails.env.development?
+		ActiveRecord::Base.establish_connection(
+		  adapter:  'postgresql', # or 'postgresql' or 'sqlite3'
+		  database: 'schedulegw_development',
+		  username: 'schedulegw',
+		  password: '',
+		  host:     'localhost'
+		)
+	end
+
+	if Rails.env.production?
+		ActiveRecord::Base.establish_connection(
+		  adapter:  'postgresql', # or 'postgresql' or 'sqlite3'
+		  database: 'schedulegw_production',
+		  username: 'schedulegw',
+		  password: '',
+		  host:     'localhost'
+		)
+	end
 
 	class Course < ActiveRecord::Base
 	end
 
-	# yomu = Yomu.new 'http://www.law.gwu.edu/Students/Records/Spring2015/Documents/SP15%20CTF.pdf'
-	# #yomu = Yomu.new '/workers/courselist_with_crns.pdf'
-	# orig_text = yomu.text
+	yomu = Yomu.new 'http://www.law.gwu.edu/Students/Records/Spring2015/Documents/SP15%20CTF.pdf'
+	orig_text = yomu.text
 
 	# #timestamp and save locally to make future comparisons easier
 	# timestamp = Time.now().to_i
 	# File.write("crn_classlist_#{timestamp}", orig_text)
 
-	orig_text = File.open("crn_classlist_1420222526").read
+	orig_text = File.open("crn_classlist_1420222526").read unless Rails.env.production?
 
 	sliced_text = orig_text.scan(/\n.+/).map{ |s| s}
 
