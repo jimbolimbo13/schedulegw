@@ -18,6 +18,9 @@
 	class Course < ActiveRecord::Base
 	end
 
+	exit unless Rails.env.development?
+
+
 	yomu = Yomu.new 'http://www.law.gwu.edu/Students/Records/Spring2015/Documents/SP15%20CTF.pdf'
 	orig_text = yomu.text
 
