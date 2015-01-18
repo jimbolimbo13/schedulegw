@@ -44,7 +44,7 @@ $( document ).ready(function() {
 //renders html for a course. 
 function render_course_listing(course) {
 	var html = '';
-	var html = html + '<li style="overflow:hidden;">';
+	var html = html + '<li style="overflow:hidden;" class="available_course" id="list_'+course.crn+'">';
 	var html = html + '<img src="assets/plus.png" height=20 width=20 alt="alt data" id='+course.crn+'>';
 	var html = html + '<span class="classname">'+course.gwid+'-'+course.section+' '+course.course_name+'</span><span class="profname">'+course.professor+'</span><span class="ratings"><a href="https://my.law.gwu.edu/Evaluations/page%20library/ByFaculty.aspx?Source=%2fEvaluations%2fdefault.aspx&IID=13802" target="_blank"><button class="GWU_btn"> GWU </button></a></span>';
 	var html = html + '</li>';
@@ -164,7 +164,7 @@ function addthisclass(crn) {
 
 function render_session(column, start_time, end_time, coursedata, color) {
 	//column is the css id of the column - ie day2_column etc. 
-	console.info(coursedata);
+	// console.info(coursedata);
 
 	//start time minus 8*60 = 0 percent 
 	//480 minutes = 0% 
@@ -189,7 +189,6 @@ function render_session(column, start_time, end_time, coursedata, color) {
 	var html = html + '</div>';
 
 	$('#'+column+'').append(html);
-
 
 }
 
@@ -216,7 +215,7 @@ function random_color() {
 }
 
 function convert_to_minutes(rawtime) {
-	console.log('rawtime received :'+rawtime);
+	// console.log('rawtime received :'+rawtime);
 	//have to convert rawtime to string to substr it. 
 	if (rawtime) {
 		var rawtime = rawtime.toString();
@@ -252,7 +251,7 @@ function update_view() {
 	$('#chosenclasseslist').empty();
 
 	if (typeof window.currentschedulearray != "undefined") {
-		console.log('updating because window.currentschedulearray is '+window.currentschedulearray);
+		// console.log('updating because window.currentschedulearray is '+window.currentschedulearray);
 		//append hours counter first
 		$('#chosenclasseslist').append('<li id="hours_total"></li>');
 
@@ -288,8 +287,8 @@ function update_view() {
 
 		$.each(window.currentschedulearray, function(index, course){
 			var id = index;
-			console.log('index: '+index);
-			console.info(course);
+			// console.log('index: '+index);
+			// console.info(course);
 			var html = '';
 			var html = html+ '<li>';
 			var html = html+ '<img src="assets/minusbutton.png" height=20 width=20 onclick=removecourse('+course.crn+')>';
@@ -306,6 +305,10 @@ function update_view() {
 		var html = '';
 		var html = html + '<li id="next_btn"><a onclick="next()">Next --> Get CRNs and Books</a></li>';
 		$('#chosenclasseslist').append(html);
+		
+		//update striped classes etc. 
+		check_schedule_conflicts();
+
 	} else {
 		$('#chosenclasseslist').empty();
 	}
@@ -324,66 +327,156 @@ function course_search() {
 
 //this is rough and probably can be optimized
 function check_schedule_conflicts() {
-	addthisclass(40948); //civ pro II, Schaffner
-	addthisclass(40265); //Contracts II, Selmi conflict on day 3
 	var l = Object.keys(window.currentschedulearray).length;
 
 	var comparisons = 0;
-	var conflicts = '';
 
 	//clone the current array
 	var selected_courses = window.currentschedulearray;
-		
-		//roughly double as slow as it could be :/ 
-		for (var key in selected_courses) {
-		   	var first_course = selected_courses[key];
-	  		for (var key2 in selected_courses) {
-	  			var second_course = selected_courses[key2];
-	  			if (first_course !== second_course) {
-	  				compare_courses(first_course, second_course);
-	  				comparisons++;
-	  			}
-	  		}
-		}
 
+	//roughly twice as slow as it could be :/
+	//check for conflicts among the currently chosen classes. 
+	//if there's a conflict, give them striped backgrounds; if not, random color backgrounds.  
+	for (var key in selected_courses) {
+	   	var first_course = selected_courses[key];
+  		for (var key2 in selected_courses) {
+  			var second_course = selected_courses[key2];
+  			if (first_course !== second_course) {
+  				if ("conflict" == compare_courses(first_course, second_course)) {
+  					mark_overlapped_on_schedule(first_course, second_course);
+  				} else {
+  					//change or correct color if no overlap. 
+  					$('.'+first_course.crn+'').css('background', random_color());
+  					$('.'+second_course.crn+'').css('background', random_color());
+  				}
+  				comparisons++;
+  			} else {
+  				//first_course and second_course are the same course
+  				//if there's only one course, reset the background color
+  				if (l === 1) {
+  					$('.'+first_course.crn+'').css('background', random_color());
+  				}
+  			}
+  		}
+	}
+	console.log('made '+comparisons+' comparisons internally to determine currently selected classes dont overlap each other on the schedule display.');
 
+	//gray out the courses on the list that are incompatible with the classes currently chosen. 
+	unavailable_courses = [];
+	$.each(window.courses, function(index1, course1) {
+		$.each(window.currentschedulearray, function(index2, course2) {
+			if ("conflict" == compare_courses(course1, course2)) {
+				unavailable_courses.push(course1.crn);
+			} else {
+				mark_available_in_list(course1.crn);
+			}
+		})
+	})
 
-	console.log('made '+comparisons+' comparisons.');
-	console.log(conflicts);
+	$.each(unavailable_courses, function(index, crn) {
+		mark_unavailable_in_list(crn);
+	})
 
+	if (unavailable_courses.length === 0) {
+		$.each(window.courses, function(index, course) {
+			mark_available_in_list(course.crn);
+		})
+	}
 
 }
 
 function compare_courses(course1, course2) {
-	//returns 'conflict' else 'true'
-	// console.info(course1);
-	// console.info(course2);
+	// returns 'conflict' else 'true'
 
-	//for each day that the first course meets, see if 
-	//any of them begin a
+	//Monday 
 	if (course1.day2_start && course2.day2_start) {
-		
-		//if course1 starts first or same time
-		if (course1.day2_start <= course2.day2_start) {
-			console.log(course1.course_name+' starts ('+course1.day2_start+') before or at the same time ('+course2.day2_start+') as '+course2.course_name);
-			if (course2.day2_start <= course1.day2_end) {
-				console.log(course2.course_name+' starts ('+course2.day2_start+') at or before '+course1.course_name+' ends ('+course1.day2_end+')');
-				return 'conflict';
-			}
-
-		//if course2 starts first
-		} else if (course2.day2_start <= course1.day2_start) {
-			if (course1.day2_start <= course2.day2_end) {
-				return 'conflict';
-			}
-
-		} else { 
-			if (course1.day2_start == course2.day2_start) {
-				return 'conflict'; 
-			}
+		if (course1.day2_start == course2.day2_start) {
+			return 'conflict';
 		}
-	} 
+		if (course1.day2_start <= course2.day2_start && course1.day2_end > course2.day2_start ||
+			course1.day2_start < course2.day2_end && course1.day2_end >= course2.day2_end) {
+			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			return 'conflict';
+		}
+		if (course2.day2_start <= course1.day2_start && course2.day2_end > course1.day2_start ||
+			course2.day2_start < course1.day2_end && course2.day2_end >= course1.day2_end) {
+			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			return 'conflict';
+		}
+	}
 
+	//Tuesday
+	if (course1.day3_start && course2.day3_start) {
+		if (course1.day3_start == course2.day3_start) {
+			return 'conflict';
+		}
+		if (course1.day3_start <= course2.day3_start && course1.day3_end > course2.day3_start ||
+			course1.day3_start < course2.day3_end && course1.day3_end >= course2.day3_end) {
+			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			return 'conflict';
+		}
+		if (course2.day3_start <= course1.day3_start && course2.day3_end > course1.day3_start ||
+			course2.day3_start < course1.day3_end && course2.day3_end >= course1.day3_end) {
+			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			return 'conflict';
+		}
+	}
+
+	//Weds
+	if (course1.day4_start && course2.day4_start) {
+		if (course1.day2_start == course2.day2_start) {
+			return 'conflict';
+		}
+		if (course1.day4_start <= course2.day4_start && course1.day4_end > course2.day4_start ||
+			course1.day4_start < course2.day4_end && course1.day4_end >= course2.day4_end) {
+			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			return 'conflict';
+		}
+		if (course2.day4_start <= course1.day4_start && course2.day4_end > course1.day4_start ||
+			course2.day4_start < course1.day4_end && course2.day4_end >= course1.day4_end) {
+			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			return 'conflict';
+		}
+	}
+
+	//Thurs
+	if (course1.day5_start && course2.day5_start) {
+		if (course1.day5_start == course2.day5_start) {
+			return 'conflict';
+		}
+		if (course1.day5_start <= course2.day5_start && course1.day5_end > course2.day5_start ||
+			course1.day5_start < course2.day5_end && course1.day5_end >= course2.day5_end) {
+			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			return 'conflict';
+		}
+		if (course2.day5_start <= course1.day5_start && course2.day5_end > course1.day5_start ||
+			course2.day5_start < course1.day5_end && course2.day5_end >= course1.day5_end) {
+			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			return 'conflict';
+		}
+	}
+
+	//Friday
+	if (course1.day6_start && course2.day6_start) {
+		if (course1.day6_start == course2.day6_start) {
+			return 'conflict';
+		}
+		if (course1.day6_start <= course2.day6_start && course1.day6_end > course2.day6_start ||
+			course1.day6_start < course2.day6_end && course1.day6_end >= course2.day6_end) {
+			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			return 'conflict';
+		}
+		if (course2.day6_start <= course1.day6_start && course2.day6_end > course1.day6_start ||
+			course2.day6_start < course1.day6_end && course2.day6_end >= course1.day6_end) {
+			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			return 'conflict';
+		}
+	}
+
+	//Test Finals Times Here. 
+
+
+	return true; 
 }
 
 function test() {
@@ -400,44 +493,108 @@ function display_all_test() {
 
 function comparison_test() {
 	//test for 
-	$.each(courses, function(index, course) {
-		if (course.professor == 'Terry') {
-			
-		}	
-	})
 
 	var l = courses.length;
 	for (i=0; i<l; i++) {
-		if (courses[i]['crn'] == '45788') console.log('Array Location: '+i);
+
+		//find all of the test classes we need
+		if (courses[i]['crn'] == '45788') var foreign_relations = courses[i];
+		if (courses[i]['crn'] == '43221') var humanrights = courses[i];
+		if (courses[i]['crn'] == '41567') var mediation = courses[i];
+		if (courses[i]['crn'] == '43219') var antitrust = courses[i];
+		if (courses[i]['crn'] == '40948') var contracts = courses[i];
+		if (courses[i]['crn'] == '44780') var crim = courses[i];
 	}
 
-	//courses[171], courses[100] = Monday 850am start (Antitrust and Human Rights)
 	var test_name = 'Test Check Same Start Time for Conflict';
-	if ('conflict' == compare_courses(courses[171], courses[100])) {
+	if ('conflict' == compare_courses(antitrust, humanrights)) {
 		console.log(test_name+' : PASSED.');
 	} else {
-		console.log(test_name+ ' : FAILED!');
+		console.error(test_name+ ' : FAILED!');
+		addthisclass(humanrights.crn);
+		addthisclass(antitrust.crn);
 	}
 
-	//test Mediation courses[199] and US Foreign Relations courses[286]
-	var test_name = 'Test Class Times Overlap (course1 first)';
-	if ('conflict' == compare_courses(courses[199], courses[286])) {
+	var test_name = 'Test Check Same Start Time for Conflict (reversed)';
+	if ('conflict' == compare_courses(humanrights, antitrust)) {
 		console.log(test_name+' : PASSED.');
 	} else {
-		console.log(test_name+ ' : FAILED!');
+		console.error(test_name+ ' : FAILED!');
+		addthisclass(humanrights.crn);
+		addthisclass(antitrust.crn);
 	}
 
-	var test_name = 'Test Class Times Overlap (course 2 first)';
-	if ('conflict' == compare_courses(courses[286], courses[199])) {
+	var test_name = 'Test Class Times Overlap (mediation starts first)';
+	if ('conflict' == compare_courses(mediation, foreign_relations)) {
 		console.log(test_name+' : PASSED.');
 	} else {
-		console.log(test_name+ ' : FAILED!');
+		console.error(test_name+ ' : FAILED!');
+		addthisclass(mediation.crn);
+		addthisclass(foreign_relations.crn);
 	}
 
+	var test_name = 'Test Class Times Overlap (course 2 (mediation) starts first)';
+	if ('conflict' == compare_courses(foreign_relations, mediation)) {
+		console.log(test_name+' : PASSED.');
+	} else {
+		console.error(test_name+ ' : FAILED!');
+		addthisclass(mediation.crn);
+		addthisclass(foreign_relations.crn);
+	}
 
-	
+	var test_name = 'Test: Make sure compatible courses on the same day arent flagged as overlap.)';
+	if ('conflict' !== compare_courses(mediation, contracts)) {
+		console.log(test_name+' : PASSED.');
+	} else {
+		console.error(test_name+ ' : FAILED!');
+		addthisclass(mediation.crn);
+		addthisclass(contracts.crn);
+	}
+
+	var test_name = 'Test: Make sure compatible courses on the same day arent flagged as overlap (reversed).)';
+	if ('conflict' !== compare_courses(contracts, mediation)) {
+		console.log(test_name+' : PASSED.');
+	} else {
+		console.error(test_name+ ' : FAILED!');
+		addthisclass(mediation.crn);
+		addthisclass(contracts.crn);
+	}
+
+	var test_name = 'Test: Make sure compatible courses on different days but the same time arent flagged as overlap.)';
+	if ('conflict' !== compare_courses(crim, mediation)) {
+		console.log(test_name+' : PASSED.');
+	} else {
+		console.error(test_name+ ' : FAILED!');
+		addthisclass(mediation.crn);
+		addthisclass(crim.crn);
+	}
+
+	var test_name = 'Test: Make sure compatible courses on different days but the same time arent flagged as overlap (reversed).)';
+	if ('conflict' !== compare_courses(mediation, crim)) {
+		console.log(test_name+' : PASSED.');
+	} else {
+		console.error(test_name+ ' : FAILED!');
+		addthisclass(mediation.crn);
+		addthisclass(crim.crn);
+	}
 
 }
+
+function mark_overlapped_on_schedule(course1, course2) {
+	$('.'+course1.crn+'').css({background: 'repeating-linear-gradient(45deg, #D63518, #D63518 10px, #D3C6AB 10px, #D3C6AB 20px)'});
+	$('.'+course2.crn+'').css({background: 'repeating-linear-gradient(45deg, #D63518, #D63518 10px, #D3C6AB 10px, #D3C6AB 20px)'});
+}
+
+function mark_unavailable_in_list(crn) {
+	$( '#list_'+ crn +'' ).removeClass( "available_course" ).addClass( "unavailable_course" );
+}
+
+function mark_available_in_list(crn) {
+	$( '#list_'+ crn +'' ).removeClass( "unavailable_course" ).addClass( "available_course" );
+} 
+
+
+
 
 
 
