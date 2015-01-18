@@ -15,16 +15,6 @@
 		)
 	end
 
-	if Rails.env.production?
-		ActiveRecord::Base.establish_connection(
-		  adapter:  'postgresql', # or 'postgresql' or 'sqlite3'
-		  database: 'schedulegw_production',
-		  username: 'schedulegw',
-		  password: '',
-		  host:     'localhost'
-		)
-	end
-
 	class Course < ActiveRecord::Base
 	end
 
