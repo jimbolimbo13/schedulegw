@@ -14,24 +14,15 @@ $( document ).ready(function() {
 	//populate courses available
 	populate_course_list();
 
-
 	//This next line only works in Chrome which is bullshit because it's amazing and needs 
 	//to work in Safari too. Safari sucks.
 	// Object.observe(window.currentschedulearray, update_view);
 
 	//searches 
 	$('#search_bar').keyup(function (e) {
-		var terms = $('#search_bar').val();
-		console.log('term: '+terms);
-		if ((terms == null) || (terms == "") || (terms == undefined)) {
-			//nothing in the box. 
-			populate_course_list();
-		} else {
-			$('#classlisttarget').empty();
-	    	search_courses(terms);
-	    }
-	    
+		course_search();
 	});
+	
 	//handly any course plus button being clicked. ul must be static/extant when the page loads, whereas the li can be added dynamically later and this will still fire.
 	$('body #classlisttarget').on('click', 'li img', function(e) {
 		var id = $(this).attr('id');
@@ -194,7 +185,7 @@ function render_session(column, start_time, end_time, coursedata, color) {
 
 	var html = '';
 	var html = html+ '<div class="scheduled_course '+jsclass+'" style="top:'+start_percent+'%; height:'+height+'%; background:'+color+';">';
-	var html = html+ ''+name+', '+prof+'';
+	var html = html+ '<span class="scheduled_course_name">'+name+'</span>,<span class="scheduled_course_prof">'+prof+'</span>';
 	var html = html + '</div>';
 
 	$('#'+column+'').append(html);
@@ -251,71 +242,202 @@ function convert_to_minutes(rawtime) {
 }
 
 function removecourse(classid) {
+	delete window.currentschedulearray[classid];
 	$('.'+classid).remove();
+	update_view();
 }
 
 function update_view() {
+	
 	$('#chosenclasseslist').empty();
 
-	//append hours counter first
-	$('#chosenclasseslist').append('<li id="hours_total"></li>');
+	if (typeof window.currentschedulearray != "undefined") {
+		console.log('updating because window.currentschedulearray is '+window.currentschedulearray);
+		//append hours counter first
+		$('#chosenclasseslist').append('<li id="hours_total"></li>');
 
-		//update hours counter
-		window.hours = 0;
-		window.variable_hours = false;
-		$.each(window.currentschedulearray, function(index, course){
-			if (course.hours !== 'variable') {
-				window.hours = window.hours + parseInt(course.hours);
-				set_hours(window.hours);
-			} else {
-				window.variable_hours = true;
+			//update hours counter
+			window.hours = 0;
+			window.variable_hours = false;
+			$.each(window.currentschedulearray, function(index, course){
+				if (course.hours !== 'variable') {
+					window.hours = window.hours + parseInt(course.hours);
+					set_hours(window.hours);
+				} else {
+					window.variable_hours = true;
+				}
+			});
+
+			var html = '';
+			function set_hours(hours) {
+				if (hours > 0) {
+					var html = hours+' hour';
+					if (hours > 1) {
+						var html = hours+' hours';
+					}
+				} else {
+					var html = 'No Hours';
+				}
+
+				if (window.variable_hours == true) {
+					var html = html+'++';
+				}
+
+				$('#hours_total').html(html);
 			}
+
+		$.each(window.currentschedulearray, function(index, course){
+			var id = index;
+			console.log('index: '+index);
+			console.info(course);
+			var html = '';
+			var html = html+ '<li>';
+			var html = html+ '<img src="assets/minusbutton.png" height=20 width=20 onclick=removecourse('+course.crn+')>';
+			var html = html+ '<span class="classname">'+course.course_name+', </span>';
+			var html = html+ '<span class="profname"> '+course.professor+'</span>';
+			var html = html+ '<span class="chosen_hours"> , '+course.hours+' hours</span>';
+			var html = html+ '</li>';
+			$('#chosenclasseslist').append(html);
 		});
 
+
+		//append the 'next button to the classlist'
+		
 		var html = '';
-		function set_hours(hours) {
-			if (hours > 0) {
-				var html = hours+' hour';
-				if (hours > 1) {
-					var html = hours+' hours';
-				}
-			} else {
-				var html = 'No Hours';
-			}
-
-			if (window.variable_hours == true) {
-				var html = html+'++';
-			}
-
-			$('#hours_total').html(html);
-		}
-	
-
-
-	$.each(window.currentschedulearray, function(index, course){
-		var id = index;
-		console.log('index: '+index);
-		console.info(course);
-		var html = '';
-		var html = html+ '<li>';
-		var html = html+ '<img src="assets/minusbutton.png" height=20 width=20 id="'+course.crn+'">';
-		var html = html+ '<span class="classname">'+course.course_name+',</span>';
-		var html = html+ '<span class="profname">'+course.professor+'</span>';
-		var html = html+ '<span class="chosen_hours"> , '+course.hours+' hours</span>';
-		var html = html+ '</li>';
+		var html = html + '<li id="next_btn"><a onclick="next()">Next --> Get CRNs and Books</a></li>';
 		$('#chosenclasseslist').append(html);
-	});
+	} else {
+		$('#chosenclasseslist').empty();
+	}
+}
+
+function course_search() {
+	var terms = $('#search_bar').val();
+	if ((terms == null) || (terms == "") || (terms == undefined)) {
+		//nothing in the box. 
+		populate_course_list();
+	} else {
+		$('#classlisttarget').empty();
+    	search_courses(terms);
+    }
+}
+
+//this is rough and probably can be optimized
+function check_schedule_conflicts() {
+	addthisclass(40948); //civ pro II, Schaffner
+	addthisclass(40265); //Contracts II, Selmi conflict on day 3
+	var l = Object.keys(window.currentschedulearray).length;
+
+	var comparisons = 0;
+	var conflicts = '';
+
+	//clone the current array
+	var selected_courses = window.currentschedulearray;
+		
+		//roughly double as slow as it could be :/ 
+		for (var key in selected_courses) {
+		   	var first_course = selected_courses[key];
+	  		for (var key2 in selected_courses) {
+	  			var second_course = selected_courses[key2];
+	  			if (first_course !== second_course) {
+	  				compare_courses(first_course, second_course);
+	  				comparisons++;
+	  			}
+	  		}
+		}
 
 
-	//append the 'next button to the classlist'
-	var html = '';
-	var html = html + '<li>Next --> Get CRNs and Books</li>';
-	$('#chosenclasseslist').append(html);
+
+	console.log('made '+comparisons+' comparisons.');
+	console.log(conflicts);
+
 
 }
 
+function compare_courses(course1, course2) {
+	//returns 'conflict' else 'true'
+	// console.info(course1);
+	// console.info(course2);
+
+	//for each day that the first course meets, see if 
+	//any of them begin a
+	if (course1.day2_start && course2.day2_start) {
+		
+		//if course1 starts first or same time
+		if (course1.day2_start <= course2.day2_start) {
+			console.log(course1.course_name+' starts ('+course1.day2_start+') before or at the same time ('+course2.day2_start+') as '+course2.course_name);
+			if (course2.day2_start <= course1.day2_end) {
+				console.log(course2.course_name+' starts ('+course2.day2_start+') at or before '+course1.course_name+' ends ('+course1.day2_end+')');
+				return 'conflict';
+			}
+
+		//if course2 starts first
+		} else if (course2.day2_start <= course1.day2_start) {
+			if (course1.day2_start <= course2.day2_end) {
+				return 'conflict';
+			}
+
+		} else { 
+			if (course1.day2_start == course2.day2_start) {
+				return 'conflict'; 
+			}
+		}
+	} 
+
+}
+
+function test() {
+	//display_all_test();
+	comparison_test();
+}
+
+function display_all_test() {
+	var l = window.courses.length;
+	for (i=0; i<l; i++) {
+		addthisclass(window.courses[i]['crn']);
+	}
+}
+
+function comparison_test() {
+	//test for 
+	$.each(courses, function(index, course) {
+		if (course.professor == 'Terry') {
+			
+		}	
+	})
+
+	var l = courses.length;
+	for (i=0; i<l; i++) {
+		if (courses[i]['crn'] == '45788') console.log('Array Location: '+i);
+	}
+
+	//courses[171], courses[100] = Monday 850am start (Antitrust and Human Rights)
+	var test_name = 'Test Check Same Start Time for Conflict';
+	if ('conflict' == compare_courses(courses[171], courses[100])) {
+		console.log(test_name+' : PASSED.');
+	} else {
+		console.log(test_name+ ' : FAILED!');
+	}
+
+	//test Mediation courses[199] and US Foreign Relations courses[286]
+	var test_name = 'Test Class Times Overlap (course1 first)';
+	if ('conflict' == compare_courses(courses[199], courses[286])) {
+		console.log(test_name+' : PASSED.');
+	} else {
+		console.log(test_name+ ' : FAILED!');
+	}
+
+	var test_name = 'Test Class Times Overlap (course 2 first)';
+	if ('conflict' == compare_courses(courses[286], courses[199])) {
+		console.log(test_name+' : PASSED.');
+	} else {
+		console.log(test_name+ ' : FAILED!');
+	}
 
 
+	
+
+}
 
 
 

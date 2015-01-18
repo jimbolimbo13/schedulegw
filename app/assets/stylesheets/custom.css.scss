@@ -38,12 +38,18 @@ ul {
 #chosenclassesbox {
 	#chosenclasseslist {
 		list-style-type: none;
+		display:inline-block;
 		img {
 			display:inline-block;
 		}
 	}
-	
+
+	#finals_list {
+		list-style-type:none;
+		display:inline-block;
+	}	
 }
+
 
 
 #wrapper {
@@ -314,29 +320,37 @@ $row_height:7.6923076923%;
 	
 }
 
-#c12345 {
-	background:yellow;
-	top:0%;
-}
-
-#c54321 {
-	background:orange;
-	top:90%;
-}
-
-#test {
-	background:blue;
-	top:69.23076923%;
-}
-
+/*Boxes on the schedule grid*/
 .scheduled_course {
 	position:absolute;
+	max-width: 100%;
 	background:white;
 	min-height:1%;
 	border:1px solid black;
 	-webkit-box-shadow: 5px 5px 10px 0px rgba(87,87,87,1);
 	-moz-box-shadow: 5px 5px 10px 0px rgba(87,87,87,1);
 	box-shadow: 5px 5px 10px 0px rgba(87,87,87,1);
+	line-height: 1em;
+
+	.scheduled_course_name {
+		font-size: .75em;
+	}
+
+	.scheduled_course_prof {
+		font-size: .75em;
+	}
+
+}
+
+/*45 degree angle striped background*/
+.overlapped_course {
+	background:repeating-linear-gradient(
+	  45deg,
+	  #606dbc,
+	  #606dbc 10px,
+	  #465298 10px,
+	  #465298 20px
+	);
 }
 
 #canvas {
@@ -363,14 +377,7 @@ $row_height:7.6923076923%;
 	box-shadow: 5px 5px 10px 0px rgba(87,87,87,1);
 }
 
-#final_div {
-	background-color:#000066;
-	color:white;
-	border-radius:2px;
-	width:100%;
-	min-height:1%;
-	padding:5px;
-}
+
 
 
 
