@@ -24,7 +24,7 @@ $( document ).ready(function() {
 	});
 	
 	//handly any course plus button being clicked. ul must be static/extant when the page loads, whereas the li can be added dynamically later and this will still fire.
-	$('body #classlisttarget').on('click', 'li img', function(e) {
+	$('body #classlisttarget').on('click', 'li .fa-plus-square', function(e) {
 		var id = $(this).attr('id');
 		console.log('clicked an li its id is '+id);
 		
@@ -45,7 +45,7 @@ $( document ).ready(function() {
 function render_course_listing(course) {
 	var html = '';
 	var html = html + '<li style="overflow:hidden;" class="available_course" id="list_'+course.crn+'">';
-	var html = html + '<img src="assets/plus.png" height=20 width=20 alt="alt data" id='+course.crn+'>';
+	var html = html + '<span class="fa fa-plus-square fa-2x" style="color:green;" alt="'+course.additional_info+'" id='+course.crn+'></span>';
 	var html = html + '<span class="classname">'+course.gwid+'-'+course.section+' '+course.course_name+'</span><span class="profname">'+course.professor+'</span><span class="ratings"><a href="https://my.law.gwu.edu/Evaluations/page%20library/ByFaculty.aspx?Source=%2fEvaluations%2fdefault.aspx&IID=13802" target="_blank"><button class="GWU_btn"> GWU </button></a></span>';
 	var html = html + '</li>';
 	return html 
@@ -291,7 +291,7 @@ function update_view() {
 			// console.info(course);
 			var html = '';
 			var html = html+ '<li>';
-			var html = html+ '<img src="assets/minusbutton.png" height=20 width=20 onclick=removecourse('+course.crn+')>';
+			var html = html+ '<span class="fa fa-remove fa-2x" style="color:red;" onclick=removecourse('+course.crn+')></span>';
 			var html = html+ '<span class="classname">'+course.course_name+', </span>';
 			var html = html+ '<span class="profname"> '+course.professor+'</span>';
 			var html = html+ '<span class="chosen_hours"> , '+course.hours+' hours</span>';

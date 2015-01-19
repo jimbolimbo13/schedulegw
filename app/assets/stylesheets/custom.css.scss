@@ -45,7 +45,8 @@ ul {
 
 #chosenclassesbox {
 	max-height:250px;
-	overflow:scroll;
+	overflow-y:auto;
+
 	#chosenclasseslist {	
 		list-style-type: none;
 		display:inline-block;
@@ -256,9 +257,6 @@ $row_height:7.6923076923%;
 
 #schedule_columns_container {
 	position:relative;
-	background: url('canvas.png');
-	background-size: contain;
-	background-repeat: repeat-x;
 	max-height:500px;
 	display:block;
 	min-width:100%;
@@ -272,47 +270,61 @@ $row_height:7.6923076923%;
 	min-height:1%;
 }
 
-#time_indicator_0 {
+#time_indicator_0, .dotted_line_0 {
 	top:0;
 }
-#time_indicator_1 {
+#time_indicator_1, .dotted_line_1 {
 	top:$row_height;
 }
-#time_indicator_2 { //10am
+#time_indicator_2, .dotted_line_2 { //10am
 	top:$row_height*2;
 }
-#time_indicator_3 {
+#time_indicator_3, .dotted_line_3 {
 	top:$row_height*3;
 }
-#time_indicator_4 { //noon
+#time_indicator_4, .dotted_line_4 { //noon
 	top:$row_height*4;
 }
-#time_indicator_5 { //one pm
+#time_indicator_5, .dotted_line_5 { //one pm
 	top:$row_height*5;
 }
-#time_indicator_6 {
+#time_indicator_6, .dotted_line_6 {
 	top:$row_height*6;
 }
-#time_indicator_7 {
+#time_indicator_7, .dotted_line_7 {
 	top:$row_height*7;
 }
-#time_indicator_8 { //four pm
+#time_indicator_8, .dotted_line_8 { //four pm
 	top:$row_height*8;
 }
-#time_indicator_9 { //five pm
+#time_indicator_9, .dotted_line_9 { //five pm
 	top:$row_height*9;
 }
-#time_indicator_10 { //six pm
+#time_indicator_10, .dotted_line_10 { //six pm
 	top:$row_height*10;
 }
-#time_indicator_11 {
+#time_indicator_11, .dotted_line_11 {
 	top:$row_height*11;
 }
-#time_indicator_12 { //8 pm
+#time_indicator_12, .dotted_line_12 { //8 pm
 	top:$row_height*12;
 }
-#time_indicator_13 { //9pm
+#time_indicator_13, .dotted_line_13 { //9pm
 	top:$row_height*13;
+}
+
+.dotted_line {
+	position:absolute;
+	border-top-style: dashed;
+	border-top-width:1px;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+	height:0px;
+	margin:0;
+	padding:0;
+	width:100%;
+	z-index:0;
 }
 
 .schedule_column {
@@ -339,6 +351,7 @@ $row_height:7.6923076923%;
 	-moz-box-shadow: 5px 5px 10px 0px rgba(87,87,87,1);
 	box-shadow: 5px 5px 10px 0px rgba(87,87,87,1);
 	line-height: 1em;
+	z-index:1;
 
 	.scheduled_course_name {
 		font-size: .75em;
@@ -350,19 +363,6 @@ $row_height:7.6923076923%;
 
 }
 
-#canvas {
-	display:inline-block;
-	position:relative; 
-	/*background-color:#C2C2D6;*/
-	background: url('canvas.png');
-	background-size: contain;
-	background-repeat: repeat-x;
-	margin:0px;
-	padding:0px;
-	width:89%;
-	height:96%;
-	font-size:12px;
-}
 
 #canvas .session {
 	display:inline-block;

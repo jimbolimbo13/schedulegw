@@ -38,6 +38,6 @@ Rails.application.configure do
   #to match production
   config.serve_static_files = true
 
-  #force developer to precompile assets before running (set this to true after solving why assets don't compile in production)
-  config.assets.compile = false
+  #force developer to precompile assets before running. true = better for development, but must run rake assets:clean before deploying. 
+  config.assets.compile = true
 end
