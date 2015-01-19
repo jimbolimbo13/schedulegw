@@ -14,6 +14,8 @@ class Course < ActiveRecord::Base
 
 		if new_text == cached_text 
 			puts "CRN Classlist is the same: Skipping parse."
+			puts "cached_text is:"
+			puts cached_text
 		else 
 			puts "New Version of CRN Classlist, running scraper/parser."
 			#timestamp and save the file formerly known as crn_classlist_last.
