@@ -12,10 +12,10 @@ class Course < ActiveRecord::Base
 		new_text = crn_text.text
 		cached_text = File.exist?("#{Rails.root}/lib/scrape_texts/crn_classlist_last") ? File.open("#{Rails.root}/lib/scrape_texts/crn_classlist_last").read : nil
 
-		if new_text == cached_text 
+		if new_text == cached_text && Course.first
 			puts "CRN Classlist is the same: Skipping parse."
-			puts "cached_text is:"
-			puts cached_text
+			puts "and there is a first Course: "
+			puts Course.first
 		else 
 			puts "New Version of CRN Classlist, running scraper/parser."
 			#timestamp and save the file formerly known as crn_classlist_last.
@@ -329,7 +329,7 @@ class Course < ActiveRecord::Base
 
 		cached_text = File.exist?("#{Rails.root}/lib/scrape_texts/exam_schedule_last") ? File.open("#{Rails.root}/lib/scrape_texts/exam_schedule_last").read : nil
 
-		if new_text == cached_text 
+		if new_text == cached_text && Course.first
 			puts "Exams PDF: Same as local copy, skipping parse."
 		else
 			puts "Exam schedule PDF has changed, parsing the new one now."
