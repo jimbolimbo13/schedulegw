@@ -10,7 +10,7 @@ class Course < ActiveRecord::Base
 
 		#begin CRN_classlist with checking if changes occurred. 
 		new_text = crn_text.text
-		cached_text = File.exist?('crn_classlist_last') ? File.open("crn_classlist_last").read : nil
+		cached_text = File.exist?("#{Rails.root}/lib/scrape_texts/crn_classlist_last") ? File.open("#{Rails.root}/lib/scrape_texts/crn_classlist_last").read : nil
 
 		if new_text == cached_text 
 			puts "CRN Classlist is the same: Skipping parse."
@@ -18,10 +18,10 @@ class Course < ActiveRecord::Base
 			puts "New Version of CRN Classlist, running scraper/parser."
 			#timestamp and save the file formerly known as crn_classlist_last.
 			timestamp = Time.now().to_i
-			File.write("crn_classlist_#{timestamp}", cached_text)
+			File.write("#{Rails.root}/lib/scrape_texts/crn_classlist#{timestamp}", cached_text)
 
 			#save the new_text as crn_classlist_last
-			File.write("crn_classlist_last", new_text)
+			File.write("#{Rails.root}/lib/scrape_texts/crn_classlist_last", new_text)
 
 			sliced_text = new_text.scan(/\n.+/).map{ |s| s}
 
@@ -325,7 +325,7 @@ class Course < ActiveRecord::Base
 		#start with checking the foreign copy. exam_text is defined way above. 
 		new_text = exam_text.text
 
-		cached_text = File.exist?('exam_schedule_last') ? File.open("exam_schedule_last").read : nil
+		cached_text = File.exist?("#{Rails.root}/lib/scrape_texts/exam_schedule_last") ? File.open("#{Rails.root}/lib/scrape_texts/exam_schedule_last").read : nil
 
 		if new_text == cached_text 
 			puts "Exams PDF: Same as local copy, skipping parse."
@@ -333,10 +333,10 @@ class Course < ActiveRecord::Base
 			puts "Exam schedule PDF has changed, parsing the new one now."
 			#timestamp and save the file formerly known as exam_schedule_last.
 			timestamp = Time.now().to_i
-			File.write("exam_schedule_#{timestamp}", cached_text)
+			File.write("#{Rails.root}/lib/scrape_texts/exam_schedule_#{timestamp}", cached_text)
 
 			#save the new_text as crn_classlist_last
-			File.write("exam_schedule_last", new_text)
+			File.write("#{Rails.root}/lib/scrape_texts/exam_schedule_last", new_text)
 
 			# process:
 			# 1. discard everything before the phrase "EXAMINATION SCHEDULE" in new_text
