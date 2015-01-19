@@ -35,6 +35,9 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  #to match deployment
+  #to match production
   config.serve_static_files = true
+
+  #force developer to precompile assets before running (set this to true after solving why assets don't compile in production)
+  config.assets.compile = false
 end
