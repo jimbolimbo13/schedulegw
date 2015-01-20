@@ -395,12 +395,12 @@ function compare_courses(course1, course2) {
 		}
 		if (course1.day2_start <= course2.day2_start && course1.day2_end > course2.day2_start ||
 			course1.day2_start < course2.day2_end && course1.day2_end >= course2.day2_end) {
-			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			//console.log(course1.course_name+' and '+course2.course_name+' overlap.');
 			return 'conflict';
 		}
 		if (course2.day2_start <= course1.day2_start && course2.day2_end > course1.day2_start ||
 			course2.day2_start < course1.day2_end && course2.day2_end >= course1.day2_end) {
-			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			//console.log(course1.course_name+' and '+course2.course_name+' overlap.');
 			return 'conflict';
 		}
 	}
@@ -412,12 +412,12 @@ function compare_courses(course1, course2) {
 		}
 		if (course1.day3_start <= course2.day3_start && course1.day3_end > course2.day3_start ||
 			course1.day3_start < course2.day3_end && course1.day3_end >= course2.day3_end) {
-			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			//console.log(course1.course_name+' and '+course2.course_name+' overlap.');
 			return 'conflict';
 		}
 		if (course2.day3_start <= course1.day3_start && course2.day3_end > course1.day3_start ||
 			course2.day3_start < course1.day3_end && course2.day3_end >= course1.day3_end) {
-			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			//console.log(course1.course_name+' and '+course2.course_name+' overlap.');
 			return 'conflict';
 		}
 	}
@@ -429,12 +429,12 @@ function compare_courses(course1, course2) {
 		}
 		if (course1.day4_start <= course2.day4_start && course1.day4_end > course2.day4_start ||
 			course1.day4_start < course2.day4_end && course1.day4_end >= course2.day4_end) {
-			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			//console.log(course1.course_name+' and '+course2.course_name+' overlap.');
 			return 'conflict';
 		}
 		if (course2.day4_start <= course1.day4_start && course2.day4_end > course1.day4_start ||
 			course2.day4_start < course1.day4_end && course2.day4_end >= course1.day4_end) {
-			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			//console.log(course1.course_name+' and '+course2.course_name+' overlap.');
 			return 'conflict';
 		}
 	}
@@ -446,12 +446,12 @@ function compare_courses(course1, course2) {
 		}
 		if (course1.day5_start <= course2.day5_start && course1.day5_end > course2.day5_start ||
 			course1.day5_start < course2.day5_end && course1.day5_end >= course2.day5_end) {
-			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			//console.log(course1.course_name+' and '+course2.course_name+' overlap.');
 			return 'conflict';
 		}
 		if (course2.day5_start <= course1.day5_start && course2.day5_end > course1.day5_start ||
 			course2.day5_start < course1.day5_end && course2.day5_end >= course1.day5_end) {
-			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			//console.log(course1.course_name+' and '+course2.course_name+' overlap.');
 			return 'conflict';
 		}
 	}
@@ -463,12 +463,12 @@ function compare_courses(course1, course2) {
 		}
 		if (course1.day6_start <= course2.day6_start && course1.day6_end > course2.day6_start ||
 			course1.day6_start < course2.day6_end && course1.day6_end >= course2.day6_end) {
-			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			//console.log(course1.course_name+' and '+course2.course_name+' overlap.');
 			return 'conflict';
 		}
 		if (course2.day6_start <= course1.day6_start && course2.day6_end > course1.day6_start ||
 			course2.day6_start < course1.day6_end && course2.day6_end >= course1.day6_end) {
-			console.log(course1.course_name+' and '+course2.course_name+' overlap.');
+			//console.log(course1.course_name+' and '+course2.course_name+' overlap.');
 			return 'conflict';
 		}
 	}
@@ -480,15 +480,20 @@ function compare_courses(course1, course2) {
 }
 
 function test() {
-	//display_all_test();
+	display_all_test();
 	comparison_test();
 }
 
 function display_all_test() {
+	console.log("Testing display of every single class. This may take a long time. ")
 	var l = window.courses.length;
-	for (i=0; i<l; i++) {
-		addthisclass(window.courses[i]['crn']);
-	}
+	var i=0;
+	setInterval(function() {
+		if (i<l) {
+			addthisclass(window.courses[i]['crn']);
+			i++
+		}
+	}, 1000)
 }
 
 function comparison_test() {
