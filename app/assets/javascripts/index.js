@@ -327,39 +327,28 @@ function course_search() {
 
 //this is rough and probably can be optimized
 function check_schedule_conflicts() {
-	var l = Object.keys(window.currentschedulearray).length;
-
-	var comparisons = 0;
-
-	//clone the current array
 	var selected_courses = window.currentschedulearray;
-
-	//roughly twice as slow as it could be :/
-	//check for conflicts among the currently chosen classes. 
-	//if there's a conflict, give them striped backgrounds; if not, random color backgrounds.  
+	selected = []
 	for (var key in selected_courses) {
-	   	var first_course = selected_courses[key];
-  		for (var key2 in selected_courses) {
-  			var second_course = selected_courses[key2];
-  			if (first_course !== second_course) {
-  				if ("conflict" == compare_courses(first_course, second_course)) {
-  					mark_overlapped_on_schedule(first_course, second_course);
-  				} else {
-  					//change or correct color if no overlap. 
-  					$('.'+first_course.crn+'').css('background', random_color());
-  					$('.'+second_course.crn+'').css('background', random_color());
-  				}
-  				comparisons++;
-  			} else {
-  				//first_course and second_course are the same course
-  				//if there's only one course, reset the background color
-  				if (l === 1) {
-  					$('.'+first_course.crn+'').css('background', random_color());
-  				}
-  			}
-  		}
+		selected.push(selected_courses[key]);
 	}
-	console.log('made '+comparisons+' comparisons internally to determine currently selected classes dont overlap each other on the schedule display.');
+
+	//this makes the minimum number of comparisons :) :) :) 
+	for (i=0; i<selected.length; i++) {
+		console.log('length: '+selected.length);
+		if (selected.length < 1) {continue}
+		var course1 = selected.shift();
+		for (a=0; a<selected.length; a++) {
+			var course2 = selected[a];
+			if ('conflict' == compare_courses(course1, course2)) {
+				mark_overlapped_on_schedule(course1, course2);
+			} else {
+				//change or correct color if no overlap. 
+  				$('.'+first_course.crn+'').css('background', random_color());
+  				$('.'+second_course.crn+'').css('background', random_color());
+			}
+		}
+	}
 
 	//gray out the courses on the list that are incompatible with the classes currently chosen. 
 	unavailable_courses = [];
@@ -424,7 +413,7 @@ function compare_courses(course1, course2) {
 
 	//Weds
 	if (course1.day4_start && course2.day4_start) {
-		if (course1.day2_start == course2.day2_start) {
+		if (course1.day4_start == course2.day4_start) {
 			return 'conflict';
 		}
 		if (course1.day4_start <= course2.day4_start && course1.day4_end > course2.day4_start ||
@@ -597,9 +586,5 @@ function mark_unavailable_in_list(crn) {
 function mark_available_in_list(crn) {
 	$( '#list_'+ crn +'' ).removeClass( "unavailable_course" ).addClass( "available_course" );
 } 
-
-
-
-
 
 

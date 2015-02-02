@@ -56,6 +56,20 @@ Rails.application.configure do
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = "http://assets.example.com"
 
+  host = 'schedulegw.com'
+  config.action_mailer.asset_host = 'www.schedulegw.com'
+  config.action_mailer.default_url_options = { host: 'www.schedulegw.com'}
+  
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+   address:              'smtp.gmail.com',
+   port:                 587,
+   domain:               'http://www.meansdatabase.com',
+   user_name:            ENV['gmail_address'],
+   password:             ENV['gmail_password'],
+   authentication:       'plain',
+   enable_starttls_auto: true  }
+
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false

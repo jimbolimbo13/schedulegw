@@ -348,6 +348,10 @@ class Course < ActiveRecord::Base
 
 		end #end of exam_schedule scrape
 
+	##Notify scrape completed. 
+	@school = "George Washington University"
+ 	AdminMailer.scrape_complete(@school).deliver_now
+
 	end #end of GWU_scrape
 
 
