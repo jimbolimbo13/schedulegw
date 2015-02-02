@@ -1,3 +1,0 @@
-class CourseController < ApplicationController
-
-end
