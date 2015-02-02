@@ -1,0 +1,89 @@
+Course Form.
+<%= form_for(@course) do |f| %>
+
+<% if @course.errors.any? %>
+	<div id="error_explanation">
+	  <h2><%= pluralize(@course.errors.count, "error") %> prohibited this item from being saved:</h2>
+
+	  <ul>
+	  <% @course.errors.full_messages.each do |message| %>
+	    <li><%= message %></li>
+	  <% end %>
+	  </ul>
+	</div>
+<% end %>
+
+<div class="field">
+    <%= f.label :crn %><br>
+    <%= f.text_field :crn %>
+</div>
+
+<div class="field">
+    <%= f.label :gwid %><br>
+    <%= f.text_field :gwid %>
+</div>
+
+<div class="field">
+    <%= f.label :section %><br>
+    <%= f.text_field :section %>
+</div>
+
+<div class="field">
+    <%= f.label :course_name %><br>
+    <%= f.text_field :course_name %>
+</div>
+
+<div class="field">
+    <%= f.label :professor %><br>
+    <%= f.text_field :professor %>
+</div>
+
+<div class="field">
+    <%= f.label :final_date %><br>
+    <%= f.text_field :final_date %>
+</div>
+
+<div class="field">
+    <%= f.label :final_time %><br>
+    <%= f.text_field :final_time %>
+</div>
+
+<div class="field">
+    <%= f.label :hours %><br>
+    <%= f.text_field :hours %>
+</div>
+
+<div class="field">
+    <%= f.label :days %><br>
+    <%= f.text_field :days %>
+</div>
+
+<div class="field">
+    <%= f.label :llm_only %><br>
+    <%= f.text_field :llm_only %>
+</div>
+
+<div class="field">
+    <%= f.label :jd_only %><br>
+    <%= f.text_field :jd_only %>
+</div>
+
+<div class="field">
+    <%= f.label :course_name_2 %><br>
+    <%= f.text_field :course_name_2 %>
+</div>
+
+<div class="field">
+    <%= f.label :alt_schedule %><br>
+    <%= f.text_field :alt_schedule %>
+</div>
+
+<div class="field">
+    <%= f.label :additional_info %><br>
+    <%= f.text_field :additional_info %>
+</div>
+
+<div class="actions">
+    <%= f.submit %>
+</div>
+<% end %>
