@@ -250,7 +250,7 @@ function update_view() {
 	
 	$('#chosenclasseslist').empty();
 
-	if (typeof window.currentschedulearray != "undefined") {
+	if (typeof window.currentschedulearray !== "undefined") {
 		// console.log('updating because window.currentschedulearray is '+window.currentschedulearray);
 		//append hours counter first
 		$('#chosenclasseslist').append('<li id="hours_total"></li>');
@@ -298,13 +298,22 @@ function update_view() {
 			var html = html+ '</li>';
 			$('#chosenclasseslist').append(html);
 		});
-
-
-		//append the 'next button to the classlist'
 		
-		var html = '';
-		var html = html + '<li id="next_btn"><a onclick="next()">Next --> Get CRNs and Books</a></li>';
-		$('#chosenclasseslist').append(html);
+		if (Object.keys(window.currentschedulearray).length > 0) {
+			if ($('#login_status').val() == 'logged_in') {
+				//user is logged in
+				//append the 'next button to the classlist'
+					var html = '';
+					var html = html + '<li id="next_btn"><a href="/result">Next --> Get CRNs and Books</a></li>';
+					$('#chosenclasseslist').append(html);
+			} else {
+				//user is logged out. Encourage login
+				var html = '';
+				var html = html + '<li id="next_btn"><a href="/signin">Login</a> Using School Email To Continue</li>';
+				$('#chosenclasseslist').append(html);
+			}
+		}
+		
 		
 		//update striped classes etc. 
 		check_schedule_conflicts();
