@@ -6,6 +6,7 @@ class Course < ActiveRecord::Base
 		#URLs are all brought together here for convenience.
 		crn_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Spring2015/Documents/SP15%20CTF.pdf'
 		exam_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Fall2014/Documents/SPRING%202015%20COURSE%20AND%20EXAM%20SCHEDULE.pdf'
+		school = "GWU"
 
 
 		#begin CRN_classlist with checking if changes occurred. 
