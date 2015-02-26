@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+
+
   resources :users
   resources :courses
 
@@ -6,8 +8,12 @@ Rails.application.routes.draw do
   get '/auth/:provider/callback' => 'sessions#create'
   get '/signin' => 'sessions#new', :as => :signin
   get '/signout' => 'sessions#destroy', :as => :signout
-  get '/auth/failure' => 'sessions#failure'
+  get '/auth/failure' => 'static_pages#security'
 
+
+  #staticpages 
+  get 'security' => 'static_pages#security'
+  get 'privacy' => 'static_pages#privacy'
 
   #API
   get '/api/courses/:school', to: 'api#courses'
