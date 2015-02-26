@@ -6,7 +6,7 @@ class Course < ActiveRecord::Base
 		#URLs are all brought together here for convenience.
 		crn_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Spring2015/Documents/SP15%20CTF.pdf'
 		exam_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Fall2014/Documents/SPRING%202015%20COURSE%20AND%20EXAM%20SCHEDULE.pdf'
-		school = "GWU"
+		$school = "GWU"
 
 
 		#begin CRN_classlist with checking if changes occurred. 
@@ -244,44 +244,6 @@ class Course < ActiveRecord::Base
 
 				end
 
-				#commit to the database all globals here for this course
-				
-				# puts "CRN: '#{$crn}'"
-				# puts "$gwid: #{$gwid}" 
-				# puts "$section: #{$section}"
-				# puts "$course_name: #{$course_name}"
-				# puts "$hours: #{$hours}"
-				# puts "days: #{$days}"
-
-				# puts "day1_start: #{$day1_start}"
-				# puts "day1_end: #{$day1_end}"
-
-				# puts "day2_start: #{$day2_start}"
-				# puts "day2_end: #{$day2_end}"
-
-				# puts "day3_start: #{$day3_start}"
-				# puts "day3_end: #{$day3_end}"
-
-				# puts "day4_start: #{$day4_start}"
-				# puts "day4_end: #{$day4_end}"
-
-				# puts "day5_start: #{$day5_start}"
-				# puts "day5_end: #{$day5_end}"
-
-				# puts "day6_start: #{$day6_start}"
-				# puts "day6_end: #{$day6_end}"
-
-				# puts "day7_start: #{$day7_start}"
-				# puts "day7_end: #{$day7_end}"
-
-				# puts "llm_only #{$llm_only}"
-				# puts "jd_only #{$jd_only}"
-
-				# puts "$course_name_2: #{$course_name_2}"
-				# puts "alt schedule: #{$alt_schedule}"
-
-				# puts "additional info: '#{$additional_info}'"
-
 				course = Course.find_or_initialize_by(crn: $crn)
 					course.crn = $crn
 					course.course_name = $course_name
@@ -316,6 +278,7 @@ class Course < ActiveRecord::Base
 					course.alt_schedule = $alt_schedule
 					course.additional_info = $additional_info
 					course.professor = $professor
+					course.school = $school
 
 				course.save! unless (course.manual_lock == true) 
 
@@ -350,8 +313,8 @@ class Course < ActiveRecord::Base
 		end #end of exam_schedule scrape
 
 	##Notify scrape completed. 
-	@school = "George Washington University"
- 	AdminMailer.scrape_complete(@school).deliver_now
+
+ 	AdminMailer.scrape_complete($school).deliver_now
 
 	end #end of GWU_scrape
 

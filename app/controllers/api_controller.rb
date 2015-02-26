@@ -1,6 +1,7 @@
 class ApiController < ApplicationController
 	def courses
-		@courses = Course.all
+		@school = current_user.school.name
+		@courses = Course.all.where(school: @school)
 
 		respond_to do |format|
 			format.json { render :json => @courses }
@@ -8,8 +9,14 @@ class ApiController < ApplicationController
 		end
 	end
 
-	private 
-		def params 
-			
+	def whoami
+		if current_user
+			respond_to do |format|
+				format.json {render :json => current_user}
+			end
 		end
+	end
+
+	private 
+		
 end

@@ -12,7 +12,7 @@ $( document ).ready(function() {
 	window.currentschedulearray = {}; //set as an obj not an array 
 	
 	//populate courses available
-	populate_course_list();
+	load_courses();
 
 	//This next line only works in Chrome which is bullshit because it's amazing and needs 
 	//to work in Safari too. Safari sucks.
@@ -51,22 +51,22 @@ function render_course_listing(course) {
 	return html 
 }
 
+function load_courses() {
+	$.get('/api/courses/courses.json', function(courses){
+		window.courses = courses
+		populate_course_list();	
+	})
+}
+
+
 //fills classlisttarget with all of the courses.
 function populate_course_list() {
-	$.get('/api/courses.json', function(courses){
-			if (courses !=="") {
-				window.courses = courses;
-				$('#classlisttarget').empty();
-
-				$.each(courses, function(index, course) {
-					html = render_course_listing(course);
-
-					$('#classlisttarget').append(html);
-				})
-			} else {
-				$('#classlisttarget').append("No Classes Loaded. Something has gone terribly wrong. Email grantmnelsn@gmail.com ASAP.");
-			}
+	$('#classlisttarget').empty();
+	$.each(window.courses, function(index, course) {
+		html = render_course_listing(course);
+		$('#classlisttarget').append(html);
 	})
+
 }
 
 //shows/hides courses available based on search input 

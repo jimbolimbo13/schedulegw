@@ -14,12 +14,14 @@
         </div>
       </div>
     </div>
-    <ul class="nav navbar-nav navbar-right">
-      <% if user_signed_in? %>
-        <li><%= link_to 'Sign out', signout_path %></li>
-      <% else %>
-        <li><%= link_to 'Sign in with Google', signin_path %></li>
-      <% end %>
+    <div class="nav navbar-nav navbar-right">
+      <ul class="nav navbar-nav navbar-right">
+        <% if user_signed_in? %>
+          <li><%= link_to "Verified #{current_user.school.name} Student", signout_path %></li>
+        <% else %>
+          <li><%= link_to 'Sign in with Google', signin_path %></li>
+        <% end %>
+      </ul>
       <ul class="nav navbar-nav navbar-right">
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">School Links<span class="caret"></span></a>
