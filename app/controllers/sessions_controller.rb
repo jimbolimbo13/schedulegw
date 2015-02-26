@@ -20,7 +20,7 @@ class SessionsController < ApplicationController
 
   def failure
     #if user cancels 
-    redirect_to root_url, :alert => "Authentication error: #{params[:message].humanize}"
+    redirect_to security_path
   end
 
 end
