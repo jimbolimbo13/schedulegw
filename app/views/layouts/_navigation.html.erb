@@ -17,9 +17,10 @@
     <div class="nav navbar-nav navbar-right">
       <ul class="nav navbar-nav navbar-right">
         <% if user_signed_in? %>
-          <li><%= link_to "Verified #{current_user.school.name} Student", signout_path %></li>
+          <li> <%= link_to "Verified #{current_user.school.name} Student", '#' %> </li>
+          <li><%= link_to "Change User", signout_path %></li>
         <% else %>
-          <li><%= link_to 'Sign in with Google', signin_path %></li>
+          <li><%= link_to 'Sign in', signin_path %></li>
         <% end %>
       </ul>
       <ul class="nav navbar-nav navbar-right">
