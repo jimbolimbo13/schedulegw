@@ -8,7 +8,7 @@ class VisitorsController < ApplicationController
 	end
 
 	def check_school
-		redirect_to sessionsfailure_path if current_user.school.name == 'none'
+		redirect_to security_path if current_user.school.name == 'none'
 	end
 
 end
