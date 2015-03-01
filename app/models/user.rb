@@ -2,8 +2,6 @@ class User < ActiveRecord::Base
 	belongs_to :school
 	#has_many :schedules
 
-
-
   def self.create_with_omniauth(auth)
 	    create! do |user|
 	      	user.provider = auth['provider']
