@@ -334,22 +334,36 @@ function check_schedule_conflicts() {
 		selected.push(selected_courses[key]);
 	}
 
+	conflicted_courses = [];
+	unconflicted_courses = [];
+
 	//this makes the minimum number of comparisons :) :) :) 
 	for (i=0; i<selected.length; i++) {
 		console.log('length: '+selected.length);
-		if (selected.length < 1) {continue}
+		if (selected.length < 1) {
+			unconflicted_courses.push(course1);
+			continue;
+		}
 		var course1 = selected.shift();
 		for (a=0; a<selected.length; a++) {
 			var course2 = selected[a];
 			if ('conflict' == compare_courses(course1, course2)) {
-				mark_overlapped_on_schedule(course1, course2);
+				conflicted_courses.push(course1);
+				conflicted_courses.push(course2);
 			} else {
-				//change or correct color if no overlap. 
-  				$('.'+first_course.crn+'').css('background', random_color());
-  				$('.'+second_course.crn+'').css('background', random_color());
+				unconflicted_courses.push(course1);
 			}
-		}
+		}	
 	}
+
+	//make the overlapping courses white/red slashed in color 
+	$.each(conflicted_courses, function (index, conflicted_course) {
+		mark_overlapped_on_schedule(conflicted_course);
+	})
+
+	$.each(unconflicted_courses, function (index, unconflicted_course) {
+		mark_non_overlapped_on_schedule(unconflicted_course);
+	})
 
 	//gray out the courses on the list that are incompatible with the classes currently chosen. 
 	unavailable_courses = [];
@@ -575,9 +589,13 @@ function comparison_test() {
 
 }
 
-function mark_overlapped_on_schedule(course1, course2) {
+function mark_overlapped_on_schedule(course1) {
 	$('.'+course1.crn+'').css({background: 'repeating-linear-gradient(45deg, #D63518, #D63518 10px, #D3C6AB 10px, #D3C6AB 20px)'});
-	$('.'+course2.crn+'').css({background: 'repeating-linear-gradient(45deg, #D63518, #D63518 10px, #D3C6AB 10px, #D3C6AB 20px)'});
+	//$('.'+course2.crn+'').css({background: 'repeating-linear-gradient(45deg, #D63518, #D63518 10px, #D3C6AB 10px, #D3C6AB 20px)'});
+}
+
+function mark_non_overlapped_on_schedule(course) {
+	$('.'+course.crn+'').css({background: random_color()});
 }
 
 function mark_unavailable_in_list(crn) {
