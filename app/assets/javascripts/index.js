@@ -51,6 +51,7 @@ function render_course_listing(course) {
 	return html 
 }
 
+
 function load_courses() {
 	$.get('/api/courses/courses.json', function(courses){
 		window.courses = courses
