@@ -26,7 +26,7 @@ class SchedulesController < ApplicationController
     @schedule = Schedule.find(params[:id])
     
     if @schedule.update(update_subscription_params)
-    	flash[:success] = "Updated."
+    	flash[:notice] = "Updated."
     	redirect_to schedules_path
     end
 
@@ -36,11 +36,11 @@ class SchedulesController < ApplicationController
   private 
 
   	def schedule_params
-			params.permit(:courses, :course_ids => [])
+		params.permit(:courses, :course_ids => [])
 	end
 
 	def update_subscription_params 
-		params.require(:schedule).permit(:course_ids => [])
+		params.require(:schedule).permit(:name, :course_ids => [])
 	end
 
 	def require_permission

@@ -12,7 +12,7 @@ class SubscriptionsController < ApplicationController
     @user.subscribed_ids = @course_ids
     @user.save!
 
-    flash[:notice] = "Success"
+    flash[:notice] = "Updated!"
     redirect_to subscriptions_path
   end
 
@@ -26,16 +26,14 @@ class SubscriptionsController < ApplicationController
   end
 
   def index
-    @schedules = current_user.schedules.all ? current_user.schedules.all : nil
+    @user = current_user
     @subscriptions = current_user.subscribed_ids ? current_user.subscribed_ids : []
 
-    @courses = current_user.schedules.first.courses ? current_user.schedules.first.courses : nil
+    @allcourses = @user.schedules.first.courses 
 
-    # @schedules.each do |schedule|
-    #   @courses << schedule.courses
-    # end
-
-
+    @user.schedules.each do |this_s|
+      @allcourses = @allcourses + this_s.courses
+    end
 
   end
 

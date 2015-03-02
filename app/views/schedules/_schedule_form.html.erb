@@ -17,8 +17,10 @@
 		    </div>
 		  <% end %>
 
+		<%= f.text_field :name, {placeholder: 'Schedule Name'} %>
+
 		Classes in this schedule:
-		<div class="checkbox">
+		<div class="inline-checkbox">
 		    <%= hidden_field_tag "schedule[course_ids][]", nil %>
 		    <% @schedule.courses.each do |course| %>
 		      <%= check_box_tag "schedule[course_ids][]", course.id, @schedule.course_ids.include?(course.id), id: dom_id(course) %> 
