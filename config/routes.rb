@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
 
-
   resources :users
   resources :courses
+  resources :schedules
 
   root 'visitors#index'
   get '/auth/:provider/callback' => 'sessions#create'
@@ -10,6 +10,21 @@ Rails.application.routes.draw do
   get '/signout' => 'sessions#destroy', :as => :signout
   get '/auth/failure' => 'static_pages#security'
 
+
+  #subscriptions stuff
+  get 'subscriptions' => 'subscriptions#index'
+  post 'subscriptions' => 'subscriptions#create'
+  
+  get 'subscriptions/create'
+  get 'subscriptions/new'
+  get 'subscriptions/update'
+  get 'subscriptions/show'
+
+  #next pages 
+  get '/schedules' => 'schedules#index'
+  get '/schedules/create' => 'schedules#create'
+  get '/schedules/:id/edit' => 'schedules#edit'
+  get '/schedules/:id/show' => 'schedules#show'
 
   #staticpages 
   get 'security' => 'static_pages#security'

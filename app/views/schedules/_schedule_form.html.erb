@@ -1,0 +1,35 @@
+<div class="container">
+	<div class="row">
+		<div class="col-md-1">
+			
+		</div>
+		<div class="col-md-11">
+			<%= form_for(@schedule) do |f| %>
+			<% if @schedule.errors.any? %>
+		    <div id="error_explanation">
+		      <h2><%= pluralize(@schedule.errors.count, "error") %> prohibited this schedule from being saved:</h2>
+
+		      <ul>
+		      <% @schedule.errors.full_messages.each do |message| %>
+		        <li><%= message %></li>
+		      <% end %>
+		      </ul>
+		    </div>
+		  <% end %>
+
+		Classes in this schedule:
+		<div class="checkbox">
+		    <%= hidden_field_tag "schedule[course_ids][]", nil %>
+		    <% @schedule.courses.each do |course| %>
+		      <%= check_box_tag "schedule[course_ids][]", course.id, @schedule.course_ids.include?(course.id), id: dom_id(course) %> 
+		      <%= label_tag dom_id(course), course.course_name %><br>
+		    <% end %> 
+		</div>
+
+		<div class="actions">
+		    <%= f.submit %>
+		</div>
+		<% end %>
+		</div>
+	</div>
+</div>

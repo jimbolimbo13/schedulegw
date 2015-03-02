@@ -286,6 +286,7 @@ function update_view() {
 				$('#hours_total').html(html);
 			}
 
+		window.courses_exist = false;
 		$.each(window.currentschedulearray, function(index, course){
 			var id = index;
 			// console.log('index: '+index);
@@ -298,14 +299,17 @@ function update_view() {
 			var html = html+ '<span class="chosen_hours"> , '+course.hours+' hours</span>';
 			var html = html+ '</li>';
 			$('#chosenclasseslist').append(html);
+			window.courses_exist = true;
 		});
 
 
 		//append the 'next button to the classlist'
+		if (window.courses_exist) {
+			var html = '';
+			var html = html + '<li id="next_btn" class="btn btn-lg btn-primary" onclick="next()">Next</li>';
+			$('#chosenclasseslist').append(html);
+		}
 		
-		var html = '';
-		var html = html + '<li id="next_btn"><a onclick="next()">Next --> Get CRNs and Books</a></li>';
-		$('#chosenclasseslist').append(html);
 		
 		//update striped classes etc. 
 		check_schedule_conflicts();
@@ -482,6 +486,35 @@ function compare_courses(course1, course2) {
 
 	return true; 
 }
+
+
+
+//triggered to go to next page
+function next() {
+	window.next_courses = '';
+	count = 0;
+	$.each(window.currentschedulearray, function(index, course){
+		if (count > 0) {
+			window.next_courses = window.next_courses + ',' + course.crn
+		} else {
+			window.next_courses = window.next_courses + course.crn
+		}
+		count++
+	});
+
+	var url_frag = 'schedules?courses='+next_courses;
+	target = document.URL+url_frag;
+
+	$.post(target, function(result){
+		
+	})
+
+	window.location = '/schedules';
+}
+
+
+
+
 
 function test() {
 	display_all_test();
