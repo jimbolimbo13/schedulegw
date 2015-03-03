@@ -3,8 +3,7 @@
 // If you can read this, we should be friends. Especially if you like Ruby
 // 
 
-
-$( document ).on('page:load', function() {
+$( document ).on('page:change', function() {
 	//load courses.
 	window.courses = null;
 	
