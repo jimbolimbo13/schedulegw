@@ -16,4 +16,4 @@
 //= require bootstrap-sprockets
 //= require_tree .
 //= require 'google_analytics'
-//= require 'index.js'
+//= require 'index'
