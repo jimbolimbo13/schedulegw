@@ -4,7 +4,7 @@
 // 
 
 
-$( document ).on('ready page:load', function() {
+$( document ).on('page:load', function() {
 	//load courses.
 	window.courses = null;
 	
