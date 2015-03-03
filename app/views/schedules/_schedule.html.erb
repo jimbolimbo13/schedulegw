@@ -1,0 +1,13 @@
+<div class="col-md-12 schedule">
+	<h2><%= schedule.name.to_s %></h2>
+	<% schedule.courses.each do |course| %>
+		<div class="col-md-12 schedule_line_item">
+			<span class="course_name"><%= course.crn %> <%= course.gwid %>-<%= course.section %> <%= course.course_name %></span>, <span class="prof_name"><%= course.professor %></span>
+			<% if course.final_date %>
+				<%= course.final_date %> at <%= course.final_time %>
+			<% end %>   
+		</div>
+	<% end %>
+	<%= link_to 'Edit This Schedule', edit_schedule_path(schedule) %>
+	Created <%= time_ago_in_words(schedule.created_at)%> ago.
+</div>

@@ -1,5 +1,28 @@
 class Course < ActiveRecord::Base
+	has_many :schedules
+	has_many :users, through: :schedules
+
+	has_many :subscriptions
+	has_many :users, through: :subscriptions
+
+
+
 	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	#scrapers 
 	def self.GWU_scrape
 		#Compare the School's PDF with the one we have cached most recently. If they match, skip this step. If they don't match, run it. 
 		#All of the PDFs are scraped at once here at the top. 

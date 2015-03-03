@@ -1,0 +1,24 @@
+// Place all the styles related to the schedules controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.schedule {
+	background-color: white;
+	border: solid 2px black;
+	border-radius:2px;
+	margin-bottom:20px;
+
+	.schedule_line_item {
+	
+	}
+
+	.course_name {
+		font-size:1.1em;
+		font-weight: bold;
+	}
+
+	.prof_name {
+		font-decoration: italic;
+	}
+}
