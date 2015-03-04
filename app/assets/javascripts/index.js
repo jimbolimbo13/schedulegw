@@ -623,7 +623,7 @@ function comparison_test() {
 }
 
 function mark_overlapped_on_schedule(course1) {
-	$('.'+course1.crn+'').css({background: 'repeating-linear-gradient(45deg, #D63518, #D63518 10px, #D3C6AB 10px, #D3C6AB 20px)'});
+	$('.'+course1.crn+'').css({background: 'repeating-linear-gradient(45deg, #D63518, #D63518 10px, #FFF 10px, #FFF 20px)'});
 	//$('.'+course2.crn+'').css({background: 'repeating-linear-gradient(45deg, #D63518, #D63518 10px, #D3C6AB 10px, #D3C6AB 20px)'});
 }
 

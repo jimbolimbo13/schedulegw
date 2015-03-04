@@ -27,8 +27,8 @@ class Course < ActiveRecord::Base
 		#Compare the School's PDF with the one we have cached most recently. If they match, skip this step. If they don't match, run it. 
 		#All of the PDFs are scraped at once here at the top. 
 		#URLs are all brought together here for convenience.
-		crn_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Spring2015/Documents/SP15%20CTF.pdf'
-		exam_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Fall2014/Documents/SPRING%202015%20COURSE%20AND%20EXAM%20SCHEDULE.pdf'
+		crn_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Fall2015/Documents/Fall%202015%20Schedule%20of%20Classes%20with%20CRNs.pdf'
+		exam_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Fall2015/Documents/Fall%202015%20Schedule%20with%20Exams.pdf'
 		$school = "GWU"
 
 
@@ -39,7 +39,7 @@ class Course < ActiveRecord::Base
 		if new_text == cached_text && Course.first
 			puts "CRN Classlist is the same: Skipping parse."
 			puts "and there is a first Course: "
-			puts Course.first
+			puts Course.first.course_name
 		else 
 			puts "New Version of CRN Classlist, running scraper/parser."
 			#timestamp and save the file formerly known as crn_classlist_last.

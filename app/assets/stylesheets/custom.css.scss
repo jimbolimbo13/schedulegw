@@ -50,6 +50,8 @@ ul {
 	#chosenclasseslist {	
 		list-style-type: none;
 		display:inline-block;
+		overflow-x:hidden;
+		width:97%;
 		img {
 			display:inline-block;
 		}
