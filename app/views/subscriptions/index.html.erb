@@ -8,19 +8,28 @@
 			<p>You'll know when someone posts a used book that matches these courses.</p>
 		</div>
 		<div class="col-md-8">
-			<%= form_tag("/subscriptions", method: "post") do %>
-			<%= hidden_field_tag "subscriptions[course_ids][]", nil %>
-				<% @allcourses.each do |course| %> 
-					<div class="row">
-						<div class="col-md-8">
-							<div class="inline-checkbox">
-									<%= check_box_tag "subscriptions[course_ids][]", course.id, @subscriptions.include?(course.id), id: dom_id(course) %> 
-				      				<%= label_tag dom_id(course), course.course_name %> <%=  course.professor.to_s %>
+			<% if @allcourses %>
+				<%= form_tag("/subscriptions", method: "post") do %>
+				<%= hidden_field_tag "subscriptions[course_ids][]", nil %>
+					<% @allcourses.each do |course| %> 
+						<div class="row">
+							<div class="col-md-8">
+								<div class="inline-checkbox">
+										<%= check_box_tag "subscriptions[course_ids][]", course.id, @subscriptions.include?(course.id), id: dom_id(course) %> 
+					      				<%= label_tag dom_id(course), course.course_name %> <%=  course.professor.to_s %>
+								</div>
 							</div>
 						</div>
-					</div>
+					<% end %>
+				<%= submit_tag("Update") %>
 				<% end %>
-			<%= submit_tag("Update") %>
+
+			<% else %>
+				<div class="row">
+					<div class="col-md-8">
+						<p>No Schedules Yet</p>
+					</div>
+				</div>	
 			<% end %>
 		</div>
 	</div>
