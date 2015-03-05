@@ -156,3 +156,12 @@
 		</div>
 	</div>
 </div>
+<% if @courses %>
+	<script> 
+	$( document ).on('page:change', function() {
+		<% @courses.each do |course| %>
+			addthisclass(course.to_i)
+		<% end %>
+	})
+	</script>
+<% end %>

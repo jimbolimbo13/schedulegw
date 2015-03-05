@@ -2,6 +2,10 @@ class VisitorsController < ApplicationController
 	before_action :check_login
 	before_action :check_school
 
+	def index
+		@courses = params[:courses]
+	end
+
 
 	def check_login
 		redirect_to signin_path unless current_user
