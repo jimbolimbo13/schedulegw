@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150305013200) do
+ActiveRecord::Schema.define(version: 20150304214736) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,13 +44,13 @@ ActiveRecord::Schema.define(version: 20150305013200) do
     t.text     "additional_info"
     t.boolean  "manual_lock"
     t.string   "professor"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "final_date"
+    t.integer  "prof_id"
     t.string   "final_time"
+    t.string   "final_date"
     t.string   "school"
     t.integer  "schedule_id"
-    t.integer  "prof_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "courses", ["crn"], name: "index_courses_on_crn", unique: true, using: :btree
@@ -67,9 +67,9 @@ ActiveRecord::Schema.define(version: 20150305013200) do
   create_table "schedules", force: :cascade do |t|
     t.string   "name"
     t.integer  "user_id"
+    t.integer  "course_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer  "course_id"
   end
 
   create_table "schools", force: :cascade do |t|
@@ -84,13 +84,13 @@ ActiveRecord::Schema.define(version: 20150305013200) do
   create_table "users", force: :cascade do |t|
     t.string   "name"
     t.string   "provider"
+    t.string   "email"
     t.string   "uid"
     t.text     "subscribed_ids"
+    t.boolean  "admin",          default: false
+    t.integer  "school_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "admin",          default: false
-    t.string   "email"
-    t.integer  "school_id"
   end
 
 end
