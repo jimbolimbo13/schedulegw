@@ -510,10 +510,11 @@ function next() {
 	target = document.URL+url_frag;
 
 	$.post(target, function(result){
-		
+		console.log('adding courses post call returned: ' + result);
+		window.location = '/schedules';
 	})
 
-	window.location = '/schedules';
+	
 }
 
 

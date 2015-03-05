@@ -156,12 +156,15 @@
 		</div>
 	</div>
 </div>
-<% if @courses %>
+<% if @schedule %>
 	<script> 
-	$( document ).on('page:change', function() {
-		<% @courses.each do |course| %>
-			addthisclass(course.to_i)
-		<% end %>
-	})
+	 $( document ).on('page:change', function() {
+	 	setTimeout(function(){  
+			<% @schedule.courses.each do |course| %>
+				console.log(<%= course.crn.to_s %>);
+				addthisclass(<%= course.crn.to_s %>);
+			<% end %>
+		}, 500);
+	 })
 	</script>
 <% end %>

@@ -4,11 +4,7 @@
 			<%= link_to schedule.name.to_s, edit_schedule_path(schedule) %>
 		<% else %>
 			<%= link_to 'Unnamed', edit_schedule_path(schedule) %>
-		<% end %>
-		<% @course_crns = [] %>
-		<% schedule.courses.each do |course| %>
-			<% @course_crns << course.crn %>
-		<% end %>
+		<% end %>		
 	</h2>
 
 
@@ -20,10 +16,9 @@
 			<% end %>   
 		</div>
 	<% end %>
-	<%= link_to "View", 
-            :controller => "visitors", 
-            :action => "index", 
-            :courses => @course_crns %>
+
+  <%= link_to "View", root_url( :schedule => schedule ) %>
+
 	Created <%= time_ago_in_words(schedule.created_at)%> ago.
 	<%= link_to 'Delete', schedule, method: :delete, data: { confirm: 'Are you sure?' } %>
 </div>

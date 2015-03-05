@@ -3,7 +3,10 @@ class VisitorsController < ApplicationController
 	before_action :check_school
 
 	def index
-		@courses = params[:courses]
+		if params[:schedule] 
+			@schedule = current_user.schedules.find_by(id: params[:schedule].to_i)
+			flash[:notice] = "Loading Schedule"
+		end
 	end
 
 

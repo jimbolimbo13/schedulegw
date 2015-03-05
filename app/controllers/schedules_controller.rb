@@ -1,7 +1,7 @@
 class SchedulesController < ApplicationController
 	
 	before_action :check_login
-  	before_action :require_permission, only: [:edit, :update, :destroy]
+  before_action :require_permission, only: [:edit, :update, :destroy]
 
 
   def index
@@ -12,7 +12,8 @@ class SchedulesController < ApplicationController
   def create
   	#build new schedule, send array of course unique by school ids to users build_schedule
   	current_user.build_schedule(schedule_params[:courses].split(",").map(&:to_i)) 
-  	redirect_to schedules_path
+  	render json: {message: 'Dope'}, status: 200
+
   end
 
   def edit
