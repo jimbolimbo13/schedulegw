@@ -23,7 +23,7 @@ class CoursesController < ApplicationController
 		@course = Course.find(params[:id])
 		respond_to do |format|
 	      if @course.update(course_params)
-	        flash[:success] = "Successfully updated this item."
+	        flash[:notice] = "Successfully updated this item."
 	        format.html { redirect_to '/courses' }
 	        format.json { render :index, status: :ok, location: @course }
 	      else
@@ -52,6 +52,9 @@ class CoursesController < ApplicationController
 											:course_name_2,
 											:alt_schedule,
 											:additional_info,
+											:final_date,
+											:final_time,
+											:manual_lock,
 											)
 		end
 

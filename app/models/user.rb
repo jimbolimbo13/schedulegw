@@ -18,6 +18,9 @@ class User < ActiveRecord::Base
 		      	email = auth['info']['email']
   				stub = email.slice(/@.+/)
   				@school = School.find_by(email_stub: stub) ? School.find_by(email_stub: stub) : School.find_by(name: 'none')
+  				if email == 'gmnelson@law.gwu.edu'
+  					user.admin = true
+  				end
 		      	user.school = @school
 		      	user.email = email
 		    end

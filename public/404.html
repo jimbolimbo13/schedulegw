@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>The page you were looking for doesn't exist (404)</title>
+  <title>Not The Droids You're Looking For (404)</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
   body {
@@ -58,10 +58,13 @@
   <!-- This file lives in public/404.html -->
   <div class="dialog">
     <div>
-      <h1>The page you were looking for doesn't exist.</h1>
-      <p>You may have mistyped the address or the page may have moved.</p>
+      <h1>Oh snap!</h1>
+      <p>That site went WMD - it doesn't exist. Or it did, but it doesn't anymore.</p>
+      <p>Sending you to the homepage in 3 seconds.</p>
     </div>
-    <p>If you are the application owner check the logs for more information.</p>
   </div>
+  <script>
+    setTimeout(function(){ window.location = '/' }, 4000);
+  </script>
 </body>
 </html>

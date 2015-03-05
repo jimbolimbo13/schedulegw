@@ -28,6 +28,11 @@ class CreateCourses < ActiveRecord::Migration
     	t.text :additional_info
     	t.boolean :manual_lock
         t.string :professor
+        t.integer :prof_id
+        t.string :final_time
+        t.string :final_date
+        t.string :school
+        t.integer :schedule_id
       	t.timestamps
     end
     add_index(:courses, :crn, unique: true)

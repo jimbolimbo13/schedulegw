@@ -2,6 +2,11 @@
 CSS FOR MAIN VIEW
 */
 
+.navbar-default {
+	border-top: 4px solid #00007C;
+	border-bottom: 4px solid #00007C;
+}
+
 img { 
 	border-radius:3px;
 }
@@ -50,6 +55,8 @@ ul {
 	#chosenclasseslist {	
 		list-style-type: none;
 		display:inline-block;
+		overflow-x:hidden;
+		width:97%;
 		img {
 			display:inline-block;
 		}

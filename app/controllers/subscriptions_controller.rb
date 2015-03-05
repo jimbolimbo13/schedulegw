@@ -29,11 +29,14 @@ class SubscriptionsController < ApplicationController
     @user = current_user
     @subscriptions = current_user.subscribed_ids ? current_user.subscribed_ids : []
 
-    @allcourses = @user.schedules.first.courses 
+    if @user.schedules.count > 0
+      @allcourses = @user.schedules.first.courses 
 
-    @user.schedules.each do |this_s|
-      @allcourses = @allcourses + this_s.courses
+      @user.schedules.each do |this_s|
+        @allcourses = @allcourses + this_s.courses unless this_s.courses == @allcourses
+      end
     end
+   
 
   end
 
