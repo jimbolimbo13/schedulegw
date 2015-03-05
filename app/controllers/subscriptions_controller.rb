@@ -32,7 +32,7 @@ class SubscriptionsController < ApplicationController
     @allcourses = @user.schedules.first.courses 
 
     @user.schedules.each do |this_s|
-      @allcourses = @allcourses + this_s.courses
+      @allcourses = @allcourses + this_s.courses unless this_s.courses == @allcourses
     end
 
   end
