@@ -9,6 +9,11 @@ class CoursesController < ApplicationController
 	#GET /courses
 	def index
 		@courses = Course.all
+		@stats = [];
+		@stats.push( {name: 'Users', value: User.count.to_i} );
+		@stats.push( {name: 'Schedules', value: Schedule.count.to_i} )
+		
+
 	end
 
 	def show 

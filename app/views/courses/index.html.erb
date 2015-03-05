@@ -1,7 +1,37 @@
-<h2>All Courses</h2>
-<div class="col-md-12">
-	<ol class="items">
-	  <%= render @courses %>
-	</ol>
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+      <h2>All Courses (<%= @courses.count %>)</h2>
+    </div>
+    <div class="col-md-7">
+      <h2>Stats</h2>
+    </div>
+    <div class="col-md-1">
+      <h2>Links</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <ol class="items">
+        <%= render @courses %>
+      </ol>
+    </div>
+    <div class="col-md-7">
+      <ul>
+        <% @stats.each do |stat| %>
+          <li><%= stat[:name] %> : <%= stat[:value] %></li>
+        <% end %>
+      </ul>
+    </div>
+    <div class="col-md-1">
+      <ul>
+        <li><%= link_to 'Amazon Associates', 'https://affiliate-program.amazon.com/gp/associates/network/main.html' %></li>
+        <li><%= link_to 'Google Feedback', 'https://docs.google.com/spreadsheets/d/1gqJ2UqTa7dE24SVayQbg4IJG0rtYT42B_V2cOtHMWyM/edit#gid=1060046951' %></li>
+        <li><%= link_to 'Analytics', 'https://www.google.com/analytics/web/?authuser=0#realtime/rt-overview/a55495147w88688654p92122382/' %></li>
+      </ul>
+    </div>
+  </div>
 </div>
+
+
 
