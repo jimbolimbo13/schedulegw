@@ -267,6 +267,9 @@ class Course < ActiveRecord::Base
 
 				end
 
+				## match the professor to Professorlist. Lastname
+				$prof_id = Professorlist.find_by(last_name: $professor) ? Professorlist.find_by(last_name: $professor).prof_id : 0
+
 				course = Course.find_or_initialize_by(crn: $crn)
 					course.crn = $crn
 					course.course_name = $course_name
@@ -301,6 +304,7 @@ class Course < ActiveRecord::Base
 					course.alt_schedule = $alt_schedule
 					course.additional_info = $additional_info
 					course.professor = $professor
+					course.prof_id = $prof_id
 					course.school = $school
 
 				course.save! unless (course.manual_lock == true) 

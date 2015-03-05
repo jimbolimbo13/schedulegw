@@ -29,7 +29,7 @@ class SubscriptionsController < ApplicationController
     @user = current_user
     @subscriptions = current_user.subscribed_ids ? current_user.subscribed_ids : []
 
-    @allcourses = @user.schedules.first.courses 
+    @allcourses = @user.schedules.first.courses ? @user.schedules.first.courses : nil
 
     @user.schedules.each do |this_s|
       @allcourses = @allcourses + this_s.courses unless this_s.courses == @allcourses

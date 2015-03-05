@@ -10,6 +10,10 @@ $( document ).on('ready page:load', function() {
 	
 	//no currently selected courses
 	window.currentschedulearray = {}; //set as an obj not an array 
+
+	//sessions/courses on the schedule that overlap / don't overlap
+	window.conflicted_courses = [];
+	window.unconflicted_courses = [];
 	
 	//populate courses available
 	load_courses();
@@ -46,7 +50,7 @@ function render_course_listing(course) {
 	var html = '';
 	var html = html + '<li style="overflow:hidden;" class="available_course" id="list_'+course.crn+'">';
 	var html = html + '<span class="fa fa-plus-square fa-2x" style="color:green;" alt="'+course.additional_info+'" id='+course.crn+'></span>';
-	var html = html + '<span class="classname">'+course.gwid+'-'+course.section+' '+course.course_name+'</span><span class="profname">'+course.professor+'</span><span class="ratings">soon</span>'; //<span class="ratings"><a href="https://my.law.gwu.edu/Evaluations/page%20library/ByFaculty.aspx?Source=%2fEvaluations%2fdefault.aspx&IID=13802" target="_blank"><button class="GWU_btn"> GWU </button></a></span>';
+	var html = html + '<span class="classname">'+course.gwid+'-'+course.section+' '+course.course_name+'</span><span class="profname">'+course.professor+'</span><span class="ratings"><a href="https://my.law.gwu.edu/Evaluations/page%20library/ByFaculty.aspx?Source=%2fEvaluations%2fdefault.aspx&IID='+course.prof_id+'" target="_blank"><button class="GWU_btn"> GWU </button></a></span>';
 	var html = html + '</li>';
 	return html 
 }
@@ -291,12 +295,15 @@ function update_view() {
 			var id = index;
 			// console.log('index: '+index);
 			// console.info(course);
+			if ( (course.final_date == null) || (course.final_time == null) ) { course.final_date = 'unknown'; course.final_time = ''; }
 			var html = '';
 			var html = html+ '<li>';
 			var html = html+ '<span class="fa fa-remove fa-2x" style="color:red;" onclick=removecourse('+course.crn+')></span>';
 			var html = html+ '<span class="classname">'+course.course_name+', </span>';
 			var html = html+ '<span class="profname"> '+course.professor+'</span>';
-			var html = html+ '<span class="chosen_hours"> , '+course.hours+' hours</span>';
+			var html = html+ '<span class="chosen_hours"> , '+course.hours+' hours </span>';
+			var html = html+ '<span class="chosen_hours"> Final: '+course.final_date+'</span>';
+			var html = html+ ' <span class="chosen_hours">'+course.final_time+'</span>';
 			var html = html+ '</li>';
 			$('#chosenclasseslist').append(html);
 			window.courses_exist = true;
@@ -338,36 +345,34 @@ function check_schedule_conflicts() {
 		selected.push(selected_courses[key]);
 	}
 
-	conflicted_courses = [];
-	unconflicted_courses = [];
+	// conflicted_courses = window.conflicted_courses;
+	
 
 	//this makes the minimum number of comparisons :) :) :) 
 	for (i=0; i<selected.length; i++) {
 		console.log('length: '+selected.length);
-		if (selected.length < 1) {
-			unconflicted_courses.push(course1);
+		if (selected.length < 2) {
+			window.conflicted_courses = [];
+			$.each(selected_courses, function (index, unconflicted_course) {
+				mark_non_overlapped_on_schedule(unconflicted_course);
+			})
 			continue;
 		}
 		var course1 = selected.shift();
 		for (a=0; a<selected.length; a++) {
 			var course2 = selected[a];
 			if ('conflict' == compare_courses(course1, course2)) {
-				conflicted_courses.push(course1);
-				conflicted_courses.push(course2);
-			} else {
-				unconflicted_courses.push(course1);
-			}
+				window.conflicted_courses.push(course1);
+				window.conflicted_courses.push(course2);
+			} 
 		}	
 	}
 
 	//make the overlapping courses white/red slashed in color 
-	$.each(conflicted_courses, function (index, conflicted_course) {
+	$.each(window.conflicted_courses, function (index, conflicted_course) {
 		mark_overlapped_on_schedule(conflicted_course);
 	})
 
-	$.each(unconflicted_courses, function (index, unconflicted_course) {
-		mark_non_overlapped_on_schedule(unconflicted_course);
-	})
 
 	//gray out the courses on the list that are incompatible with the classes currently chosen. 
 	unavailable_courses = [];
@@ -530,7 +535,7 @@ function display_all_test() {
 			addthisclass(window.courses[i]['crn']);
 			i++
 		}
-	}, 1000)
+	}, 500)
 }
 
 function comparison_test() {
