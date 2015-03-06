@@ -1,24 +1,3 @@
-<% day_options = [
-    ['None' ,'unknown'], 
-    ['12/3', '12/3'], 
-    ['12/4', '12/4'],
-    ['12/7', '12/7'], 
-    ['12/8', '12/8'], 
-    ['12/9', '12/9'], 
-    ['12/10', '12/10'], 
-    ['12/11', '12/13'], 
-    ['12/14', '12/14'],
-    ['12/15', '12/15']  
-] %>
-
-<% time_options = [
-    ['None' ,'unknown'],  
-    ['9:30 AM', '9:30am'], 
-    ['2:00 PM', '2:00pm'],
-    ['6:30 PM', '6:30pm']
-] %>
-
-
 <%= form_for(@course) do |f| %>
 
 <% if @course.errors.any? %>
@@ -64,12 +43,12 @@
 
 <div class="field">
     <%= f.label :final_date %><br>
-    <%= f.select(:final_date, day_options) %>
+    <%= f.select(:final_date, School.second.final_date_options << [nil]) %>
 </div>
 
 <div class="field">
     <%= f.label :final_time %><br>
-    <%= f.select(:final_time, time_options) %>
+    <%= f.select(:final_time, School.second.final_time_options << [nil]) %>
 </div>
 
 <div class="field">
