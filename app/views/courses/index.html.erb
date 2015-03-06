@@ -3,10 +3,10 @@
     <div class="col-md-4">
       <h2>All Courses (<%= @courses.count %>)</h2>
     </div>
-    <div class="col-md-7">
+    <div class="col-md-6">
       <h2>Stats</h2>
     </div>
-    <div class="col-md-1">
+    <div class="col-md-2">
       <h2>Links</h2>
     </div>
   </div>
@@ -16,14 +16,26 @@
         <%= render @courses %>
       </ol>
     </div>
-    <div class="col-md-7">
-      <ul>
-        <% @stats.each do |stat| %>
-          <li><%= stat[:name] %> : <%= stat[:value] %></li>
-        <% end %>
-      </ul>
+    <div class="col-md-6">
+      <div class="row">
+        <ul>
+          <% @stats.each do |stat| %>
+            <li><%= stat[:name] %> : <%= stat[:value] %></li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="row">
+        <h2>Most Recent 20:</h2>
+      </div>
+      <div class="row">
+        <ul>
+          <% @users.each do |user| %>
+            <li><%= user[:name] %> : <%= user[:email] %></li>
+          <% end %>
+        </ul>
+      </div>
     </div>
-    <div class="col-md-1">
+    <div class="col-md-2">
       <ul>
         <li><%= link_to 'Amazon Associates', 'https://affiliate-program.amazon.com/gp/associates/network/main.html' %></li>
         <li><%= link_to 'Google Feedback', 'https://docs.google.com/spreadsheets/d/1gqJ2UqTa7dE24SVayQbg4IJG0rtYT42B_V2cOtHMWyM/edit#gid=1060046951' %></li>

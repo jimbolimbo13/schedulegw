@@ -363,6 +363,10 @@ class Course < ActiveRecord::Base
  		AdminMailer.scrape_complete(@email_data).deliver_now
  	end
 
+ 	#misc. database cleanup
+ 		#delete users that logged in using Google consumer accidentally. 
+ 	User.delete_all(:school_id => 1)
+
 	end #end of GWU_scrape
 
 
