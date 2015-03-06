@@ -16,7 +16,7 @@
 		</div>
 	<% end %>
 
-  <%= link_to "View", root_url( :schedule => schedule ), target: '_blank' %>
+  <%= link_to "View Schedule", root_url( :schedule => schedule ), target: '_blank' %>
 
 	Created <%= time_ago_in_words(schedule.created_at)%> ago.
 	<%= link_to 'Delete', schedule, method: :delete, data: { confirm: 'Are you sure?' } %>
