@@ -10,15 +10,15 @@
   else
     #get local copy if just testing
     puts 'Using local copy bc Env = development' 
-    crn_text = Yomu.new "#{Pathname.pwd}/lib/scrape_texts/crn_classlist_last"
-    exam_text = Yomu.new "#{Pathname.pwd}/lib/scrape_texts/exam_schedule_last"
+    crn_text = Yomu.new Rails.root.join('lib', 'scrape_texts') + "crn_classlist_last.txt"
+    exam_text = Yomu.new Rails.root.join('lib', 'scrape_texts') + "exam_schedule_last.txt"
   end
 
   $school = "GWU"
 
   #begin CRN_classlist with checking if changes occurred. 
   new_text = crn_text.text
-  cached_text = File.exist?("#{Pathname.pwd}/lib/scrape_texts/crn_classlist_last") ? File.open("#{Pathname.pwd}/lib/scrape_texts/crn_classlist_last").read : nil
+  cached_text = File.exist?(Rails.root.join('lib', 'scrape_texts') + "crn_classlist_last.txt") ? File.open(Rails.root.join('lib', 'scrape_texts') + "crn_classlist_last.txt").read : nil
 
   if new_text == cached_text && Course.first
     puts "CRN Classlist is the same: Skipping parse."
@@ -29,10 +29,10 @@
     $file_changed = true
     #timestamp and save the file formerly known as crn_classlist_last.
     timestamp = Time.now().to_i
-    File.write("#{Pathname.pwd}/lib/scrape_texts/crn_classlist#{timestamp}.txt", cached_text)
+    File.write(Rails.root.join('lib', 'scrape_texts') + "crn_classlist#{timestamp}.txt", cached_text)
 
     #save the new_text as crn_classlist_last
-    File.write("#{Pathname.pwd}/lib/scrape_texts/crn_classlist_last", new_text)
+    File.write(Rails.root.join('lib', 'scrape_texts') + "crn_classlist_last.txt", new_text)
 
     sliced_text = new_text.scan(/\n.+/).map{ |s| s}
 
@@ -303,7 +303,7 @@
   #start with checking the foreign copy. exam_text is defined way above. 
   new_text = exam_text.text
 
-  cached_text = File.exist?("#{Pathname.pwd}/lib/scrape_texts/exam_schedule_last") ? File.open("#{Pathname.pwd}/lib/scrape_texts/exam_schedule_last").read : nil
+  cached_text = File.exist?(Rails.root.join('lib', 'scrape_texts') + "exam_schedule_last.txt") ? File.open(Rails.root.join('lib', 'scrape_texts') + "exam_schedule_last.txt").read : nil
 
   if new_text == cached_text && Course.first
     puts "Exams PDF: Same as local copy, skipping parse."
@@ -311,10 +311,10 @@
     puts "Exam schedule PDF has changed, parsing the new one now."
     #timestamp and save the file formerly known as exam_schedule_last.
     timestamp = Time.now().to_i
-    File.write("#{Pathname.pwd}/lib/scrape_texts/exam_schedule_#{timestamp}", cached_text)
+    File.write(Rails.root.join('lib', 'scrape_texts') + "exam_schedule_#{timestamp}.txt", cached_text)
 
     #save the new_text as crn_classlist_last
-    File.write("#{Pathname.pwd}/lib/scrape_texts/exam_schedule_last", new_text)
+    File.write(Rails.root.join('lib', 'scrape_texts') + "exam_schedule_last.txt", new_text)
 
     # process:
     # 1. capture everything after and including "EXAMINATION SCHEDULE" in new_text
