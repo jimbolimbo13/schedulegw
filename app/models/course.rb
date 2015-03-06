@@ -346,7 +346,6 @@ class Course < ActiveRecord::Base
 				$final_day_options << m.to_s
 			}
 
-			# 2. w
 
 
 

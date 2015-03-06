@@ -13,7 +13,7 @@ class CoursesController < ApplicationController
 		@stats.push( {name: 'Users', value: User.count.to_i} );
 		@stats.push( {name: 'Schedules', value: Schedule.count.to_i} )
 		
-		@users = User.select(:id, :name, :email).order(created_at: :desc).first(20)
+		@new_users = User.select(:id, :name, :email).order(created_at: :desc).first(20)
 
 	end
 
