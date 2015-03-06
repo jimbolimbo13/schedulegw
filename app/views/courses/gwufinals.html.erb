@@ -1,24 +1,24 @@
 <div class="container">
-  <div class="row">
+  <div class="row table_row">
     <div class="col-md-10">
-      <div class="row" align="center">
+      <div class="row table_col" align="center">
         Final Schedule Visualizer
       </div>
-      <div class="row">
-        <div class="col-md-2">
+      <div class="row table_row">
+        <div class="col-md-2 table_col">
           corner
         </div>
         <% @final_times.each do |time| %>
-        <div class="col-md-3">
+        <div class="col-md-3 table_col">
           <%= time %>
         </div>
         <% end %>
       </div>
       <% @final_dates.each_with_index do |date, dateindex| %>
         <div class="row">
-          <div class="col-md-2"><%= date %></div>
+          <div class="col-md-2 table_col"><%= date %></div>
           <% @final_times.each_with_index do |time, timeindex| %> 
-          <div class="col-md-3">
+          <div class="col-md-3 table_col">
             <ul>
               <% instance_variable_get("@grid#{dateindex}#{timeindex}").each do |course| %>
               <li><%= link_to "#{course.gwid}-#{course.section} #{course.course_name}, #{course.professor}", edit_course_path(course) %></li>
@@ -29,7 +29,7 @@
         </div>
       <% end %>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 table_col">
       Orphans (<%= @orphans.count %>)
       <ul>
         <% @orphans.each do |orphan| %>
