@@ -1,12 +1,11 @@
 class SchedulesController < ApplicationController
 	
 	before_action :check_login
-  before_action :require_permission, only: [:edit, :update, :destroy]
+  before_action :require_permission, only: [:edit, :update, :destroy, :show]
 
 
   def index
   	@schedules = current_user.schedules
-
   end
 
   def create

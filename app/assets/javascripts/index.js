@@ -506,8 +506,9 @@ function next() {
 		count++
 	});
 
-	var url_frag = 'schedules?courses='+next_courses;
-	target = document.URL+url_frag;
+	var url_frag = '/schedules?courses='+next_courses;
+	target = url_frag;
+	console.log('url frag: '+url_frag);
 
 	$.post(target, function(result){
 		console.log('adding courses post call returned: ' + result);

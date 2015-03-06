@@ -7,7 +7,6 @@
 		<% end %>		
 	</h2>
 
-
 	<% schedule.courses.each do |course| %>
 		<div class="col-md-12 schedule_line_item">
 			<span class="course_name"><%= course.crn %> <%= course.gwid %>-<%= course.section %> <%= course.course_name %></span>, <span class="prof_name"><%= course.professor %></span>
@@ -17,7 +16,7 @@
 		</div>
 	<% end %>
 
-  <%= link_to "View", root_url( :schedule => schedule ) %>
+  <%= link_to "View", root_url( :schedule => schedule ), target: '_blank' %>
 
 	Created <%= time_ago_in_words(schedule.created_at)%> ago.
 	<%= link_to 'Delete', schedule, method: :delete, data: { confirm: 'Are you sure?' } %>
