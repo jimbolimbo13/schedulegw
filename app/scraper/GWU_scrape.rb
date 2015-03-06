@@ -2,8 +2,18 @@
   #Compare the School's PDF with the one we have cached most recently. If they match, skip this step. If they don't match, run it. 
   #All of the PDFs are scraped at once here at the top. 
   #URLs are all brought together here for convenience.
-  crn_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Fall2015/Documents/Fall%202015%20Schedule%20of%20Classes%20with%20CRNs.pdf'
-  exam_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Fall2015/Documents/Fall%202015%20Schedule%20with%20Exams.pdf'
+  
+
+  if Rails.env != 'development'
+    crn_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Fall2015/Documents/Fall%202015%20Schedule%20of%20Classes%20with%20CRNs.pdf'
+    exam_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Fall2015/Documents/Fall%202015%20Schedule%20with%20Exams.pdf'
+  else
+    #get local copy if just testing
+    puts 'Using local copy bc Env = development' 
+    crn_text = Yomu.new "#{Pathname.pwd}/lib/scrape_texts/crn_classlist_last"
+    exam_text = Yomu.new "#{Pathname.pwd}/lib/scrape_texts/exam_schedule_last"
+  end
+
   $school = "GWU"
 
   #begin CRN_classlist with checking if changes occurred. 
@@ -308,26 +318,23 @@
 
     # process:
     # 1. capture everything after and including "EXAMINATION SCHEDULE" in new_text
-    exam_page_text = new_text.scan(/(EXAMINATION SCHEDULE.+)/) { |s| s }
+    exam_page_text = new_text.match(/(EXAMINATION SCHEDULE.+)/m).to_s
     
-    #find '9:30 A.M. 2:00 P.M. 6:30 P.M.' which are the timeslots. 
+    #find times of the form '9:30 A.M. 2:00 P.M. 6:30 P.M.' which are the timeslots. 
+    $final_time_options = []
     exam_page_text.scan(/(\d:\d{2}\s\D.\D.)\s(\d:\d{2}\s\D.\D.)\s(\d:\d{2}\s\D.\D.)/) { |m| 
-      $final_time_options = [$1, $2, $3]
+      $final_time_options << $1 << $2 << $3
     }
 
-    $final_day_options = []
+    $final_date_options = []
     exam_page_text.scan(/(\d\d?\/\d\d?)/) { |m| 
-      $final_day_options << m.to_s
+      $final_date_options << m
     }
 
-
-
-
-    # puts $final_time_options
-    # puts $final_day_options
-
-
-
+    school = School.find_by(:name => $school)
+      school.final_time_options = $final_time_options
+      school.final_date_options = $final_date_options.flatten
+    school.save!
 
   end #end of exam_schedule scrape
 
@@ -336,7 +343,7 @@
                 :school => $school, 
                 :changed => $file_changed,
                 :final_times => $final_time_options,
-                :final_dates => $final_day_options, 
+                :final_dates => $final_date_options, 
               }
 if $file_changed
   AdminMailer.scrape_complete(@email_data).deliver_now
