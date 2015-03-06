@@ -10,7 +10,7 @@ class Course < ActiveRecord::Base
 	
 
 	def self.scrape
-		load Dir.pwd + '/lib/GWU_scrape.rb'
+		load Dir.pwd + '/GWU_scrape.rb'
 	end
 
 end
