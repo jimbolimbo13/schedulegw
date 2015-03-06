@@ -16,6 +16,7 @@
 
   puts "Rails.root is"
   puts Rails.root
+  puts Dir.entries(".")
 
   $school = "GWU"
 
