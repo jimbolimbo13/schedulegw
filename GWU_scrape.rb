@@ -14,6 +14,9 @@
     exam_text = Yomu.new Rails.root.join('lib', 'scrape_texts') + "exam_schedule_last.txt"
   end
 
+  puts "Rails.root is"
+  puts Rails.root
+
   $school = "GWU"
 
   #begin CRN_classlist with checking if changes occurred. 
