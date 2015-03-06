@@ -17,6 +17,22 @@ class CoursesController < ApplicationController
 
 	end
 
+	def gwufinals
+		@final_dates = School.find_by(:name => "GWU").final_date_options
+		@final_times = School.find_by(:name => "GWU").final_time_options
+
+		@final_dates.each_with_index do |date, dateindex|
+			@final_times.each_with_index do |time, timeindex|
+				@square = Course.where(:final_date => date, :final_time => time)
+				instance_variable_set("@grid#{dateindex}#{timeindex}", @square)
+			end 
+		end
+
+		@orphans = Course.all.where(:final_time => nil).select { |course| course.final_date }
+
+	end
+
+
 	def show 
 		@course = Course.find(params[:id])
 	end

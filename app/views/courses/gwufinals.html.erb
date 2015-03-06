@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="row">
+    <h1>Finals According to Database. Compare to file at : [insert link later]</h1>
+  </div>
+  <div class="row">
+    <div class="col-md-10">
+      <% @final_dates.each_with_index do |date, dateindex| %>
+        <div class="row">
+          <div class="col-md-1">
+            <%= date %>
+          </div>
+          <% @final_times.each_with_index do |time, timeindex| %> 
+          <div class="col-md-3">
+            This is a square.
+            <% instance_variable_get("@grid#{dateindex}#{timeindex}").each do |course| %>
+              <%= link_to course.course_name, edit_course_path(course) %>
+            <% end %>
+          </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    <div class="col-md-2">
+      <p>Courses with date but no time: (<%= @orphans.count %>)</p>
+      <ul>
+        <% @orphans.each do |orphan| %>
+          <li><%= link_to orphan.course_name, edit_course_path(orphan) %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

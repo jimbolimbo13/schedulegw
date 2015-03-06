@@ -14,29 +14,26 @@
     exam_text = Yomu.new Rails.root.join('lib', 'scrape_texts') + "exam_schedule_last.txt"
   end
 
-  puts "Rails.root is"
-  puts Rails.root
-  puts Dir.entries(".")
-
-  $school = "GWU"
+  $school_name = "GWU" #should change this to be a relation to School.find_by(:name => 'GWU')
+  $school = School.find_by(:name => $school_name)
 
   #begin CRN_classlist with checking if changes occurred. 
   new_text = crn_text.text
-  cached_text = File.exist?(Rails.root.join('lib', 'scrape_texts') + "crn_classlist_last.txt") ? File.open(Rails.root.join('lib', 'scrape_texts') + "crn_classlist_last.txt").read : nil
+  new_digest = Digest::MD5.hexdigest new_text
 
-  if new_text == cached_text && Course.first
+  Rails.env == 'development' ? old_digest = '1' : old_digest = $school.crn_scrape_digest.to_s
+
+  if new_digest == old_digest 
     puts "CRN Classlist is the same: Skipping parse."
-    puts "and there is a first Course: "
-    puts Course.first.course_name
+    $school.crn_last_checked = DateTime.now
   else 
     puts "New Version of CRN Classlist, running scraper/parser."
+    puts "Rails.env is dev so ignoring if docs are the same" if Rails.env = 'development'
     $file_changed = true
     #timestamp and save the file formerly known as crn_classlist_last.
-    timestamp = Time.now().to_i
-    File.write(Rails.root.join('lib', 'scrape_texts') + "crn_classlist#{timestamp}.txt", cached_text)
 
-    #save the new_text as crn_classlist_last
-    File.write(Rails.root.join('lib', 'scrape_texts') + "crn_classlist_last.txt", new_text)
+    $school.crn_last_scraped = $school.crn_last_checked = DateTime.now
+    $school.crn_scrape_digest = new_digest
 
     sliced_text = new_text.scan(/\n.+/).map{ |s| s}
 
@@ -294,7 +291,7 @@
         course.additional_info = $additional_info
         course.professor = $professor
         course.prof_id = $prof_id
-        course.school = $school
+        course.school = $school.name
 
       course.save! unless (course.manual_lock == true) 
 
@@ -303,58 +300,83 @@
   end #end of 'new text available to scrape'
 
   # Now finished the groundwork for the classes, time to add the finals information.
-
+ 
   #start with checking the foreign copy. exam_text is defined way above. 
   new_text = exam_text.text
+  new_digest = Digest::MD5.hexdigest new_text
 
-  cached_text = File.exist?(Rails.root.join('lib', 'scrape_texts') + "exam_schedule_last.txt") ? File.open(Rails.root.join('lib', 'scrape_texts') + "exam_schedule_last.txt").read : nil
+  Rails.env == 'development' ? old_digest = '1' : old_digest = $school.exam_scrape_digest.to_s
 
-  if new_text == cached_text && Course.first
+  if new_digest == old_digest 
     puts "Exams PDF: Same as local copy, skipping parse."
+    $school.exam_last_checked = DateTime.now
   else
     puts "Exam schedule PDF has changed, parsing the new one now."
-    #timestamp and save the file formerly known as exam_schedule_last.
-    timestamp = Time.now().to_i
-    File.write(Rails.root.join('lib', 'scrape_texts') + "exam_schedule_#{timestamp}.txt", cached_text)
-
-    #save the new_text as crn_classlist_last
-    File.write(Rails.root.join('lib', 'scrape_texts') + "exam_schedule_last.txt", new_text)
+    $school.exam_last_scraped = $school.exam_last_checked = DateTime.now
+    $school.exam_scrape_digest = new_digest
 
     # process:
     # 1. capture everything after and including "EXAMINATION SCHEDULE" in new_text
     exam_page_text = new_text.match(/(EXAMINATION SCHEDULE.+)/m).to_s
     
     #find times of the form '9:30 A.M. 2:00 P.M. 6:30 P.M.' which are the timeslots. 
-    $final_time_options = []
+    @final_time_options = []
     exam_page_text.scan(/(\d:\d{2}\s\D.\D.)\s(\d:\d{2}\s\D.\D.)\s(\d:\d{2}\s\D.\D.)/) { |m| 
-      $final_time_options << $1 << $2 << $3
+      @final_time_options << $1 << $2 << $3
     }
 
-    $final_date_options = []
+    @final_date_options = []
     exam_page_text.scan(/(\d\d?\/\d\d?)/) { |m| 
-      $final_date_options << m
+      @final_date_options << m
     }
+    @final_date_options.flatten!
 
-    school = School.find_by(:name => $school)
-      school.final_time_options = $final_time_options
-      school.final_date_options = $final_date_options.flatten
-    school.save!
+    $school.final_time_options = @final_time_options
+    $school.final_date_options = @final_date_options
+    $school.save!
+
+    # figure out which courses have finals on which day based on which ones are between date_options
+    @final_date_options.each_with_index do |start_day, index|
+      @start = @final_date_options[index]
+
+      if @final_time_options.size - 1 == index.to_i #if it's the last day, the end will just be the end of the document. 
+        @end = ''
+      else 
+        @end = @final_date_options[index+1]
+      end
+      @days_courses = exam_page_text.match(/#{@start}(.+)#{@end}/m)[1]
+
+      @days_courses.scan(/((\d{4})-(\d{2}))/) { |gwid| 
+        # find the course with the gwid, check it's final date and if it's different than this guess and manual_lock is false, change it. 
+        @gwid = $2
+        @section = $3
+        
+        #get the course's info and update it if the scraper has new info
+        if course = Course.find_by(:gwid => @gwid, :section => @section)
+          course.final_date != @start ? course.final_date = @start : course.final_date = course.final_date
+          course.save! unless course.manual_lock == true
+        end
+      
+      }
+
+    end
+    
+
+
 
   end #end of exam_schedule scrape
 
 ##Notify scrape completed. 
 @email_data = { 
-                :school => $school, 
+                :school => $school.name, 
                 :changed => $file_changed,
-                :final_times => $final_time_options,
-                :final_dates => $final_date_options, 
               }
 if $file_changed
-  AdminMailer.scrape_complete(@email_data).deliver_now
+  AdminMailer.scrape_complete(@email_data).deliver_now unless Rails.env = 'development'
 end
 
 #misc. database cleanup
   #delete users that logged in using Google consumer accidentally. 
-User.delete_all(:school_id => 1)
+  User.delete_all(:school_id => 1)
 
 

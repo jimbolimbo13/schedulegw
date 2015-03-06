@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
 
   resources :users
-  resources :courses
   resources :schedules
 
   root 'visitors#index'
@@ -34,9 +33,12 @@ Rails.application.routes.draw do
   get '/api/courses/:school', to: 'api#courses'
   get '/api/whoami', to: 'api#whoami'
 
-  #manual editing etc. 
+  #manual editing etc.
+  get '/courses/gwufinals' => 'courses#gwufinals'
+  resources :courses 
   get '/courses/:id/edit' => 'courses#edit'
   get '/courses' => 'courses#index'
+
 
 
 end
