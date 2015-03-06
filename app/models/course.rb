@@ -42,9 +42,10 @@ class Course < ActiveRecord::Base
 			puts Course.first.course_name
 		else 
 			puts "New Version of CRN Classlist, running scraper/parser."
+			$file_changed = true
 			#timestamp and save the file formerly known as crn_classlist_last.
 			timestamp = Time.now().to_i
-			File.write("#{Rails.root}/lib/scrape_texts/crn_classlist#{timestamp}", cached_text)
+			File.write("#{Rails.root}/lib/scrape_texts/crn_classlist#{timestamp}.txt", cached_text)
 
 			#save the new_text as crn_classlist_last
 			File.write("#{Rails.root}/lib/scrape_texts/crn_classlist_last", new_text)
@@ -332,16 +333,35 @@ class Course < ActiveRecord::Base
 			File.write("#{Rails.root}/lib/scrape_texts/exam_schedule_last", new_text)
 
 			# process:
-			# 1. discard everything before the phrase "EXAMINATION SCHEDULE" in new_text
-			# 2. 
+			# 1. capture everything after and including "EXAMINATION SCHEDULE" in new_text
+			exam_page_text = new_text.scan(/(EXAMINATION SCHEDULE.+)/s) { |s| s }
+			
+			#find '9:30 A.M. 2:00 P.M. 6:30 P.M.' which are the timeslots. 
+			exam_page_text.scan(/(\d:\d{2}\s\D.\D.)\s(\d:\d{2}\s\D.\D.)\s(\d:\d{2}\s\D.\D.)/) { |m| 
+				$final_time_options = [$1, $2, $3]
+			}
+
+			$final_day_options = []
+			exam_page_text.scan(/(\d\d?\/\d\d?)/) { |m| 
+				$final_day_options << m.to_s
+			}
+
+			# 2. w
 
 
 
 		end #end of exam_schedule scrape
 
 	##Notify scrape completed. 
-
- 	AdminMailer.scrape_complete($school).deliver_now
+	@email_data = { 
+									:school => $school, 
+									:changed => $file_changed,
+									:final_times => $final_time_options,
+									:final_dates => $final_day_options, 
+								}
+	if $file_changed
+ 		AdminMailer.scrape_complete(@email_data).deliver_now
+ 	end
 
 	end #end of GWU_scrape
 
