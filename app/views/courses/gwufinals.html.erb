@@ -18,6 +18,7 @@
         <div class="row">
           <div class="col-md-2 table_col"><%= date %></div>
           <% @final_times.each_with_index do |time, timeindex| %> 
+          
           <div class="col-md-3 table_col">
             <ul>
               <% instance_variable_get("@grid#{dateindex}#{timeindex}").each do |course| %>
