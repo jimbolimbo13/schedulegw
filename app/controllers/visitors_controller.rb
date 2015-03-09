@@ -1,6 +1,6 @@
 class VisitorsController < ApplicationController
-	before_action :check_login, except: [:gwsbadata]
-	before_action :check_school, except: [:gwsbadata]
+	before_action :check_login
+	before_action :check_school
 
 	def index
 		if params[:schedule] 
@@ -12,7 +12,6 @@ class VisitorsController < ApplicationController
 	def gwsbadata
 		@data = Course.all.map { |course| {:professor => course.professor, :name => course.course_name} }
 	end
-
 
 	def check_login
 		redirect_to signin_path unless current_user
