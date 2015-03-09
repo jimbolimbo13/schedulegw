@@ -1,12 +1,16 @@
 class VisitorsController < ApplicationController
-	before_action :check_login
-	before_action :check_school
+	before_action :check_login, except: [:gwsbadata]
+	before_action :check_school, except: [:gwsbadata]
 
 	def index
 		if params[:schedule] 
 			@schedule = current_user.schedules.find_by(id: params[:schedule].to_i)
 			flash[:notice] = "Loading Schedule"
 		end
+	end
+
+	def gwsbadata
+		@data = Course.all.map { |course| {:professor => course.professor, :name => course.course_name} }
 	end
 
 

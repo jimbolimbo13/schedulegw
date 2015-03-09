@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="row">
+    <h1>Current Course and Professor Info</h1>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <h2>Course Names and Professors</h2>
+        <% @data.each do |item| %>
+        <%= item[:name] %>, <%= item[:professor] %><br>
+        <% end %>
+    </div>
+    <div class="col-md-3">
+      <h2>Just Course Names </h2>
+        <% @data.each do |item| %>
+        <%= item[:name] %><br>
+        <% end %>
+    </div>
+    <div class="col-md-3">
+      <h2>Just Professors</h2>
+        <% @data.each do |item| %>
+        <%= item[:professor] %><br>
+        <% end %>
+    </div>
+  </div>
+</div>
+
+

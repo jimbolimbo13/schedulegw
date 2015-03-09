@@ -2,7 +2,6 @@ Rails.application.routes.draw do
 
   resources :users
 
-
   root 'visitors#index'
   get '/auth/:provider/callback' => 'sessions#create'
   get '/signin' => 'sessions#new', :as => :signin
@@ -40,6 +39,9 @@ Rails.application.routes.draw do
   #staticpages 
   get 'security' => 'static_pages#security'
   get 'privacy' => 'static_pages#privacy'
+
+  #GWSBA stuff
+  get 'gwsbadata' => 'visitors#gwsbadata'
 
 
 end
