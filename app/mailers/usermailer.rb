@@ -7,8 +7,10 @@ class Usermailer < ApplicationMailer
   #
   #   en.usermailer.schedule.subject
   #
-  def schedule(user)
-    
+  def schedule(user, schedule)
+    @user = user
+    @courses = schedule.courses
+    @schedule = schedule
     roadie_mail to: user.email, subject: "Your Schedule From ScheduleGW"
   end
 

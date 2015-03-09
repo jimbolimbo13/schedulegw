@@ -2,6 +2,13 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>schedule</title>
   <style>
+    tr {
+      width: 100%;
+    }
+
+    #schedule_table {
+      text-align: center;
+    }
 
   </style>
 </head>
@@ -14,8 +21,51 @@
       <%= render 'layouts/email_header' %>
     </tr>
     <tr>
-      Hi
-      
+      <p>Hey,</p>
+      <p>Here's the schedule you wanted. Use Banweb to register for courses using the CRN #.</p>
+      <table id="schedule_table">
+        <tr>
+          <td>
+            CRN
+          </td>
+          <td>
+            ID-Section
+          </td>
+          <td>
+            Name
+          </td>
+          <td>
+            Profesor
+          </td>
+        </tr>
+        <% @courses.each do |course| %>
+        <tr>
+          <td id="course_crn">
+            <%= course.crn %>
+          </td>
+          <td id="gwid_section">
+            <%= course.gwid %>-<%= course.section %>
+          </td>
+          <td id="course_name">
+            <%= course.course_name %>
+          </td>
+          <td id="professor">
+            <%= course.professor %>
+          </td>
+        </tr>
+        <% end %>
+      </table>
+      <table>
+        <tr>
+          <td>
+            <%= link_to "View Schedule", root_url( :schedule => @schedule ) %>
+          </td>
+        </tr>
+      </table>
+      <p>
+        Rock On, 
+      </p>
+      <p>The ScheduleGW Team</p>
     </tr>
     <tr>
       <%= render 'layouts/email_footer' %>

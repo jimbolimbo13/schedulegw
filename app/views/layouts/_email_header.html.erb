@@ -2,13 +2,15 @@
 
   #header {
     display:inline-block;
+    width:100%;
     margin-bottom:30px;
-    background-color: #00007C;
-    color: #fff;
+    background-color: #fff;
+    color: #00007C;
   }
   
   #logo_div {
     display:inline-block;
+    color: #fff;
     margin-right:20px;
     height:50px;
   }
@@ -23,10 +25,14 @@
 
 </style>
 
-<div id="header">
-  <div id="logo_div"><img src="http://www.schedulegw.com/assets/logo.png" height="50"></div>
-  <div id="title_header">ScheduleGW</div>
-  <div id="logo_div"><img src="http://www.schedulegw.com/assets/images/logo.png" height="50"></div>
-  <div id="logo_div"><img src="http://www.schedulegw.com/logo.png" height="50"></div>
+<table id="header">
+  <tr>
+    <td>
+     <img src="http://www.schedulegw.com/logo.png" height="50">
+    </td>
+    <td>
+       <span id="title_header">ScheduleGW</span>
+    </td>
+  </tr>
+</table>
 
-</div>
