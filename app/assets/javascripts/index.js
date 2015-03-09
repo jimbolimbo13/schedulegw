@@ -76,7 +76,7 @@ function populate_course_list() {
 //shows/hides courses available based on search input 
 function search_courses(term) {
 	$.each(window.courses, function(index, course) {
-		match = ( ((course.course_name.indexOf(term)) > -1) || ((course.professor.indexOf(term)) > -1) );
+		match = ( ((course.course_name.indexOf(term)) > -1) || ((course.professor.indexOf(term)) > -1) || ((course.gwid.indexOf(term)) > -1) );
 		if (match) {
 			//render
 			html = render_course_listing(course);
