@@ -1,10 +1,4 @@
-
-
 <div class="container text-center">
-	<div class="row">
-		<h1>Login Required</h1>
-	</div>
-
 	<div class="row">
 		<br><br><%= link_to 'Sign in with Law School Account', signin_path, class: "btn btn-lg btn-primary" %><br><br>
 	</div>
@@ -34,23 +28,19 @@
 	</div>
 
 	<div class="row">
-		Minimum Data Collection
-		<span class="glyphicon glyphicon-ok" aria-hidden="true" style="color:green;"></span>
+		<% if @users > 50 %>
+					<br><br><span style="font-size:2em">Current Users: <%= @users %> </span>
+		<% end %>
 	</div>
-
 	<div class="row">
-		Maximum Privacy
-		<span class="glyphicon glyphicon-ok" aria-hidden="true" style="color:green;"></span>
-	</div>
-
-	<div class="row">
-		Minimum Hacking Risk - No New Password to Remember
-		<span class="glyphicon glyphicon-ok" aria-hidden="true" style="color:green;"></span>
+		<% if @schedules > 50 %>
+					<br><br><span style="font-size:2em"><%= @schedules %> Schedules Created </span>
+		<% end %>
 	</div>
 
 	<div class="row">
 		<br><br><br><br>
-		<p>This website only requests the minimum amount of information. We could not care less whether you browse celebrity websites when you should be studying.</p><br><br><br>
+		<p>This website only requests the minimum permissions.</p><br><br><br>
 	</div>
 	<div class="row">
 		<%= link_to 'Privacy Policy', privacy_path %>
