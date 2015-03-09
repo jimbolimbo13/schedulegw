@@ -28,7 +28,7 @@
     $school.crn_last_checked = DateTime.now
   else 
     puts "New Version of CRN Classlist, running scraper/parser."
-    puts "Rails.env is dev so ignoring if docs are the same" if Rails.env = 'development'
+    puts "Rails.env is dev so ignoring if docs are the same" unless Rails.env != 'development'
     $file_changed = true
     #timestamp and save the file formerly known as crn_classlist_last.
 
