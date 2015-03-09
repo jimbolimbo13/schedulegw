@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
   resources :users
-  resources :schedules
+ 
 
   root 'visitors#index'
   get '/auth/:provider/callback' => 'sessions#create'
@@ -22,8 +22,11 @@ Rails.application.routes.draw do
   #next pages 
   get '/schedules' => 'schedules#index'
   get '/schedules/create' => 'schedules#create'
+  get '/schedules/send_schedule_email' => 'schedules#send_schedule_email'
+  resources :schedules
   get '/schedules/:id/edit' => 'schedules#edit'
   get '/schedules/:id/show' => 'schedules#show'
+
 
   #staticpages 
   get 'security' => 'static_pages#security'
