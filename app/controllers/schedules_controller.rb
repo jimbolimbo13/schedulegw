@@ -10,7 +10,13 @@ class SchedulesController < ApplicationController
 
   def create
   	#build new schedule, send array of course unique by school ids to users build_schedule
-  	current_user.build_schedule(schedule_params[:courses].split(",").map(&:to_i)) 
+  	current_user.build_schedule(schedule_params[:courses].split(",").map(&:to_i))
+
+    #update stat: total number of times the next button was pressed.
+    school = School.find(current_user.school.id)
+    school.schedules_created = school.schedules_created + 1 
+    school.save! 
+
   	render json: {message: 'Dope'}, status: 200
 
   end
@@ -43,29 +49,41 @@ class SchedulesController < ApplicationController
     end
   end
 
+  def send_schedule_email
+    @schedule = Schedule.find(params[:schedule])
+    if Usermailer.schedule(current_user, @schedule).deliver_now
+      flash[:notice] = "Email Sent to #{current_user.email}."
+      redirect_to schedules_path
+    else 
+      flash[:danger] = "Email didn't send - try again."
+      redirect_to schedules_path
+    end 
+    
+  end
+
 
   private 
 
   	def schedule_params
-		params.permit(:courses, :course_ids => [])
-	end
+  		params.permit(:courses, :course_ids => [])
+  	end
 
-	def update_subscription_params 
-		params.require(:schedule).permit(:name, :course_ids => [])
-	end
+  	def update_subscription_params 
+  		params.require(:schedule).permit(:name, :course_ids => [])
+  	end
 
-	def require_permission
-      if current_user != Schedule.find(params[:id]).user
-      flash[:warning] = "Sorry, something went wrong."
-      redirect_to root_path
+  	def require_permission
+        if current_user != Schedule.find(params[:id]).user
+        flash[:warning] = "Sorry, something went wrong."
+        redirect_to root_path
+        end
       end
-    end
 
-    def check_login
-      unless current_user
-        flash[:warning] = "Please login."
-        redirect_to signin_path
+      def check_login
+        unless current_user
+          flash[:warning] = "Please login."
+          redirect_to signin_path
+        end
       end
-    end
 
 end
