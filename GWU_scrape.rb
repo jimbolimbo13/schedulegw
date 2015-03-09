@@ -5,7 +5,7 @@
   
 
   if Rails.env != 'development'
-    crn_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Fall2015/Documents/Fall%202015%20Schedule%20of%20Classes%20with%20CRNs.pdf'
+    crn_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Fall2015/Documents/Fa15%20Schedule%20with%20CRNs.pdf' 
     exam_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Fall2015/Documents/Fall%202015%20Schedule%20with%20Exams.pdf'
   else
     #get local copy if just testing
