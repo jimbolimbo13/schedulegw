@@ -16,7 +16,7 @@ class SchedulesController < ApplicationController
     school = School.find(current_user.school.id)
     school.schedules_created = school.schedules_created + 1 
     school.save! 
-
+    
   	render json: {message: 'Dope'}, status: 200
 
   end
