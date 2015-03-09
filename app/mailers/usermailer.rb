@@ -11,6 +11,11 @@ class Usermailer < ApplicationMailer
     @user = user
     @courses = schedule.courses
     @schedule = schedule
+    
+    school = School.find(user.school.id)
+    school.emails_sent = school.emails_sent + 1 
+    school.save! 
+  
     roadie_mail to: user.email, subject: "Your Schedule From ScheduleGW"
   end
 

@@ -11,8 +11,10 @@ class CoursesController < ApplicationController
 		@courses = Course.all
 		@stats = [];
 		@stats.push( {name: 'Users', value: User.count.to_i} );
-		@stats.push( {name: 'Schedules', value: Schedule.count.to_i} )
-		
+		@stats.push( {name: 'Schedules Saved in Database', value: Schedule.count.to_i} )
+		@stats.push( {name: 'Schedules Emailed', value: School.find(current_user.school.id).emails_sent.to_i} )
+		@stats.push( {name: 'Schedules Created', value: School.find(current_user.school.id).schedules_created.to_i} )
+
 		@new_users = User.select(:id, :name, :email).order(created_at: :desc).first(20)
 
 	end

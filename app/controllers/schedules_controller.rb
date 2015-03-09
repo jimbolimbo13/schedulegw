@@ -10,7 +10,13 @@ class SchedulesController < ApplicationController
 
   def create
   	#build new schedule, send array of course unique by school ids to users build_schedule
-  	current_user.build_schedule(schedule_params[:courses].split(",").map(&:to_i)) 
+  	current_user.build_schedule(schedule_params[:courses].split(",").map(&:to_i))
+
+    #update stat: total number of times the next button was pressed.
+    school = School.find(current_user.school.id)
+    school.schedules_created = school.schedules_created + 1 
+    school.save! 
+
   	render json: {message: 'Dope'}, status: 200
 
   end
