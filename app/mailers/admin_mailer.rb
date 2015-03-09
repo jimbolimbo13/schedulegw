@@ -9,4 +9,10 @@ class AdminMailer < ApplicationMailer
     roadie_mail to: @admin, subject: "! Scrape Data Changed for #{@school}"
   end
 
+  def error_report(errors)
+    @admin = 'grantmnelsn@gmail.com'
+    @errors = errors
+    roadie_mail to: @admin, subject: "!  SCRAPE ERROR - ADDRESS IMMEDIATELY  !"
+  end
+
 end

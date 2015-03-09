@@ -1,0 +1,17 @@
+<h1>Scrape Error - Address Immediately!</h1>
+
+<p>
+  Hey, there were some errors: 
+</p>
+
+<p>
+  <ul>
+  <% @errors.each do |error| %>
+  <li><%= error[:name] %>: <%= error[:text] %></li>
+  <% end %> 
+  </ul>
+
+  <p>Sincerely, </p>
+  <p>The Robot</p>
+
+</p>

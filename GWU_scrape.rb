@@ -14,6 +14,12 @@
     exam_text = Yomu.new Rails.root.join('lib', 'scrape_texts') + "exam_schedule_last.txt"
   end
 
+  @errors = []
+  if (crn_text == nil) || (exam_text == nil)
+    @errors.push( {:name => 'File Not Found', :text => 'The file for either the CRN text or the exam text cannot be found. Likely it was moved. Scrapes from now on wont be useful until this is fixed.'} )
+    AdminMailer.error_report(@errors).deliver_now unless Rails.env = 'development'
+  end
+
   $school_name = "GWU" #should change this to be a relation to School.find_by(:name => 'GWU')
   $school = School.find_by(:name => $school_name)
 
