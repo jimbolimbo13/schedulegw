@@ -168,3 +168,17 @@
 	 })
 	</script>
 <% end %>
+
+<% if @sid %>
+<% @schedule = Schedule.find_by(:unique_string => @sid) %>
+	<script> 
+	 $( document ).on('page:change', function() {
+	 	setTimeout(function(){  
+			<% @schedule.courses.each do |course| %>
+				console.log(<%= course.crn.to_s %>);
+				addthisclass(<%= course.crn.to_s %>);
+			<% end %>
+		}, 500);
+	 })
+	</script>
+<% end %>

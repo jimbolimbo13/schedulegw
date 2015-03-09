@@ -58,7 +58,7 @@
       <table>
         <tr>
           <td>
-            <%= link_to "View Schedule", root_url( :schedule => @schedule ) %>
+            <%= link_to "View Schedule", root_url( :schedule => @schedule, :sid => @schedule.unique_string ) %>
           </td>
         </tr>
       </table>

@@ -4,5 +4,12 @@ class Schedule < ActiveRecord::Base
 	has_many :users
 	has_many :courses
 
+  before_create :create_unique_string
+
+  def create_unique_string 
+    @string = ('a'..'z').to_a.shuffle[0,15].join
+    Schedule.find_by(:unique_string => @string) ? self.create_unique_string : self.unique_string = @string
+  end
+
 
 end
