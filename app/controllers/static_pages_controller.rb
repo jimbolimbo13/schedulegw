@@ -1,7 +1,7 @@
 class StaticPagesController < ApplicationController
   def security
-    @users = User.count.to_i
-    @schedules = School.find(3).schedules_created
+    @users = User.count
+    @schedules = School.find_by(:name => "GWU").schedules_created
   end
 
   def privacy

@@ -1,10 +1,7 @@
 Rails.application.routes.draw do
 
   resources :users
-  
-  #staticpages 
-  get 'security' => 'static_pages#security'
-  get 'privacy' => 'static_pages#privacy'
+
 
   root 'visitors#index'
   get '/auth/:provider/callback' => 'sessions#create'
@@ -40,6 +37,9 @@ Rails.application.routes.draw do
   get '/courses/:id/edit' => 'courses#edit'
   get '/courses' => 'courses#index'
 
+  #staticpages 
+  get 'security' => 'static_pages#security'
+  get 'privacy' => 'static_pages#privacy'
 
 
 end
