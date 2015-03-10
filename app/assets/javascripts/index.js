@@ -58,7 +58,8 @@ function render_course_listing(course) {
 function load_courses() {
 	$.get('/api/courses/courses.json', function(courses){
 		window.courses = courses
-		populate_course_list();	
+		populate_course_list();
+		check_for_loaded_schedule();	
 	})
 }
 
@@ -70,7 +71,14 @@ function populate_course_list() {
 		html = render_course_listing(course);
 		$('#classlisttarget').append(html);
 	})
+}
 
+function check_for_loaded_schedule() {
+	if (window.load_these) {
+		$.each(window.load_these, function(index, course){
+			addthisclass(course);
+		})
+	}
 }
 
 //shows/hides courses available based on search input 

@@ -157,28 +157,20 @@
 	</div>
 </div>
 <% if @schedule %>
-	<script> 
-	 $( document ).on('page:change', function() {
-	 	setTimeout(function(){  
+	<script>
+			window.load_these = [];
 			<% @schedule.courses.each do |course| %>
-				console.log(<%= course.crn.to_s %>);
-				addthisclass(<%= course.crn.to_s %>);
+				window.load_these.push(<%= course.crn %>);
 			<% end %>
-		}, 500);
-	 })
 	</script>
 <% end %>
 
 <% if @sid %>
 <% @schedule = Schedule.find_by(:unique_string => @sid) %>
-	<script> 
-	 $( document ).on('page:change', function() {
-	 	setTimeout(function(){  
+	<script>
+			window.load_these = []; 
 			<% @schedule.courses.each do |course| %>
-				console.log(<%= course.crn.to_s %>);
-				addthisclass(<%= course.crn.to_s %>);
+				window.load_these.push(<%= course.crn %>);
 			<% end %>
-		}, 500);
-	 })
 	</script>
 <% end %>
