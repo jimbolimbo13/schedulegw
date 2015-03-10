@@ -4,14 +4,14 @@
   #URLs are all brought together here for convenience.
   
   #only run if its during business hours
-  t = Time.now
-  if ( Range.new(
-        Time.local(t.year, t.month, t.day, 11),
-        Time.local(t.year, t.month, t.day, 22)
-      ) != t )
-  puts "Not during Business Hours, so not scraping"
-  exit
-  end
+  # t = Time.now
+  # unless ( Range.new(
+  #       Time.local(t.year, t.month, t.day, 11),
+  #       Time.local(t.year, t.month, t.day, 22)
+  #     ) === t )
+  # puts "Not during Business Hours, so not scraping"
+  # exit
+  # end
 
 
   if Rails.env != 'development'
