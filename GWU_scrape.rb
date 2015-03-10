@@ -3,15 +3,13 @@
   #All of the PDFs are scraped at once here at the top. 
   #URLs are all brought together here for convenience.
   
-  #only run if its during business hours
-  # t = Time.now
-  # unless ( Range.new(
-  #       Time.local(t.year, t.month, t.day, 11),
-  #       Time.local(t.year, t.month, t.day, 22)
-  #     ) === t )
-  # puts "Not during Business Hours, so not scraping"
-  # exit
-  # end
+  #only run if its during business-y hours
+  t = Time.now
+
+  if t.hour > 22 || t.hour < 11
+    puts "Not during Business Hours, so not scraping"
+    exit
+  end
 
 
   if Rails.env != 'development'
