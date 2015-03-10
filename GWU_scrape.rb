@@ -32,6 +32,7 @@
   if new_digest == old_digest 
     puts "CRN Classlist is the same: Skipping parse."
     $school.crn_last_checked = Time.now
+    $school.save!
   else 
     puts "New Version of CRN Classlist, running scraper/parser."
     puts "Rails.env is dev so ignoring if docs are the same" unless Rails.env != 'development'
@@ -316,6 +317,7 @@
   if new_digest == old_digest 
     puts "Exams PDF: Same as local copy, skipping parse."
     $school.exam_last_checked = Time.now
+    $school.save!
   else
     puts "Exam schedule PDF has changed, parsing the new one now."
     $school.exam_last_scraped = $school.exam_last_checked = Time.now
