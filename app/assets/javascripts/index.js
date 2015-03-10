@@ -84,13 +84,12 @@ function check_for_loaded_schedule() {
 //shows/hides courses available based on search input 
 function search_courses(term) {
 	$.each(window.courses, function(index, course) {
-		match = ( ((course.course_name.indexOf(term)) > -1) || ((course.professor.indexOf(term)) > -1) || ((course.gwid.indexOf(term)) > -1) );
+		match = ( ((course.course_name.toLowerCase().indexOf(term.toLowerCase())) > -1) || ((course.professor.toLowerCase().indexOf(term.toLowerCase())) > -1) || ((course.gwid.indexOf(term)) > -1) );
 		if (match) {
 			//render
 			html = render_course_listing(course);
 			$('#classlisttarget').append(html);
 		} 
-
 	})
 }
 
