@@ -3,6 +3,15 @@
   #All of the PDFs are scraped at once here at the top. 
   #URLs are all brought together here for convenience.
   
+  #only run if its during business hours
+  if ( Range.new(
+        Time.local(t.year, t.month, t.day, 11),
+        Time.local(t.year, t.month, t.day, 22)
+      ) != Time.now )
+  puts "Not during Business Hours, so not scraping"
+  exit
+  end
+
 
   if Rails.env != 'development'
     crn_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Fall2015/Documents/Fa15%20Schedule%20with%20CRNs.pdf' 
