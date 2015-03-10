@@ -31,14 +31,14 @@
 
   if new_digest == old_digest 
     puts "CRN Classlist is the same: Skipping parse."
-    $school.crn_last_checked = Time.now.getlocal('-04:00')
+    $school.crn_last_checked = Time.now
   else 
     puts "New Version of CRN Classlist, running scraper/parser."
     puts "Rails.env is dev so ignoring if docs are the same" unless Rails.env != 'development'
     $file_changed = true
     #timestamp and save the file formerly known as crn_classlist_last.
 
-    $school.crn_last_scraped = $school.crn_last_checked = Time.now.getlocal('-04:00')
+    $school.crn_last_scraped = $school.crn_last_checked = Time.now
     $school.crn_scrape_digest = new_digest
 
     sliced_text = new_text.scan(/\n.+/).map{ |s| s}
@@ -315,10 +315,10 @@
 
   if new_digest == old_digest 
     puts "Exams PDF: Same as local copy, skipping parse."
-    $school.exam_last_checked = Time.now.getlocal('-04:00')
+    $school.exam_last_checked = Time.now
   else
     puts "Exam schedule PDF has changed, parsing the new one now."
-    $school.exam_last_scraped = $school.exam_last_checked = Time.now.getlocal('-04:00')
+    $school.exam_last_scraped = $school.exam_last_checked = Time.now
     $school.exam_scrape_digest = new_digest
 
     # process:
