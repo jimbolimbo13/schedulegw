@@ -68,8 +68,8 @@
               <% if user_signed_in? && current_user.school.initials != 'NA' %>
                 <li role="presentation" class="divider"></li>
                 <li role="presentation" class="dropdown-header">Course Recency</li>
-                <li><%= link_to "Checked for course changes #{time_ago_in_words(current_user.school.crn_last_checked)} ago", '#' %></li>
-                <li><%= link_to "Course data last updated #{time_ago_in_words(current_user.school.crn_last_scraped)} ago", '#' %></li>
+                <li><%= link_to "Checked for course changes #{time_ago_in_words(current_user.school.crn_last_checked.to_i)} ago", '#' %></li>
+                <li><%= link_to "Course data last updated #{time_ago_in_words(current_user.school.crn_last_scraped.to_i)} ago", '#' %></li>
                 <li role="presentation" class="divider"></li>
                 <li role="presentation" class="dropdown-header">Exam Recency</li>
                 <li><%= link_to "Checked for exam info changes #{time_ago_in_words(current_user.school.exam_last_checked)} ago", '#' %></li>
