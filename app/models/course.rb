@@ -7,6 +7,7 @@ class Course < ActiveRecord::Base
 	
 
 	def self.scrape
+    #load the scrapers here.
 		load Dir.pwd + '/GWU_scrape.rb'
 	end
 
