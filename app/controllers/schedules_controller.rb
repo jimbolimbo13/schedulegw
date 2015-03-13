@@ -10,7 +10,15 @@ class SchedulesController < ApplicationController
 
   def create
   	#build new schedule, send array of course unique by school ids to users build_schedule
-  	current_user.build_schedule(schedule_params[:courses].split(",").map(&:to_i))
+    # schedule_params[:courses].split(",").map(&:to_i)
+  	schedule = current_user.schedules.create!(:name => "Unnamed Schedule")
+    courses = schedule_params[:courses].split(",").map(&:to_i)
+
+    courses.each do |course|
+      schedule.courses << Course.find_by(crn: course)
+    end
+
+    schedule.save!
 
     #update stat: total number of times the next button was pressed.
     school = School.find(current_user.school.id)

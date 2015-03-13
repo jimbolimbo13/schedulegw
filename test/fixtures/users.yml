@@ -1,11 +1,21 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
-  provider: MyString
-  uid: MyString
+Grant:
+  id: 2
+  name: Grant Nelson
+  provider: google_oath2
+  uid: 102927493897445069334
+  subscribed_ids: nil
+  admin: true
+  school_id: 2
+  created_at: <%= Time.now %>
 
-two:
-  name: MyString
-  provider: MyString
-  uid: MyString
+Joe: 
+  id: 1
+  name: Joe Blackwell
+  provider: google_oath2
+  uid: 10adsf4
+  subscribed_ids: nil
+  admin: false
+  school_id: 2
+  created_at: <%= Time.now %>

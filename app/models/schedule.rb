@@ -1,8 +1,16 @@
 class Schedule < ActiveRecord::Base
 	default_scope { order('created_at DESC') }
-	belongs_to :user
-	has_many :users
-	has_many :courses
+	
+  belongs_to :user
+  
+
+  #schedule to courses relations
+  has_many :courseschedules
+  has_many :courses, through: :courseschedules
+
+
+
+
 
   before_create :create_unique_string
 

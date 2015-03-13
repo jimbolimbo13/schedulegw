@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
 	belongs_to :school
-	has_many :schedules
-	has_many :courses, through: :schedules
+
+  has_many :schedules, dependent: :destroy
 
 	has_many :subscriptions 
 	has_many :courses, through: :subscriptions

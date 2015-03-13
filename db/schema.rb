@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150309224840) do
+ActiveRecord::Schema.define(version: 20150311194638) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,17 @@ ActiveRecord::Schema.define(version: 20150309224840) do
 
   add_index "courses", ["crn"], name: "index_courses_on_crn", unique: true, using: :btree
 
+  create_table "courseschedules", force: :cascade do |t|
+    t.string   "name_of_relation"
+    t.integer  "course_id"
+    t.integer  "schedule_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "courseschedules", ["course_id"], name: "index_courseschedules_on_course_id", using: :btree
+  add_index "courseschedules", ["schedule_id"], name: "index_courseschedules_on_schedule_id", using: :btree
+
   create_table "professorlists", force: :cascade do |t|
     t.string   "first_name"
     t.string   "last_name"
@@ -65,13 +76,14 @@ ActiveRecord::Schema.define(version: 20150309224840) do
   end
 
   create_table "schedules", force: :cascade do |t|
-    t.string   "name",          default: "Unnamed Schedule"
     t.integer  "user_id"
-    t.integer  "course_id"
+    t.string   "name",          default: "Unnamed Schedule"
+    t.string   "unique_string"
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
-    t.string   "unique_string"
   end
+
+  add_index "schedules", ["user_id"], name: "index_schedules_on_user_id", using: :btree
 
   create_table "schools", force: :cascade do |t|
     t.string   "name"

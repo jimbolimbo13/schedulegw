@@ -1,9 +1,17 @@
 class Course < ActiveRecord::Base
-	has_many :schedules
-	has_many :users, through: :schedules
+
+  #relationship to schedules
+  has_many :courseschedules
+  has_many :schedules, through: :courseschedules
+
+
+  #possibly:
+  belongs_to :schools
 
 	has_many :subscriptions
 	has_many :users, through: :subscriptions
+
+
 	
 
 	def self.scrape

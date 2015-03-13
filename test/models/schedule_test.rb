@@ -1,7 +1,14 @@
 require 'test_helper'
 
 class ScheduleTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  
+  def setup 
+    @user = users(:Grant)
+    @schedule = @user.build_schedule("60242,61000".split(",").map(&:to_i))
+  end
+
+  test "is valid " do 
+    assert @schedule.valid?
+  end
+
 end
