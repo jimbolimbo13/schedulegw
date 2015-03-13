@@ -69,11 +69,11 @@
                 <li role="presentation" class="divider"></li>
                 <li role="presentation" class="dropdown-header">Course Recency</li>
                 <li><%= link_to "Checked for course changes #{time_ago_in_words(current_user.school.crn_last_checked.getlocal)} ago", '#' %></li>
-                <li><%= link_to "Course data last updated #{time_ago_in_words(current_user.school.crn_last_scraped.getlocal)} ago", '#' %></li>
+                <li><%= link_to "Nothing new since #{time_ago_in_words(current_user.school.crn_last_scraped.getlocal)} ago", '#' %></li>
                 <li role="presentation" class="divider"></li>
                 <li role="presentation" class="dropdown-header">Exam Recency</li>
                 <li><%= link_to "Checked for exam info changes #{time_ago_in_words(current_user.school.exam_last_checked.getlocal)} ago", '#' %></li>
-                <li><%= link_to "Exam info last updated #{time_ago_in_words(current_user.school.exam_last_scraped.getlocal)} ago", '#' %></li>
+                <li><%= link_to "Nothing new since #{time_ago_in_words(current_user.school.exam_last_scraped.getlocal)} ago", '#' %></li>
               <% end %>
             </ul>
           </li>

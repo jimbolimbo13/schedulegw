@@ -42,6 +42,12 @@ $( document ).on('page:change', function() {
 			addthisclass(id);
 		}
 	});
+
+	// if the user has blocked ads....
+ 	$.ajax( "http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ).fail(function() {
+  	$('#bottom_google_ad_container').append("<div><h1>Freeloader. :(</h1></div>");
+  })
+
 })
 
 //renders html for a course. 
@@ -651,5 +657,8 @@ function mark_unavailable_in_list(crn) {
 function mark_available_in_list(crn) {
 	$( '#list_'+ crn +'' ).removeClass( "unavailable_course" ).addClass( "available_course" );
 } 
+
+
+
 
 
