@@ -45,7 +45,10 @@ $( document ).on('page:change', function() {
 
 	// if the user has blocked ads....
  	$.ajax( "http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ).fail(function() {
-  	$('#bottom_google_ad_container').append("<div><h1></h1></div>");
+  	
+  	// $('#bottom_google_ad_container').append("<div><h1></h1></div>");
+  	// Here insert what you want to happen when people have adblock enabled 
+  	// or some other reason ads aren't loading. :*()
   })
 
 })
