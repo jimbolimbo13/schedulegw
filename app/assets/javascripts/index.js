@@ -89,8 +89,54 @@ function check_for_loaded_schedule() {
 
 //shows/hides courses available based on search input 
 function search_courses(term) {
+	term = term.toLowerCase();
+
 	$.each(window.courses, function(index, course) {
-		match = ( ((course.course_name.toLowerCase().indexOf(term.toLowerCase())) > -1) || ((course.professor.toLowerCase().indexOf(term.toLowerCase())) > -1) || ((course.gwid.indexOf(term)) > -1) );
+		switch(term) {
+			case 'monday':
+				match = (course.day2_start)
+				break;
+
+			case 'tuesday':
+				match = (course.day3_start)
+				break;
+
+			case 'wednesday':
+				match = (course.day4_start)
+				break;
+
+			case 'thursday':
+				match = (course.day5_start)
+				break;
+
+			case 'friday':
+				match = (course.day6_start)
+				break;
+
+			case '1 hour':
+				match = (course.hours == 1)
+				break;
+
+			case '2 hours':
+				match = (course.hours == 2)
+				break;
+
+			case '3 hours':
+				match = (course.hours == 3)
+				break;
+
+			case '4 hours':
+				match = (course.hours == 4)
+				break;
+
+			default:
+				match = ( 
+				((course.course_name.toLowerCase().indexOf(term)) > -1) || 
+				((course.professor.toLowerCase().indexOf(term)) > -1) || 
+				((course.gwid.indexOf(term)) > -1)
+				);
+		} 
+
 		if (match) {
 			//render
 			html = render_course_listing(course);
