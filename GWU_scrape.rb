@@ -8,7 +8,7 @@
 
   if t.hour > 22 || t.hour < 11
     puts "Not during Business Hours, so not scraping"
-    # exit
+    exit
   end
 
 
