@@ -23,7 +23,7 @@ $( document ).on('page:change', function() {
 
 	//searches 
 	$('#search_bar').keyup(function (e) {
-		course_search();
+		search_courses();
 	});
 	
 	//handly any course plus button being clicked. ul must be static/extant when the page loads, whereas the li can be added dynamically later and this will still fire.
@@ -42,6 +42,12 @@ $( document ).on('page:change', function() {
 			addthisclass(id);
 		}
 	});
+
+	//anytime an option is changed, filter immediately 
+	$( '.filter_option' ).on('change', function(e) {
+		console.log('changd filter');
+		search_courses();
+	})
 
 	// if the user has blocked ads....
  	$.ajax( "http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ).fail(function() {
@@ -88,61 +94,75 @@ function check_for_loaded_schedule() {
 }
 
 //shows/hides courses available based on search input 
-function search_courses(term) {
-	term = term.toLowerCase();
+function search_courses() {
+	var include_all = false;
 
-	$.each(window.courses, function(index, course) {
-		switch(term) {
-			case 'monday':
-				match = (course.day2_start)
-				break;
+	var term = $('#search_bar').val().toLowerCase();
+	if ((term == null) || (term == "") || (term == undefined)) {
+		// nothing in the box. 
+		var include_all = true;
+	} 
 
-			case 'tuesday':
-				match = (course.day3_start)
-				break;
+		$('#classlisttarget').empty();
+	
+		var monday = document.getElementById("monday").checked;
+		var tuesday = document.getElementById("tuesday").checked;
+		var wednesday = document.getElementById("wednesday").checked;
+		var thursday = document.getElementById("thursday").checked;
+		var friday = document.getElementById("friday").checked;
 
-			case 'wednesday':
-				match = (course.day4_start)
-				break;
+		var h1 = document.getElementById("h1").checked;
+		var h2 = document.getElementById("h2").checked;
+		var h3 = document.getElementById("h3").checked;
+		var h4 = document.getElementById("h4").checked;
+		var hx = document.getElementById("hx").checked;
 
-			case 'thursday':
-				match = (course.day5_start)
-				break;
+		$.each(window.courses, function(index, course) {
 
-			case 'friday':
-				match = (course.day6_start)
-				break;
-
-			case '1 hour':
-				match = (course.hours == 1)
-				break;
-
-			case '2 hours':
-				match = (course.hours == 2)
-				break;
-
-			case '3 hours':
-				match = (course.hours == 3)
-				break;
-
-			case '4 hours':
-				match = (course.hours == 4)
-				break;
-
-			default:
-				match = ( 
+			term_match = (
 				((course.course_name.toLowerCase().indexOf(term)) > -1) || 
 				((course.professor.toLowerCase().indexOf(term)) > -1) || 
-				((course.gwid.indexOf(term)) > -1)
-				);
-		} 
+				((course.gwid.indexOf(term)) > -1) 
+				)
+			
+			match = ( 
 
-		if (match) {
-			//render
-			html = render_course_listing(course);
-			$('#classlisttarget').append(html);
-		} 
-	})
+				(
+					(term_match || include_all)
+				)			 
+
+				&&
+				
+				(
+					(monday && course.day2_start) ||
+					(tuesday && course.day3_start) ||
+					(wednesday && course.day4_start) ||
+					(thursday && course.day5_start) ||
+					(friday && course.day6_start) 
+				)
+
+				&&
+
+				(
+					(h1 && (course.hours == 1)) ||
+					(h2 && (course.hours == 2)) ||
+					(h3 && (course.hours == 3)) ||
+					(h4 && (course.hours == 4)) ||
+					(hx && (course.hours == "variable"))
+				)
+			);
+
+			//other options
+			
+
+
+			if (match) {
+				//render
+				html = render_course_listing(course);
+				$('#classlisttarget').append(html);
+			} 
+		})
+
 }
 
 function addthisclass(crn) {
@@ -385,14 +405,7 @@ function update_view() {
 }
 
 function course_search() {
-	var terms = $('#search_bar').val();
-	if ((terms == null) || (terms == "") || (terms == undefined)) {
-		//nothing in the box. 
-		populate_course_list();
-	} else {
-		$('#classlisttarget').empty();
-    	search_courses(terms);
-    }
+	
 }
 
 //this is rough and probably can be optimized

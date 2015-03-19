@@ -13,7 +13,17 @@
           <%= link_to image_tag('logo.png', size: '40x40'), root_path %>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search by name, ID, professor, # of hours, or day" id="search_bar" style="width:350px;">
+          <input type="text" class="form-control" placeholder="Search by name, ID, or professor" id="search_bar" style="width:350px;"><br>
+          <input type="checkbox" class="filter_option" id="monday" value="true" checked>Mon
+          <input type="checkbox" class="filter_option" id="tuesday" value="true" checked>Tue
+          <input type="checkbox" class="filter_option" id="wednesday" value="true" checked>Wed
+          <input type="checkbox" class="filter_option" id="thursday" value="true" checked>Thu
+          <input type="checkbox" class="filter_option" id="friday" value="true" checked>Fri<br>
+          <input type="checkbox" class="filter_option" id="h1" value="true" checked>1h
+          <input type="checkbox" class="filter_option" id="h2" value="true" checked>2h
+          <input type="checkbox" class="filter_option" id="h3" value="true" checked>3h
+          <input type="checkbox" class="filter_option" id="h4" value="true" checked>4h
+          <input type="checkbox" class="filter_option" id="hx" value="true" checked>variable
         </div>
       </div>
     </div>
