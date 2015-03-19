@@ -51,7 +51,7 @@ $( document ).on('page:change', function() {
 
 	// if the user has blocked ads....
  	$.ajax( "http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ).fail(function() {
- 		document.body.style.background = "url('tiedye.jpg') repeat-x";
+ 		document.body.style.background = "url('http://www.tie-dyes.com/images/Tapestry-Rainbow-Spiral-Tie-Dye-bg.jpg') repeat-x";
   })
 
 })
