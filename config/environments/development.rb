@@ -51,7 +51,7 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   #to match production
-  config.serve_static_files = true
+  config.serve_static_files = false
 
   #force developer to precompile assets before running. true = better for development, but must run rake assets:clean before deploying. 
   config.assets.compile = true
