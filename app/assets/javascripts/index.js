@@ -61,7 +61,9 @@ function render_course_listing(course) {
 	var html = '';
 	var html = html + '<li style="overflow:hidden;" class="available_course" id="list_'+course.crn+'">';
 	var html = html + '<span class="fa fa-plus-square fa-2x" style="color:green;" alt="'+course.additional_info+'" id='+course.crn+'></span>';
-	var html = html + '<span class="classname">'+course.gwid+'-'+course.section+' '+course.course_name+'</span><span class="profname">'+course.professor+'</span><span class="ratings"><a href="https://my.law.gwu.edu/Evaluations/page%20library/ByFaculty.aspx?Source=%2fEvaluations%2fdefault.aspx&IID='+course.prof_id+'" target="_blank"><button class="GWU_btn"> GWU </button></a></span>';
+	var html = html + '<span class="classname">'+course.gwid+'-'+course.section+' '+course.course_name+'</span><span class="profname">'+course.professor+'</span>';
+	//commented out because people are stupid and dont make sure its not a prof with a different last name. Will fix when algorithm is smarter.
+	//var html = html + '<span class="ratings"><a href="https://my.law.gwu.edu/Evaluations/page%20library/ByFaculty.aspx?Source=%2fEvaluations%2fdefault.aspx&IID='+course.prof_id+'" target="_blank"><button class="GWU_btn"> GWU </button></a></span>';
 	var html = html + '</li>';
 	return html 
 }
