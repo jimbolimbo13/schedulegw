@@ -27,7 +27,7 @@ class Course < ActiveRecord::Base
 
     course_array.each do |course|
       gwid = course.match(/(6\d{3}-\w{2,3})/)
-      current_class = Course.find_by(gwid)
+      current_class = Course.find_by(gwid: gwid)
       isbn_array = course.scan(/(?<=ISBN-13):*\s*((?:\d+-*)+)/)
       if isbn_array != nil
         isbn_array.map! {|x| x.to_s.slice(/((?:\d+-*)+)/).gsub("-", "")}
