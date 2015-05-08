@@ -28,11 +28,8 @@ class Course < ActiveRecord::Base
     course_array.each do |course|
       gwid = course.match(/(6\d{3}-\w{2,3})/)
       gwid = gwid.to_s.slice(/((?:\w+-*)+)/)
-      if gwid != nil && gwid[5] != "A" #this will not try to find it if it is the -All gwid
-        current_class = Course.find_or_initialize_by(gwid: gwid)
-      else
-        next
-      end
+      gwid != nil && gwid[5] != "A" ? (current_class = Course.find_or_initialize_by(gwid: gwid)) : next
+      
       isbn_array = course.scan(/(?<=ISBN-13):*\s*((?:\d+-*)+)/)
       if isbn_array != nil
         isbn_array.map! {|x| x.to_s.slice(/((?:\d+-*)+)/).gsub("-", "")}
