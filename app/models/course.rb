@@ -20,7 +20,7 @@ class Course < ActiveRecord::Base
 	end
 
   def self.get_books(url)
-    yomu = Yomu.new 'url'
+    yomu = Yomu.new url
     text = yomu.text
     final_text = text.gsub(/\n+/, " ")
     course_array = final_text.split(/\s(?=6\d{3}-\w{2,3})/)
@@ -28,7 +28,7 @@ class Course < ActiveRecord::Base
     course_array.each do |course|
       gwid = course.match(/(6\d{3}-\w{2,3})/)
       gwid = gwid.to_s.slice(/((?:\w+-*)+)/)
-      gwid != nil && gwid[5] != "A" ? (current_class = Course.find_or_initialize_by(gwid: gwid)) : next
+      gwid != nil && gwid[5] != "A" ? (current_class = Course.find_or_create_by(gwid: gwid)) : next
       
       isbn_array = course.scan(/(?<=ISBN-13):*\s*((?:\d+-*)+)/)
       if isbn_array != nil
@@ -37,6 +37,7 @@ class Course < ActiveRecord::Base
 
         isbn_array.each do |book|
           current_class.isbn << book
+          current_class.save!
         end
       end
       isbn_array = course.scan(/(?<=ISBN[#:\s])\s*((?:\d+-?)+)/)
@@ -46,6 +47,7 @@ class Course < ActiveRecord::Base
 
         isbn_array.each do |book|
           current_class.isbn << book
+          current_class.save!
         end
       end
       isbn_array = course.scan(/(?<=ISBN#:)\s*((?:\d+-?)+)/)
@@ -55,6 +57,7 @@ class Course < ActiveRecord::Base
 
         isbn_array.each do |book|
           current_class.isbn << book
+          current_class.save!
         end
       end
       isbn_array = course.scan(/(?<=ISBN\sNumber:)\s*((?:\d+-?)+)/)
@@ -64,6 +67,7 @@ class Course < ActiveRecord::Base
 
         isbn_array.each do |book|
           current_class.isbn << book
+          current_class.save!
         end
       end
     end
