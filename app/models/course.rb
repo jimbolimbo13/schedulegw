@@ -37,7 +37,7 @@ class Course < ActiveRecord::Base
 
         isbn_array.each do |book|
           if current_class.isbn.include? book
-            return
+            next
           else 
             current_class.isbn << book
           end
@@ -51,7 +51,7 @@ class Course < ActiveRecord::Base
 
         isbn_array.each do |book|
           if current_class.isbn.include? book
-            return
+            next
           else 
             current_class.isbn << book
           end
@@ -65,7 +65,7 @@ class Course < ActiveRecord::Base
 
         isbn_array.each do |book|
           if current_class.isbn.include? book
-            return
+            next
           else 
             current_class.isbn << book
           end
@@ -79,7 +79,7 @@ class Course < ActiveRecord::Base
 
         isbn_array.each do |book|
           if current_class.isbn.include? book
-            return
+            next
           else 
             current_class.isbn << book
           end
