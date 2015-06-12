@@ -36,7 +36,7 @@ class Course < ActiveRecord::Base
         isbn_array.map! {|x| x[0] != "9" ? "978" + x : x}
 
         isbn_array.each do |book|
-          current_class.isbn << book
+          current_class.isbn.include?(book) ? (next) : (current_class.isbn << book)
           current_class.save!
         end
       end
@@ -46,7 +46,7 @@ class Course < ActiveRecord::Base
         isbn_array.map! {|x| x[0] != "9" ? "978" + x : x}
 
         isbn_array.each do |book|
-          current_class.isbn << book
+          current_class.isbn.include?(book) ? (next) : (current_class.isbn << book)
           current_class.save!
         end
       end
@@ -56,7 +56,7 @@ class Course < ActiveRecord::Base
         isbn_array.map! {|x| x[0] != "9" ? "978" + x : x}
 
         isbn_array.each do |book|
-          current_class.isbn << book
+          current_class.isbn.include?(book) ? (next) : (current_class.isbn << book)
           current_class.save!
         end
       end
@@ -66,7 +66,7 @@ class Course < ActiveRecord::Base
         isbn_array.map! {|x| x[0] != "9" ? "978" + x : x}
 
         isbn_array.each do |book|
-          current_class.isbn << book
+          current_class.isbn.include?(book) ? (next) : (current_class.isbn << book)
           current_class.save!
         end
       end
