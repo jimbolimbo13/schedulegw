@@ -1,5 +1,11 @@
 <div class="container text-center">
 	<div class="row">
+		<% if current_user && current_user.school.name == "none" %>
+			<h2>You tried to sign in with a different Google Account - please use your school email.</h2>
+		<% end %>
+	</div>
+
+	<div class="row">
 		<br><br><%= link_to 'Sign in with Law School Account', signin_path, class: "btn btn-lg btn-primary" %><br><br>
 	</div>
 
@@ -23,7 +29,7 @@
 	</div>
 
 	<div class="row">
-		Automatic Account Deletion - 3 years from today
+		Automatic Account Deletion - 3 years from the day you first login.
 		<span class="glyphicon glyphicon-ok" aria-hidden="true" style="color:green;"></span>
 	</div>
 
@@ -47,4 +53,3 @@
 	</div>
 
 </div>
-

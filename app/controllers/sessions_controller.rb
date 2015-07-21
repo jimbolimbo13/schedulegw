@@ -1,6 +1,7 @@
 class SessionsController < ApplicationController
 
   def new
+    #This is the hard to fix redirect
     redirect_to '/auth/google_oauth2'
   end
 
@@ -19,7 +20,7 @@ class SessionsController < ApplicationController
   end
 
   def failure
-    #if user cancels 
+    #if user cancels
     redirect_to security_path
   end
 
