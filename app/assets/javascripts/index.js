@@ -1,62 +1,62 @@
-// 
-// 
+//
+//
 // If you can read this, we should be friends. Especially if you like Ruby
-// 
+//
 
 $( document ).on('page:change', function() {
 	//load courses.
 	window.courses = null;
-	
+
 	//no currently selected courses
-	window.currentschedulearray = {}; //set as an obj not an array 
+	window.currentschedulearray = {}; //set as an obj not an array
 
 	//sessions/courses on the schedule that overlap / don't overlap
 	window.conflicted_courses = [];
 	window.unconflicted_courses = [];
-	
+
 	//populate courses available
 	load_courses();
 
-	//This next line only works in Chrome which is bullshit because it's amazing and needs 
+	//This next line only works in Chrome which is bullshit because it's amazing and needs
 	//to work in Safari too. Safari sucks.
 	// Object.observe(window.currentschedulearray, update_view);
 
-	//searches 
+	//searches
 	$('#search_bar').keyup(function (e) {
 		search_courses();
 	});
-	
+
 	//handly any course plus button being clicked. ul must be static/extant when the page loads, whereas the li can be added dynamically later and this will still fire.
 	$('body #classlisttarget').on('click', 'li .fa-plus-square', function(e) {
 		var id = $(this).attr('id');
 		console.log('clicked an li its id is '+id);
-		
+
 		if (e.shiftKey) {
 			// if shift is held down, it means user is trying to flag this listing as incorrect.
         	c = confirm("Mark this class as incorrect?");
         	if (c == true){
-        		
+
         		//flag_incorrect(id);
-        	} 
+        	}
     	} else {
 			addthisclass(id);
 		}
 	});
 
-	//anytime an option is changed, filter immediately 
+	//anytime an option is changed, filter immediately
 	$( '.filter_option' ).on('change', function(e) {
 		console.log('changd filter');
 		search_courses();
 	})
 
 	// if the user has blocked ads....
- 	$.ajax( "http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ).fail(function() {
+ 	$.ajax( "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ).fail(function() {
  		//$( '#schedule-container' ).css( 'background', 'url("/td.jpg")' );
   })
 
 })
 
-//renders html for a course. 
+//renders html for a course.
 //commented out because people are stupid and dont make sure its not a prof with a different last name. Will fix when algorithm is smarter.
 //var html = html + '<span class="ratings"><a href="https://my.law.gwu.edu/Evaluations/page%20library/ByFaculty.aspx?Source=%2fEvaluations%2fdefault.aspx&IID='+course.prof_id+'" target="_blank"><button class="GWU_btn"> GWU </button></a></span>';
 //goes right before the closing li below
@@ -67,7 +67,7 @@ function render_course_listing(course) {
 	var html = html + '<span class="fa fa-plus-square fa-2x" style="color:green;" alt="'+course.additional_info+'" id='+course.crn+'></span>';
 	var html = html + '<span class="classname">'+course.gwid+'-'+course.section+' '+course.course_name+'</span><span class="profname">'+course.professor+'</span>';
 	var html = html + '</li>';
-	return html 
+	return html
 }
 
 
@@ -75,7 +75,7 @@ function load_courses() {
 	$.get('/api/courses/courses.json', function(courses){
 		window.courses = courses
 		populate_course_list();
-		check_for_loaded_schedule();	
+		check_for_loaded_schedule();
 	})
 }
 
@@ -97,18 +97,18 @@ function check_for_loaded_schedule() {
 	}
 }
 
-//shows/hides courses available based on search input 
+//shows/hides courses available based on search input
 function search_courses() {
 	var include_all = false;
 
 	var term = $('#search_bar').val().toLowerCase();
 	if ((term == null) || (term == "") || (term == undefined)) {
-		// nothing in the box. 
+		// nothing in the box.
 		var include_all = true;
-	} 
+	}
 
 		$('#classlisttarget').empty();
-	
+
 		var monday = document.getElementById("monday").checked;
 		var tuesday = document.getElementById("tuesday").checked;
 		var wednesday = document.getElementById("wednesday").checked;
@@ -124,25 +124,25 @@ function search_courses() {
 		$.each(window.courses, function(index, course) {
 
 			term_match = (
-				((course.course_name.toLowerCase().indexOf(term)) > -1) || 
-				((course.professor.toLowerCase().indexOf(term)) > -1) || 
-				((course.gwid.indexOf(term)) > -1) 
+				((course.course_name.toLowerCase().indexOf(term)) > -1) ||
+				((course.professor.toLowerCase().indexOf(term)) > -1) ||
+				((course.gwid.indexOf(term)) > -1)
 				)
-			
-			match = ( 
+
+			match = (
 
 				(
 					(term_match || include_all)
-				)			 
+				)
 
 				&&
-				
+
 				(
 					(monday && course.day2_start) ||
 					(tuesday && course.day3_start) ||
 					(wednesday && course.day4_start) ||
 					(thursday && course.day5_start) ||
-					(friday && course.day6_start) 
+					(friday && course.day6_start)
 				)
 
 				&&
@@ -157,14 +157,14 @@ function search_courses() {
 			);
 
 			//other options
-			
+
 
 
 			if (match) {
 				//render
 				html = render_course_listing(course);
 				$('#classlisttarget').append(html);
-			} 
+			}
 		})
 
 }
@@ -172,7 +172,7 @@ function search_courses() {
 function addthisclass(crn) {
 	var color = random_color();
 
-	//get course info from json using the crn 
+	//get course info from json using the crn
 	var course = $.grep(window.courses, function(e){ return e.crn == crn; });
 	var course = course[0];
 
@@ -250,11 +250,11 @@ function addthisclass(crn) {
 }
 
 function render_session(column, start_time, end_time, coursedata, color) {
-	//column is the css id of the column - ie day2_column etc. 
+	//column is the css id of the column - ie day2_column etc.
 	// console.info(coursedata);
 
-	//start time minus 8*60 = 0 percent 
-	//480 minutes = 0% 
+	//start time minus 8*60 = 0 percent
+	//480 minutes = 0%
 	var start_time = (convert_to_minutes(start_time) - 480);
 	var start_percent = ((start_time/780)*100); //total height of Y axis is 780 minutes, so find how many minutes are before (above) it. multiple to make it XX% instaed of .XX
 
@@ -280,30 +280,30 @@ function render_session(column, start_time, end_time, coursedata, color) {
 }
 
 function random_color() {
-	//random colors for variety 
+	//random colors for variety
 	var colors = [
 		'#D2DEE6', //whitish
 		'#3396D1', //light blue
-		'#006099', //medium blue 
-		'#FF6433', //burnt orange 
-		'#F03A00', //burnter orange 
+		'#006099', //medium blue
+		'#FF6433', //burnt orange
+		'#F03A00', //burnter orange
 		'#C32F00', //burnter-er orange
 		'#FFC933', //yellowish
 		'#C38F00', //goldenrod?
 		'#F0B000', //more goldenrod bright
 		'#33987F', //green from next_btn
 		'#FFCE80', //orange of chosenclasses box
-	]; 
+	];
 
 	var l = colors.length;
 	var color = Math.floor(Math.random()*l);
 	var color = colors[color];
-	return color 
+	return color
 }
 
 function convert_to_minutes(rawtime) {
 	// console.log('rawtime received :'+rawtime);
-	//have to convert rawtime to string to substr it. 
+	//have to convert rawtime to string to substr it.
 	if (rawtime) {
 		var rawtime = rawtime.toString();
 
@@ -324,7 +324,7 @@ function convert_to_minutes(rawtime) {
 
 		//return how many minutes are in the 4-digit military time entered as rawtime
 		return m;
-	} 
+	}
 }
 
 function removecourse(classid) {
@@ -334,7 +334,7 @@ function removecourse(classid) {
 }
 
 function update_view() {
-	
+
 	$('#chosenclasseslist').empty();
 
 	if (typeof window.currentschedulearray != "undefined") {
@@ -398,9 +398,9 @@ function update_view() {
 			var html = html + '<li id="next_btn" class="btn btn-lg btn-primary" onclick="next()">Save</li>';
 			$('#chosenclasseslist').append(html);
 		}
-		
-		
-		//update striped classes etc. 
+
+
+		//update striped classes etc.
 		check_schedule_conflicts();
 
 	} else {
@@ -409,7 +409,7 @@ function update_view() {
 }
 
 function course_search() {
-	
+
 }
 
 //this is rough and probably can be optimized
@@ -421,9 +421,9 @@ function check_schedule_conflicts() {
 	}
 
 	// conflicted_courses = window.conflicted_courses;
-	
 
-	//this makes the minimum number of comparisons :) :) :) 
+
+	//this makes the minimum number of comparisons :) :) :)
 	for (i=0; i<selected.length; i++) {
 		console.log('length: '+selected.length);
 		if (selected.length < 2) {
@@ -439,17 +439,17 @@ function check_schedule_conflicts() {
 			if ('conflict' == compare_courses(course1, course2)) {
 				window.conflicted_courses.push(course1);
 				window.conflicted_courses.push(course2);
-			} 
-		}	
+			}
+		}
 	}
 
-	//make the overlapping courses white/red slashed in color 
+	//make the overlapping courses white/red slashed in color
 	$.each(window.conflicted_courses, function (index, conflicted_course) {
 		mark_overlapped_on_schedule(conflicted_course);
 	})
 
 
-	//gray out the courses on the list that are incompatible with the classes currently chosen. 
+	//gray out the courses on the list that are incompatible with the classes currently chosen.
 	unavailable_courses = [];
 	$.each(window.courses, function(index1, course1) {
 		$.each(window.currentschedulearray, function(index2, course2) {
@@ -476,7 +476,7 @@ function check_schedule_conflicts() {
 function compare_courses(course1, course2) {
 	// returns 'conflict' else 'true'
 
-	//Monday 
+	//Monday
 	if (course1.day2_start && course2.day2_start) {
 		if (course1.day2_start == course2.day2_start) {
 			return 'conflict';
@@ -561,10 +561,10 @@ function compare_courses(course1, course2) {
 		}
 	}
 
-	//Test Finals Times Here. 
+	//Test Finals Times Here.
 
 
-	return true; 
+	return true;
 }
 
 
@@ -591,7 +591,7 @@ function next() {
 		window.location = '/schedules';
 	})
 
-	
+
 }
 
 
@@ -616,7 +616,7 @@ function display_all_test() {
 }
 
 function comparison_test() {
-	//test for 
+	//test for
 
 	var l = courses.length;
 	for (i=0; i<l; i++) {
@@ -719,9 +719,4 @@ function mark_unavailable_in_list(crn) {
 
 function mark_available_in_list(crn) {
 	$( '#list_'+ crn +'' ).removeClass( "unavailable_course" ).addClass( "available_course" );
-} 
-
-
-
-
-
+}

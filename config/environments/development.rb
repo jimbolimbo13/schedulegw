@@ -19,12 +19,12 @@ Rails.application.configure do
   host = 'schedulegw.com'
   config.action_mailer.asset_host = 'localhost'
   config.action_mailer.default_url_options = { host: 'localhost:5000'}
-  
+
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
    address:              'smtp.gmail.com',
    port:                 587,
-   domain:               'http://www.meansdatabase.com',
+   domain:               'https://www.schedulegw.com',
    user_name:            ENV['gmail_address'],
    password:             ENV['gmail_password'],
    authentication:       'plain',
@@ -53,6 +53,6 @@ Rails.application.configure do
   #to match production
   config.serve_static_files = false
 
-  #force developer to precompile assets before running. true = better for development, but must run rake assets:clean before deploying. 
+  #force developer to precompile assets before running. true = better for development, but must run rake assets:clean before deploying.
   config.assets.compile = true
 end
