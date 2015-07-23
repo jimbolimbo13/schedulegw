@@ -1,10 +1,7 @@
 require 'test_helper'
 
-
-
-
 class CoreFeatureTest < ActiveSupport::TestCase
-  def setup 
+  def setup
 
   end
 
@@ -12,12 +9,12 @@ class CoreFeatureTest < ActiveSupport::TestCase
   #   assert true
   # end
 
-  test "User saves a new schedule" do 
+  test "User saves a new schedule" do
     #data setup
-    current_user = users(:Grant)
+    current_user = users(:grant)
     get_variables = "60242,61000"
 
-    # #controller logic 
+    # #controller logic
     current_user.build_schedulecourse("60242,61000".split(",").map(&:to_i))
     schedule = current_user.schedules.create!(:name => "Unnamed Schedule")
     courses = get_variables.split(",").map(&:to_i)
@@ -27,6 +24,6 @@ class CoreFeatureTest < ActiveSupport::TestCase
     end
 
     schedule.save!
-    assert current_user.schedules.count = 1 
+    assert current_user.schedules.count = 1
   end
 end

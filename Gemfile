@@ -15,8 +15,8 @@ gem 'omniauth-google-oauth2'
 gem 'pg'
 gem 'figaro' #puts env variables in config/application.yml
 gem 'yomu' #pulls pdf to text, essential to scraper.
-gem 'roadie-rails' #inlines style for emails 
-
+gem 'roadie-rails' #inlines style for emails
+gem 'sidekiq' # background workers
 
 group :development do
   gem 'spring'
@@ -25,8 +25,11 @@ group :development do
   gem 'hub', :require=>nil
   gem 'quiet_assets'
   gem 'rails_layout'
+  gem 'letter_opener'
 end
+
 group :production do
   gem 'rails_12factor'
   gem 'thin'
+  gem 'heroku_rails_deflate' #gzipper for Heroku, reduces pageload time and makes Google happy
 end

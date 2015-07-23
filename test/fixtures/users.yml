@@ -1,21 +1,20 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-Grant:
-  id: 2
+grant:
   name: Grant Nelson
   provider: google_oath2
   uid: 102927493897445069334
   subscribed_ids: nil
   admin: true
-  school_id: 2
+  school: GWU
+  email: gmnelson@law.gwu.edu
   created_at: <%= Time.now %>
 
-Joe: 
-  id: 1
+Joe:
   name: Joe Blackwell
   provider: google_oath2
   uid: 10adsf4
   subscribed_ids: nil
   admin: false
-  school_id: 2
+  school: AU
   created_at: <%= Time.now %>

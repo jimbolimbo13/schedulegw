@@ -4,8 +4,69 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+
+evidence:
+  crn: 62260
+  gwid: 6230
+  section: 20
+  course_name: Evidence
+  hours: 4
+  days: nil
+  day1_start: nil
+  day1_end: nil
+  day2_start: 1800
+  day2_end: 2000
+  day3_start: 1800
+  day3_end: 2000
+  day4_start: nil
+  day4_end: nil
+  day5_start: nil
+  day6_end: nil
+  day7_start: nil
+  day7_end: nil
+  llm_only: false
+  jd_only: false
+  course_name_2: nil
+  alt_schedule: false
+  additional_info: nil
+  manual_lock: false
+  professor: Saltzburg
+  prof_id: 13540
+  final_time: nil
+  final_time: 12/7
+  school: "GWU"
+  created_at: <%= Time.zone.now %>
+  isbn: [1422495388]
+
+pre:
+  crn: 60242
+  gwid: 6218
+  section: 12
+  course_name: Prof Responsibility & Ethics
+  hours: 2
+  days: nil
+  day1_start: nil
+  day1_end: nil
+  day2_start: 1340
+  day2_end: 1435
+  day3_start: nil
+  day3_end: nil
+  day4_start: 1340
+  day4_end: 1435
+  day5_start: nil
+  day6_end: nil
+  day7_start: nil
+  day7_end: nil
+  llm_only: false
+  jd_only: false
+  course_name_2: nil
+  alt_schedule: false
+  additional_info: nil
+  manual_lock: false
+  professor: Tuttle
+  prof_id: 13513
+  final_time: nil
+  final_time: 12/14
+  school: "GWU"
+  created_at: <%= Time.zone.now %>
+  isbn: [9781634592086]

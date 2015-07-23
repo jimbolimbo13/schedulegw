@@ -4,8 +4,44 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+GWU:
+  name: GWU
+  display_name: The George Washington University Law School
+  email_stub: "@law.gwu.edu"
+  initials: GWU
+  created_at: <%= 3.days.ago %>
+  updated_at: <%= 2.days.ago %>
+  final_date_options: ["12/3", "12/4", "12/7", "12/8", "12/9", "12/10", "12/11", "12/14", "12/15"]
+  final_time_options: ["9:30 A.M.", "2:00 P.M.", "6:30 P.M."]
+  crn_scrape_digest: "b89c5b23fbad564afec84d802929c991"
+  crn_last_scraped: "2015-03-21 19:52:56"
+  crn_last_checked: "2015-03-21 19:52:56"
+  exam_scrape_digest: "a05e6d3c3d65c2735c7f653332b5d5c0"
+  exam_last_scraped: "2015-03-21 19:53:03"
+  exam_last_checked: "2015-03-21 19:53:03"
+  booklist_scrape_digest: nil
+  booklist_last_scraped:
+  booklist_last_checked:
+  emails_sent: 0
+  schedules_created: 0
+
+AU:
+  name: AU
+  display_name: American University Washington College of Law
+  email_stub: "@law.au.edu"
+  initials: AU
+  created_at: <%= 3.days.ago %>
+  updated_at: <%= 2.days.ago %>
+  final_date_options: ["12/3", "12/4", "12/7", "12/8", "12/9", "12/10", "12/11", "12/14", "12/15"]
+  final_time_options: ["9:30 A.M.", "2:00 P.M.", "6:30 P.M."]
+  crn_scrape_digest: nil
+  crn_last_scraped: "2015-03-21 19:52:56"
+  crn_last_checked: "2015-03-21 19:52:56"
+  exam_scrape_digest: nil
+  exam_last_scraped: "2015-03-21 19:53:03"
+  exam_last_checked: "2015-03-21 19:53:03"
+  booklist_scrape_digest: nil
+  booklist_last_scraped:
+  booklist_last_checked:
+  emails_sent: 0
+  schedules_created: 0

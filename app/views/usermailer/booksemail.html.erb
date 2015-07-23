@@ -1,0 +1,58 @@
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Here's Your Booklist With Links</title>
+</head>
+
+<body>
+<style>
+  tr {
+    width: 100%;
+  }
+
+  #schedules_table {
+    background-color: white;
+    font-size: 50px;
+  }
+
+</style>
+
+<div id="email_container">
+  <div class="body_table">
+  <table>
+    <tr>
+      <%= render 'layouts/email_header' %>
+    </tr>
+    <tr>
+      Hey <%= @user.name %>,<br>
+      Here's each schedule you have saved on schedulegw.com with Amazon links to the books needed for each class.
+    </tr>
+    <tr>
+      <br>
+      <div id="schedules_table">
+        <tr>
+          <% @user.schedules.each do |schedule| %>
+            <%= schedule.name %><br>
+            <% schedule.courses.each do |course| %>
+              <%= course.course_name %><br>
+              <% course.isbn.each do |isbn| %>
+                <%= isbn %>
+              <% end %>
+            <% end %>
+            <br>
+            <br>
+          <% end %>
+        </tr>
+      </table>
+    </tr>
+    <tr>
+      Rock on, <br>
+      The ScheduleGW Team
+    </tr>
+    <tr>
+      <%= render 'layouts/email_footer' %>
+    </tr>
+  </table>
+</div>
+</div>
+
+</body>

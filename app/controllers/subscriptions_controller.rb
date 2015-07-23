@@ -30,18 +30,18 @@ class SubscriptionsController < ApplicationController
     @subscriptions = current_user.subscribed_ids ? current_user.subscribed_ids : []
 
     if @user.schedules.count > 0
-      @allcourses = @user.schedules.first.courses 
+      @allcourses = @user.schedules.first.courses
 
       @user.schedules.each do |this_s|
         @allcourses = @allcourses + this_s.courses unless this_s.courses == @allcourses
       end
     end
-   
+
 
   end
 
 
-  private 
+  private
 
     def create_params
       params.require(:subscriptions).permit(:course_id, :course_ids => [])

@@ -16,11 +16,11 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = true
 
-  host = 'schedulegw.com'
   config.action_mailer.asset_host = 'localhost'
   config.action_mailer.default_url_options = { host: 'localhost:5000'}
 
-  config.action_mailer.delivery_method = :smtp
+  # switch to :smtp or :letter_opener depending on delivery requirement.
+  config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.smtp_settings = {
    address:              'smtp.gmail.com',
    port:                 587,
@@ -49,6 +49,9 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # Opt-in to Rails 5 default sorting order of :random vs :sorted
+  config.active_support.test_order = :random
 
   #to match production
   config.serve_static_files = false
