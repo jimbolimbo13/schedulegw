@@ -41,7 +41,7 @@ class UsermailerTest < ActionMailer::TestCase
     assert_match courses(:evidence).course_name, mail.body.encoded
     assert_match "Prof Responsibility", mail.body.encoded # .course_name doesn't encode correctly
 
-    
+
 
   end
 
