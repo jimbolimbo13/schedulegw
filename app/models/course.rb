@@ -1,4 +1,5 @@
 class Course < ActiveRecord::Base
+  after_save :add_to_listbooks
 
   #relationship to schedules
   has_many :courseschedules
@@ -10,6 +11,10 @@ class Course < ActiveRecord::Base
 
 	has_many :subscriptions
 	has_many :users, through: :subscriptions
+
+  # Connecting Course to Listbooks
+  has_many :coursebooks
+  has_many :listbooks, :through => :coursebooks
 
 	def self.scrape
     #load the scrapers here.
@@ -24,28 +29,12 @@ class Course < ActiveRecord::Base
     Course.where("id < ?", id).first.nil? ? Course.last : Course.where("id < ?", id).first
   end
 
-  # Returns the Amazon url for the given isbn
-  def amazon_url(isbn)
-    url = "http://www.amazon.com/s/?url=search-alias%3Daps&field-keywords=#{ isbn }"
-    url << "&tag=scgw-20"
-  end
-
-  def get_info_from_isbn(isbn)
-    request = Vacuum.new
-    request.configure(
-      aws_access_key_id: ENV['aws_access_key_id'],
-      aws_secret_access_key: ENV['aws_secret_access_key'],
-      associate_tag: 'scgw-20'
-    )
-
-    response = request.item_search(
-      query: {
-        'Keywords' => isbn,
-        'SearchIndex' => 'Books'
-      }
-    )
-    @doc = Nokogiri::HTML(response.body)
-    @title = @doc.xpath("//title").children.to_s
+  def add_to_listbooks
+    self.isbn.each do |isbn|
+      book = Listbook.find_or_create_by(isbn: isbn)
+      book.courses << self unless book.courses.include? self
+      book.save!
+    end
   end
 
   def self.get_books(url)
@@ -100,7 +89,10 @@ class Course < ActiveRecord::Base
         end
       end
     end
-
+    # Update the coursebooks <--> listbooks
+    Course.find_each do |course|
+      course.add_to_listbooks unless course.isbn.empty?
+    end
   end
 
 end

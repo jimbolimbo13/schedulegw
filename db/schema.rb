@@ -11,10 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150721055201) do
+ActiveRecord::Schema.define(version: 20150804050822) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "coursebooks", force: :cascade do |t|
+    t.integer  "listbook_id"
+    t.integer  "course_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "coursebooks", ["course_id"], name: "index_coursebooks_on_course_id", using: :btree
+  add_index "coursebooks", ["listbook_id"], name: "index_coursebooks_on_listbook_id", using: :btree
 
   create_table "courses", force: :cascade do |t|
     t.string   "crn"
@@ -66,6 +76,14 @@ ActiveRecord::Schema.define(version: 20150721055201) do
 
   add_index "courseschedules", ["course_id"], name: "index_courseschedules_on_course_id", using: :btree
   add_index "courseschedules", ["schedule_id"], name: "index_courseschedules_on_schedule_id", using: :btree
+
+  create_table "listbooks", force: :cascade do |t|
+    t.string   "title"
+    t.string   "amzn_url"
+    t.string   "isbn"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "professorlists", force: :cascade do |t|
     t.string   "first_name"
