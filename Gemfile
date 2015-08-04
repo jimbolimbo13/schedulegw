@@ -17,6 +17,8 @@ gem 'figaro' #puts env variables in config/application.yml
 gem 'yomu' #pulls pdf to text, essential to scraper.
 gem 'roadie-rails' #inlines style for emails
 gem 'sidekiq' # background workers
+gem 'vacuum' #Amazon Product API wrapper
+gem 'nokogiri' #HTTP parser
 
 group :development do
   gem 'spring'

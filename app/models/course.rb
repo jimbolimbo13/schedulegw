@@ -24,6 +24,30 @@ class Course < ActiveRecord::Base
     Course.where("id < ?", id).first.nil? ? Course.last : Course.where("id < ?", id).first
   end
 
+  # Returns the Amazon url for the given isbn
+  def amazon_url(isbn)
+    url = "http://www.amazon.com/s/?url=search-alias%3Daps&field-keywords=#{ isbn }"
+    url << "&tag=scgw-20"
+  end
+
+  def get_info_from_isbn(isbn)
+    request = Vacuum.new
+    request.configure(
+      aws_access_key_id: ENV['aws_access_key_id'],
+      aws_secret_access_key: ENV['aws_secret_access_key'],
+      associate_tag: 'scgw-20'
+    )
+
+    response = request.item_search(
+      query: {
+        'Keywords' => isbn,
+        'SearchIndex' => 'Books'
+      }
+    )
+    @doc = Nokogiri::HTML(response.body)
+    @title = @doc.xpath("//title").children.to_s
+  end
+
   def self.get_books(url)
     yomu = Yomu.new url
     text = yomu.text
