@@ -27,7 +27,7 @@ class CoursesController < ApplicationController
 			@final_times.each_with_index do |time, timeindex|
 				@square = Course.where(:final_date => date, :final_time => time)
 				instance_variable_set("@grid#{dateindex}#{timeindex}", @square)
-			end 
+			end
 		end
 
 		@orphans = Course.all.where(:final_time => nil).select { |course| course.final_date }
@@ -35,7 +35,7 @@ class CoursesController < ApplicationController
 	end
 
 
-	def show 
+	def show
 		@course = Course.find(params[:id])
 	end
 
@@ -43,13 +43,15 @@ class CoursesController < ApplicationController
 		@course = Course.new
 	end
 
-	def update 
+	def update
 		@course = Course.find(params[:id])
 		respond_to do |format|
 	      if @course.update(course_params)
-	        flash[:notice] = "Successfully updated this item."
-	        format.html { redirect_to '/courses' }
-	        format.json { render :index, status: :ok, location: @course }
+					flash[:notice] = "Saved Changes!"
+					format.html { redirect_to "/courses/#{ @course.next.id }/edit" } if params[:next_record]
+					format.html { redirect_to "/courses/#{ @course.previous.id }/edit" } if params[:previous_record]
+					format.html { redirect_to courses_path }
+					format.json { render :index, status: :ok, location: @course }
 	      else
 	        format.html { render :index }
 	        format.json { render json: @course.errors, status: :unprocessable_entity }
@@ -64,13 +66,13 @@ class CoursesController < ApplicationController
 		end
 
 		def course_params
-			params.require(:course).permit(	:crn, 
-											:gwid, 
-											:section, 
-											:course_name, 
-											:professor, 
-											:hours, 
-											:days, 
+			params.require(:course).permit(	:crn,
+											:gwid,
+											:section,
+											:course_name,
+											:professor,
+											:hours,
+											:days,
 											:llm_only,
 											:jd_only,
 											:course_name_2,
@@ -79,6 +81,7 @@ class CoursesController < ApplicationController
 											:final_date,
 											:final_time,
 											:manual_lock,
+											:isbn
 											)
 		end
 

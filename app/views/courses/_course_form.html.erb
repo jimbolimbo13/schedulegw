@@ -1,97 +1,119 @@
 <%= form_for(@course) do |f| %>
 
-<% if @course.errors.any? %>
-	<div id="error_explanation">
-	  <h2><%= pluralize(@course.errors.count, "error") %> prohibited this item from being saved:</h2>
+	<div class="row">
+		<% if @course.errors.any? %>
+			<div id="error_explanation">
+			  <h2><%= pluralize(@course.errors.count, "error") %> prohibited this item from being saved:</h2>
 
-	  <ul>
-	  <% @course.errors.full_messages.each do |message| %>
-	    <li><%= message %></li>
-	  <% end %>
-	  </ul>
+			  <ul>
+			  <% @course.errors.full_messages.each do |message| %>
+			    <li><%= message %></li>
+			  <% end %>
+			  </ul>
+			</div>
+		<% end %>
 	</div>
-<% end %>
 
-<div class="actions">
-    <%= f.submit %>
-</div>
+	<div class="row">
+		<div class="actions">
+				<%= f.button "Save and previous", name: 'previous_record', value: true, class: 'btn btn-success' %>
+				<%= button_tag(type: 'submit', class: "btn btn-success") do %>
+					<i class="glyphicon glyphicon-floppy-disk"></i> Save
+				<% end %>
+				<%= f.button "Save and next", name: 'next_record', value: true, class: 'btn btn-success' %>
+		</div>
+	</div>
 
-<div class="field">
-    <%= f.label :crn %><br>
-    <%= f.text_field :crn %>
-</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="field">
+			    <%= f.label :crn %><br>
+			    <%= f.text_field :crn %>
+			</div>
 
-<div class="field">
-    <%= f.label :gwid %><br>
-    <%= f.text_field :gwid %>
-</div>
+			<div class="field">
+			    <%= f.label :gwid %><br>
+			    <%= f.text_field :gwid %>
+			</div>
 
-<div class="field">
-    <%= f.label :section %><br>
-    <%= f.text_field :section %>
-</div>
+			<div class="field">
+			    <%= f.label :section %><br>
+			    <%= f.text_field :section %>
+			</div>
 
-<div class="field">
-    <%= f.label :course_name %><br>
-    <%= f.text_field :course_name %>
-</div>
+			<div class="field">
+			    <%= f.label :course_name %><br>
+			    <%= f.text_area :course_name, cols:40, rows:3 %>
+			</div>
 
-<div class="field">
-    <%= f.label :professor %><br>
-    <%= f.text_field :professor %>
-</div>
+			<div class="field">
+			    <%= f.label :professor %><br>
+			    <%= f.text_field :professor %>
+			</div>
 
-<div class="field">
-    <%= f.label :final_date %><br>
-    <%= f.select(:final_date, School.second.final_date_options << [nil]) %>
-</div>
+			<div class="field">
+			    <%= f.label :final_date %><br>
+			    <%= f.select(:final_date, School.second.final_date_options << [nil]) %>
+			</div>
 
-<div class="field">
-    <%= f.label :final_time %><br>
-    <%= f.select(:final_time, School.second.final_time_options << [nil]) %>
-</div>
+			<div class="field">
+			    <%= f.label :final_time %><br>
+			    <%= f.select(:final_time, School.second.final_time_options << [nil]) %>
+			</div>
 
-<div class="field">
-    <%= f.label :hours %><br>
-    <%= f.text_field :hours %>
-</div>
+		<div class="field">
+		    <%= f.label :hours %><br>
+		    <%= f.text_field :hours %>
+		</div>
 
-<div class="field">
-    <%= f.label :days %><br>
-    <%= f.text_field :days %>
-</div>
+		<div class="field">
+		    <%= f.label :days %><br>
+		    <%= f.text_field :days %>
+		</div>
 
-<div class="field">
-    <%= f.label :llm_only %><br>
-    <%= f.text_field :llm_only %>
-</div>
+		<div class="field">
+		    <%= f.label :llm_only, "LLM Only? True or False or blank" %><br>
+		    <%= f.text_field :llm_only %>
+		</div>
 
-<div class="field">
-    <%= f.label :jd_only %><br>
-    <%= f.text_field :jd_only %>
-</div>
+		<div class="field">
+		    <%= f.label :jd_only, "JD Only? True or False or blank" %><br>
+		    <%= f.text_field :jd_only %>
+		</div>
 
-<div class="field">
-    <%= f.label :course_name_2 %><br>
-    <%= f.text_field :course_name_2 %>
-</div>
+		<div class="field">
+		    <%= f.label :course_name_2, "Secondary/Second Line Course Name" %><br>
+		    <%= f.text_field :course_name_2 %>
+		</div>
 
-<div class="field">
-    <%= f.label :alt_schedule %><br>
-    <%= f.text_field :alt_schedule %>
-</div>
+		<div class="field">
+		    <%= f.label :alt_schedule %><br>
+		    <%= f.text_field :alt_schedule %>
+		</div>
 
-<div class="field">
-    <%= f.label :additional_info %><br>
-    <%= f.text_field :additional_info %>
-</div>
+		<div class="field">
+		    <%= f.label :additional_info %><br>
+		    <%= f.text_area :additional_info, cols:40, rows:4 %>
+		</div>
 
-<div class="field">
-    <%= f.label :manual_lock %><br>
-    <%= f.check_box :manual_lock %>
-</div>
+		<div class="field">
+		    <%= f.label :manual_lock, "Lock Schedule Data?" %><br>
+		    <%= f.check_box :manual_lock %><br>
+				Checking this box will prevent the scraper from editing data for this entry related
+				to the schedule, professor etc. It will not affect the booklist scraper from changing
+				which books are associated with the course.
+		</div>
+	</div>
 
-<div class="actions">
-    <%= f.submit %>
-</div>
+		<div class="col-md-6">
+			<div class="field">
+			    <%= f.label :isbn, "ISBNs" %><br>
+			    <%= f.text_area :isbn, cols:40, rows:5 %>
+			</div>
+			<div class="field">
+				ISBNs must be in the format: [123, 1235]
+			</div>
+		</div>
+	</div>
+
 <% end %>

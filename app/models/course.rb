@@ -11,13 +11,18 @@ class Course < ActiveRecord::Base
 	has_many :subscriptions
 	has_many :users, through: :subscriptions
 
-
-	
-
 	def self.scrape
     #load the scrapers here.
 		load Dir.pwd + '/GWU_scrape.rb'
 	end
+
+  def next
+    Course.where("id > ?", id).first.nil? ? Course.first : Course.where("id > ?", id).first
+  end
+
+  def previous
+    Course.where("id < ?", id).first.nil? ? Course.last : Course.where("id < ?", id).first
+  end
 
   def self.get_books(url)
     yomu = Yomu.new url
@@ -29,7 +34,7 @@ class Course < ActiveRecord::Base
       gwid = course.match(/(6\d{3}-\w{2,3})/)
       gwid = gwid.to_s.slice(/((?:\w+-*)+)/)
       gwid != nil && gwid[5] != "A" ? (current_class = Course.find_or_create_by(gwid: gwid)) : next
-      
+
       isbn_array = course.scan(/(?<=ISBN-13):*\s*((?:\d+-*)+)/)
       if isbn_array != nil
         isbn_array.map! {|x| x.to_s.slice(/((?:\d+-*)+)/).gsub("-", "")}
