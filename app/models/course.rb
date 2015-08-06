@@ -49,7 +49,7 @@ class Course < ActiveRecord::Base
       gwid = course.match(/(6\d{3}-\w{2,3})/)
       gwid = gwid.to_s.slice(/((?:\w+-*)+)/)
       gwid != nil && gwid[5] != "A" ? (current_class = Course.find_or_create_by(gwid: gwid)) : next
-
+      
       # Get the current isbns to compare to later to see if there's anything new.
       current_isbn = current_class.isbn
 

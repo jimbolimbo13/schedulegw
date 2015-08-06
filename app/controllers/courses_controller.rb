@@ -8,7 +8,7 @@ class CoursesController < ApplicationController
 
 	#GET /courses
 	def index
-		@courses = Course.all
+		@courses = Course.all.order(:gwid)
 		@stats = [];
 		@stats.push( {name: 'Users', value: User.count.to_i} );
 		@stats.push( {name: 'Schedules Saved in Database', value: Schedule.count.to_i} )
