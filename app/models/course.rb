@@ -26,7 +26,7 @@ class Course < ActiveRecord::Base
   end
 
   def previous
-    Course.where("id < ?", id).first.nil? ? Course.last : Course.where("id < ?", id).first
+    Course.where("id < ?", id).last.nil? ? Course.last : Course.where("id < ?", id).last
   end
 
   # This needs to be modified to also subtract a course-book relation to handle cases when a book should NOT
