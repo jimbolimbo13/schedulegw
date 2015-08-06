@@ -114,11 +114,24 @@
 				ISBNs must be in the format: ["123", "1235"]
 			</div>
 			<div class="field">
+				<%= f.label :booklist_locked, "Lock Booklist data?" %><br>
+				<%= f.check_box :booklist_locked %><br>
+				Checking this box will prevent the booklist scraper from changing the records. If you have to manually edit the ISBNs, check this box.
+				Each subsequent scrape will probably result in a warning that there is a booklist lock conflict for the course. You will just need to manually update/validate each course's books.
+			</div>
+			<div class="field">
+				Books For this Class: <br>
 				<% if @course.listbooks.count > 0 %>
 					<% @course.listbooks.each do |book| %>
 						<%= link_to "[#{book.isbn}] #{book.title}", book.amzn_url %><br>
 					<% end %>
 				<% end %>
+			</div>
+			<div class="field">
+					<%= f.label :wrong_isbn, "REJECTED/WRONG ISBNs" %><br>
+					<%= f.text_area :wrong_isbn, cols:40, rows:5 %><br>
+					In this box, put the ISBNs that the scraper found but are incorrect. This will prevent it from adding them
+					again the next time it scrapes.
 			</div>
 		</div>
 	</div>
