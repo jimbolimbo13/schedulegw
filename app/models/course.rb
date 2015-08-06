@@ -46,10 +46,16 @@ class Course < ActiveRecord::Base
     course_array = final_text.split(/\s(?=6\d{3}-\w{2,3})/)
 
     course_array.each do |course|
-      gwid = course.match(/(6\d{3}-\w{2,3})/)
-      gwid = gwid.to_s.slice(/((?:\w+-*)+)/)
-      gwid != nil && gwid[5] != "A" ? (current_class = Course.find_or_create_by(gwid: gwid)) : next
-      
+      gwid_chunk = course.match(/(6\d{3}-\w{2,3})/)
+      gwid_chunk = gwid_chunk.to_s.slice(/((?:\w+-*)+)/)
+
+      long_gwid = gwid_chunk if gwid_chunk != nil && gwid_chunk[5] != "A"
+      next if long_gwid.nil? # Skip if there's no course for this chunk.
+
+      gwid = long_gwid.scan(/(\d{4})-(\d{2})/)[0][0]
+      section = long_gwid.scan(/(\d{4})-(\d{2})/)[0][1]
+      current_class = Course.find_or_create_by(:gwid => gwid, :section => section)
+
       # Get the current isbns to compare to later to see if there's anything new.
       current_isbn = current_class.isbn
 
@@ -93,7 +99,10 @@ class Course < ActiveRecord::Base
       # Remove the ISBNs that we've already flagged as wrong.
       current_class.isbn = current_class.isbn - current_class.wrong_isbn.map {|i| i.to_s }
 
+      current_class.isbn = (current_class.isbn + current_class.pinned_isbn ).uniq
+
       # If the booklist is locked, note a conflict if a change is attempted.
+
       current_class.update_attribute('booklist_lock_conflict', true) if ( current_class.isbn.sort != current_isbn.sort && current_class.booklist_locked )
 
       # Actually save the course unless its a locked record

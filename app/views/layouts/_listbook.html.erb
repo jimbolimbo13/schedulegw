@@ -1,0 +1,15 @@
+<div class="row" id="book_#{listbook.isbn}">
+  <div class="row">
+    <%= link_to "[#{listbook.isbn}] #{listbook.title}", listbook.amzn_url %><br>
+  </div>
+
+  <% if current_user.admin? %>
+  <div class="row">
+    <% pinned_class = course.pinned_isbn.include?("{listbook.isbn}") %>
+    <div class="col-md-2 pinned_<%= pinned_class %>">
+      <span class='glyphicon glyphicon-pushpin' aria-hidden='true'></span> Pinned? 
+    </div>
+  </div>
+  <% end %>
+
+</div>

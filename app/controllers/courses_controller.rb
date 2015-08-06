@@ -53,6 +53,7 @@ class CoursesController < ApplicationController
 					format.html { redirect_to courses_path }
 					format.json { render :index, status: :ok, location: @course }
 	      else
+					flash[:danger] = "Didn't save!"
 	        format.html { render :index }
 	        format.json { render json: @course.errors, status: :unprocessable_entity }
 	      end

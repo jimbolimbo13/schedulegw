@@ -1,4 +1,4 @@
-/* 
+/*
 CSS FOR MAIN VIEW
 */
 
@@ -7,7 +7,7 @@ CSS FOR MAIN VIEW
 	border-bottom: 4px solid #00007C;
 }
 
-img { 
+img {
 	border-radius:3px;
 }
 
@@ -52,7 +52,7 @@ ul {
 	max-height:250px;
 	overflow-y:auto;
 
-	#chosenclasseslist {	
+	#chosenclasseslist {
 		list-style-type: none;
 		display:inline-block;
 		overflow-x:hidden;
@@ -65,7 +65,7 @@ ul {
 	#finals_list {
 		list-style-type:none;
 		display:inline-block;
-	}	
+	}
 }
 
 #wrapper {
@@ -123,8 +123,8 @@ ul {
 	margin-right:auto;
 	margin-left:auto;
 	margin-top:10px;
-	margin-bottom:10px; 
-	text-align:center; 
+	margin-bottom:10px;
+	text-align:center;
 	background-color:#7DD2BD;
 	display: block;
 }
@@ -136,8 +136,8 @@ ul {
 	margin-right:auto;
 	margin-left:auto;
 	margin-top:10px;
-	margin-bottom:10px; 
-	text-align:center; 
+	margin-bottom:10px;
+	text-align:center;
 	background-color:#7DD2BD;
 	border: solid 2px;
 	border-radius: 5px;
@@ -164,7 +164,7 @@ ul {
 	font-size:12px;
 }
 
-#classlist { 
+#classlist {
 	border:solid;
 	border-radius:3px;
 	background-color: #FFFFFF ;
@@ -225,7 +225,7 @@ Here marks
 the division
 between left
 and right
-sections of the 
+sections of the
 layout
 */
 
@@ -351,7 +351,7 @@ $row_height:7.6923076923%;
 	bottom:0;
 	margin:0;
 	padding:0;
-	
+
 }
 
 /*Boxes on the schedule grid*/
@@ -388,14 +388,14 @@ $row_height:7.6923076923%;
 	box-shadow: 5px 5px 10px 0px rgba(87,87,87,1);
 }
 
+// Listbook styling
 
+// If the book is pinned to the course
+.pinned_true {
+	font-color: red;
+}
 
-
-
-
-
-
-
-
-
-
+// If the book is not pinned to the course
+.pinned_false {
+	color: green;
+}
