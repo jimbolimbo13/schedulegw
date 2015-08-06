@@ -93,7 +93,7 @@ class Course < ActiveRecord::Base
       # Remove the ISBNs that we've already flagged as wrong.
       current_class.isbn = current_class.isbn - current_class.wrong_isbn.map {|i| i.to_s }
 
-      # If the booklist is locked, note a conflict if a change is attempted. 
+      # If the booklist is locked, note a conflict if a change is attempted.
       current_class.update_attribute('booklist_lock_conflict', true) if ( current_class.isbn.sort != current_isbn.sort && current_class.booklist_locked )
 
       # Actually save the course unless its a locked record
