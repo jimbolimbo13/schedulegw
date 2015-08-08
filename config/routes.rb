@@ -41,6 +41,8 @@ Rails.application.routes.draw do
   get 'addtobooklist/new'
   patch 'addtobooklist/update'
   post 'addtobooklist/update'
+  post 'addtobooklist/accept_suggestion'
+  delete 'addtobooklist/destroy'
   get 'addtobooklist/get_course'
 
 

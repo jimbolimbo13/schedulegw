@@ -1,0 +1,12 @@
+<div class="row" style="margin-bottom:1em;">
+  <div class="col-md-6">
+    <%= "#{suggestion.gwid}-#{suggestion.section}, Add ISBN: #{ suggestion.isbn }"%><br>
+    <%= "From User: #{ suggestion.user ? suggestion.user.name : 'anonymous'}" %>
+  </div>
+  <div class="btn-group pull-right col-md-6" role="group">
+    <%= link_to('Accept Edit', addtobooklist_accept_suggestion_path(:suggestion_id => suggestion.id),
+                    method: "post", data: { confirm: 'Accept Suggestion?'}, class: 'btn btn-success') %>
+    <%= link_to('Delete/Ignore', addtobooklist_destroy_path(:suggestion_id => suggestion.id),
+            method: "delete", data: { confirm: 'Are you fucking sure?'}, class: 'btn btn-danger') %>
+  </div>
+</div>

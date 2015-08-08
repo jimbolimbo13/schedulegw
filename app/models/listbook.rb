@@ -3,7 +3,7 @@ class Listbook < ActiveRecord::Base
 
   has_many :coursebooks
   has_many :courses, :through => :coursebooks
-  
+
   def get_info_from_amazon
     # Only hit Amazon if the isbn field changed.
     if isbn_changed?
@@ -20,10 +20,26 @@ class Listbook < ActiveRecord::Base
           'SearchIndex' => 'Books'
         }
       )
-      @doc = Nokogiri::HTML(response.body)
-      self.title = @doc.xpath("//title").children.to_s
-      self.amzn_url = "http://www.amazon.com/s/?url=search-alias%3Daps&field-keywords=#{ self.isbn }&tag=scgw-20"
-      sleep(1) # Amazon rate limit = 1 per second.
+
+      response = request.item_search(
+        query: {
+          'Keywords' => isbn,
+          'SearchIndex' => 'Books'
+        }
+      )
+
+
+
+      @doc = Nokogiri::XML(response.body)
+
+      self.title = @doc.at_css('Items Item ItemAttributes Title').text unless @doc.css('Items Item ItemAttributes Title').empty?
+      
+      self.image_url = @doc.at_css('Items Item LargeImage URL').text unless @doc.css('Items Item LargeImage URL').empty?
+
+      self.amzn_url = URI.unescape( @doc.at_css('Items Item DetailPageURL').text ) unless @doc.css('Items Item DetailPageURL').empty?
+
+
+      sleep(2) # Amazon rate limit = 1 per second.
     end
   end
 

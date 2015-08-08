@@ -34,6 +34,14 @@
           <% end %>
         </ul>
       </div>
+      <div class="row">
+        <h2>Submitted Booklist Edit Requests</h2>
+      </div>
+      <div class="row">
+          <% @booklistsuggestions.each do |suggestion| %>
+            <%= render partial: "addtobooklist/suggestion", locals: { suggestion: suggestion } %>
+          <% end %>
+      </div>
     </div>
     <div class="col-md-2">
       <ul>

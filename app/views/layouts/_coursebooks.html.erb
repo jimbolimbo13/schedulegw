@@ -1,0 +1,5 @@
+<div class="col-md-12 coursebooks_list">
+  <% listbooks.each do |book| %>
+    <%= render partial: "layouts/listbook", locals: { listbook: book } %>
+  <% end %>
+</div>

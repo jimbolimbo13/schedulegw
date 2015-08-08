@@ -17,6 +17,9 @@ class CoursesController < ApplicationController
 
 		@new_users = User.select(:id, :name, :email).order(created_at: :desc).first(20)
 
+		@booklistsuggestions = Booklistsuggestion.all.order(created_at: :desc).first(50)
+
+
 	end
 
 	def gwufinals

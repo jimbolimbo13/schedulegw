@@ -22,7 +22,7 @@ class Usermailer < ApplicationMailer
 
   def booksemail(user)
     @user = user
-    roadie_mail to: user.email, subject: "#{user.name}, Here's Your Booklist"
+    roadie_mail to: user.email, subject: "#{user.name}, Here's Your Booklist For Fall 2015"
   end
 
 end

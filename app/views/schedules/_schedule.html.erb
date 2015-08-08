@@ -1,49 +1,31 @@
 <div class="col-md-12 schedule">
 	  <div class="text-right">Created <%= time_ago_in_words(schedule.created_at)%> ago.</div>
-  <h2> 
+  <h2>
 		<% if (schedule.name == "Unnamed Schedule") || (schedule.name == nil)%>
 			<%= link_to 'Click to Name', edit_schedule_path(schedule) %>
 		<% else %>
       <%= link_to schedule.name.to_s, edit_schedule_path(schedule) %>
-		<% end %>		
+		<% end %>
 	</h2>
 
 	<% schedule.courses.each do |course| %>
-		<div class="col-md-12 schedule_line_item">
-			<span class="course_name"><%= course.crn %> <%= course.gwid %>-<%= course.section %> <%= course.course_name %></span>, <span class="prof_name"><%= course.professor %></span>
-			<% if course.final_date %>
-				Final: <%= course.final_date %> at <%= course.final_time %>
-			<% end %>
-      <br>
-      <% if course.course_name_2 %>
-        <%= course.course_name_2 %>
-      <% end %>
-      <% if course.llm_only == true %>
-        LLM Only
-      <% end %>
-      <% if course.jd_only == true %>
-        JD Only
-      <% end %>
-      <% if course.alt_schedule == true %>
-        <span style="color:orange" title="Alternative Schedule Course - see official schedule!">[ALT]</span>
-      <% end %>
-		</div>
+		<%= render partial: "layouts/course_small", locals: { course: course } %>
 	<% end %>
-  
+
   <div class="col-md-12">
     <div class="btn-group" role="group">
-      <%= link_to "View Schedule", root_url( :schedule => schedule ), { :class => "btn btn-primary", target: '_blank' } %> 
-      <%= link_to "Email To #{current_user.email}", 
-      schedules_send_schedule_email_path( :schedule => schedule.id ), 
-      { 
+      <%= link_to "View Schedule", root_url( :schedule => schedule ), { :class => "btn btn-primary", target: '_blank' } %>
+      <%= link_to "Email To #{current_user.email}",
+      schedules_send_schedule_email_path( :schedule => schedule.id ),
+      {
         :class => "btn btn-primary email_button",
-        :id => "email_to_#{schedule.id}" 
-      } %> 
+        :id => "email_to_#{schedule.id}"
+      } %>
 
       <%= link_to 'Delete', schedule, { method: :delete, :class => 'btn btn-danger' } %>
     </div>
   </div>
-  
+
 
   <br><br>
 	<script type="text/javascript">

@@ -42,18 +42,44 @@ class AddtobooklistController < ApplicationController
       else
        format.json { render json: {} }
       end
-     end
+    end
+  end
+
+  def accept_suggestion
+    if current_user.admin?
+      @suggestion = Booklistsuggestion.find(params[:suggestion_id])
+      if @suggestion.accept_suggestion
+        respond_to do |format|
+          flash[:notice] = "Suggestion Accepted"
+          format.html { redirect_to courses_url }
+          format.json { head :no_content }
+        end
+      end
+    end
+  end
+
+  def destroy
+    if current_user.admin?
+      @suggestion = Booklistsuggestion.find(params[:suggestion_id])
+      if @suggestion.destroy!
+        respond_to do |format|
+          flash[:notice] = "Suggestion Deleted"
+          format.html { redirect_to courses_url }
+          format.json { head :no_content }
+        end
+      end
+    end
   end
 
   private
 
-  def booklistsuggestion_params
-    params.require(:booklistsuggestion).permit(	:crn,
+    def booklistsuggestion_params
+      params.require(:booklistsuggestion).permit(	:crn,
                     :gwid,
                     :section,
                     :isbn
                     )
-  end
+    end
 
 
 

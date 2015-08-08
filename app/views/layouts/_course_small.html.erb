@@ -1,0 +1,26 @@
+
+<div class="col-md-12 schedule_line_item">
+  <span class="course_name"><%= course.crn %> <%= course.gwid %>-<%= course.section %> <%= course.course_name %></span>, <span class="prof_name"><%= course.professor %></span>
+  <% if course.final_date %>
+    Final: <%= course.final_date %> at <%= course.final_time %>
+  <% end %>
+  <br>
+  <% if course.course_name_2 %>
+    <%= course.course_name_2 %>
+  <% end %>
+  <% if course.llm_only == true %>
+    LLM Only
+  <% end %>
+  <% if course.jd_only == true %>
+    JD Only
+  <% end %>
+  <% if course.alt_schedule == true %>
+    <span style="color:orange" title="Alternative Schedule Course - see official schedule!">[ALT]</span>
+  <% end %>
+</div>
+
+<div class="col-md-12 col-md-offset-1">
+  <% unless course.listbooks.empty? %>
+    <%= render partial: "layouts/coursebooks", locals: { listbooks: course.listbooks } %>
+  <% end %>
+</div>

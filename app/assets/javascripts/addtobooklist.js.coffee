@@ -2,7 +2,7 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-$ ->
+$(document).on 'page:change', ->
   insert_course = (data) ->
     $('#title').html "#{data[0].course_name} - #{data[0].professor}" unless jQuery.isEmptyObject(data)
     $('#current_isbn_list_div').html "Already have these books: #{data[0].isbn} #{data[0].pinned_isbn}" unless jQuery.isEmptyObject(data)
