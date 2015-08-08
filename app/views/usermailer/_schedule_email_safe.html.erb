@@ -1,22 +1,13 @@
-<div class="col-md-12 schedule">
+<div class="col-md-12 email_schedule">
   <h2>
 		<% if (schedule.name == "Unnamed Schedule") || (schedule.name == nil)%>
-			<%= link_to 'Click to Name', schedule_url(schedule) %>
+			<%= link_to 'Click to Name', schedule_url(schedule), :class =>"email_link_to_schedule_name" %>
 		<% else %>
-      <%= link_to schedule.name.to_s, schedule_url(schedule) %>
+      <%= link_to schedule.name.to_s, schedule_url(schedule), :class =>"email_link_to_schedule_name"  %>
 		<% end %>
 	</h2>
-
 	<% schedule.courses.each do |course| %>
 		<%= render partial: "layouts/course_small", locals: { course: course } %>
+    <%= "<br>".html_safe if course.listbooks.count > 0 %>
 	<% end %>
-
-  <div class="col-md-12">
-    <div class="btn-group" role="group">
-      <%= link_to "View Schedule", root_url( :schedule => schedule ), { :class => "btn btn-primary", target: '_blank' } %>
-    </div>
-  </div>
-
-
-  <br><br>
 </div>
