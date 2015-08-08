@@ -3,7 +3,7 @@
 </div>
 <div class="row">
   <%= form_for @booklistsuggestion, url: addtobooklist_update_path do |f| %>
-    <div class="col-md-2">
+    <div class="col-md-2 col-md-offset-2">
       <%= f.text_field :gwid, :class => 'form-control', placeholder: '4-digit course number' %>
     </div>
     <div class="col-md-1">
