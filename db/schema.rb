@@ -11,10 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150806225732) do
+ActiveRecord::Schema.define(version: 20150807014019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "booklistsuggestions", force: :cascade do |t|
+    t.string   "gwid"
+    t.string   "section"
+    t.string   "crn"
+    t.string   "isbn"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "coursebooks", force: :cascade do |t|
     t.integer  "listbook_id"

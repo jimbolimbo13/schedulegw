@@ -25,7 +25,7 @@
 	</div>
 
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-4">
 			<div class="field">
 			    <%= f.label :crn %><br>
 			    <%= f.text_field :crn %>
@@ -105,7 +105,7 @@
 		</div>
 	</div>
 
-		<div class="col-md-6">
+		<div class="col-md-8">
 			<h2> Books For this Class: </h2>
 			<div class="field booklist_div">
 				<% if @course.listbooks.count > 0 %>
@@ -117,8 +117,21 @@
 
 			<div class="manual_booklist_div">
 				<div class="field">
-				    <%= f.label :isbn, "ISBNs" %><br>
-				    <%= f.text_area :isbn, cols:40, rows:5 %>
+					Pinned ISBNs: <br>
+					<% @course.pinned_isbn.each do |pinned_isbn| %>
+						<%= pinned_isbn.to_s %><br> 
+					<% end %>
+				</div>
+				<div class="field">
+					<%= form_tag course_path, remote: true, method: :patch do %>
+						<div class="col-md-8">
+							<%= text_field_tag :add_pinned_isbn, nil, :class => 'form-control' %>
+						</div>
+						<div class="col-md-4">
+							<%= submit_tag "Add New Pinned ISBN", :name => nil, :class => "btn btn-success" %>
+						</div>
+					<% end %>
+					<div id="ajax_message"></div>
 				</div>
 				<div class="field">
 					ISBNs must be in the format: ["123", "1235"]
@@ -128,11 +141,16 @@
 					<%= f.label :booklist_locked, "Lock Booklist data?" %><br>
 					Checking this box will prevent the booklist scraper from changing the records.
 				</div>
+
 				<div class="field">
 						<%= f.label :wrong_isbn, "REJECTED/WRONG ISBNs" %><br>
 						<%= f.text_area :wrong_isbn, cols:40, rows:5 %><br>
 						In this box, put the ISBNs that the scraper found but are incorrect. This will prevent it from adding them
 						again the next time it scrapes.
+				</div>
+				<div class="field">
+				    <%= f.label :isbn, "Combined ISBNs" %><br>
+				    <%= f.text_area :isbn, cols:40, rows:5 %>
 				</div>
 			</div>
 	</div>

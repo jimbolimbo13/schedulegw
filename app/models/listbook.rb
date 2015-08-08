@@ -3,8 +3,7 @@ class Listbook < ActiveRecord::Base
 
   has_many :coursebooks
   has_many :courses, :through => :coursebooks
-
-
+  
   def get_info_from_amazon
     # Only hit Amazon if the isbn field changed.
     if isbn_changed?

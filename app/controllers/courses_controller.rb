@@ -45,6 +45,15 @@ class CoursesController < ApplicationController
 
 	def update
 		@course = Course.find(params[:id])
+
+		if params[:add_pinned_isbn]
+			isbn = params[:add_pinned_isbn].to_s.gsub(/\D/, '')
+			@course.pinned_isbn << isbn unless isbn == ""
+			if @course.save!
+				# AJAX verification of successful save goes here. probably .js something or other ?
+			end
+		end
+
 		respond_to do |format|
 	      if @course.update(course_params)
 					flash[:notice] = "Saved Changes!"
@@ -82,7 +91,9 @@ class CoursesController < ApplicationController
 											:final_date,
 											:final_time,
 											:manual_lock,
-											:isbn
+											:isbn,
+											:pinned_isbn,
+											:wrong_isbn
 											)
 		end
 

@@ -26,15 +26,23 @@ Rails.application.routes.draw do
   get '/schedules/:id/edit' => 'schedules#edit'
   get '/schedules/:id/show' => 'schedules#show'
 
-  #API
+  # API
   get '/api/courses/:school', to: 'api#courses'
   get '/api/whoami', to: 'api#whoami'
 
-  #manual editing etc.
+  # manual editing etc.
   get '/courses/gwufinals' => 'courses#gwufinals'
   resources :courses
   get '/courses/:id/edit' => 'courses#edit'
   get '/courses' => 'courses#index'
+
+  # allow people to add suggestions to booklistsuggestions model
+  get 'addtobooklist/index'
+  get 'addtobooklist/new'
+  patch 'addtobooklist/update'
+  post 'addtobooklist/update'
+  get 'addtobooklist/get_course'
+
 
   #staticpages
   get 'security' => 'static_pages#security'

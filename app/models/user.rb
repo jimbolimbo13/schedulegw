@@ -2,11 +2,12 @@ class User < ActiveRecord::Base
 	belongs_to :school
 
   has_many :schedules, dependent: :destroy
+	has_many :booklistsuggestions
 
-	has_many :subscriptions 
+	has_many :subscriptions
 	has_many :courses, through: :subscriptions
 
-	serialize :subscribed_ids, Array 
+	serialize :subscribed_ids, Array
 
 
   def self.create_with_omniauth(auth)
@@ -31,7 +32,7 @@ class User < ActiveRecord::Base
   	# courses is an array containing crns / school unique identifiers for each course in this schedule
 		@crns = courses
 	  	@schedule = self.schedules.build
-	  	
+
 	  	@crns.each do |crn|
 	  		@course = Course.find_by(crn: crn) ? Course.find_by(crn: crn) : nil
 	  		@schedule.courses << @course
@@ -47,6 +48,6 @@ class User < ActiveRecord::Base
 	end
 
 
-	
+
 
 end
