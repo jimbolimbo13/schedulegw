@@ -49,7 +49,7 @@ class CoursesController < ApplicationController
 		if params[:add_pinned_isbn]
 			isbn = params[:add_pinned_isbn].to_s.gsub(/\D/, '')
 			@course.pinned_isbn << isbn unless isbn == ""
-			@coruse.pinned_isbn.uniq!
+			@course.pinned_isbn.uniq!
 			if @course.save!
 				# AJAX verification of successful save goes here. probably .js something or other ?
 			end
