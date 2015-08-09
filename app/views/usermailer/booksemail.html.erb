@@ -24,6 +24,9 @@
         <% @user.schedules.each do |schedule| %>
           <%= render partial: "usermailer/schedule_email_safe", locals: { schedule: schedule } %>
         <% end %>
+        <% if @user.schedules.count == 0 %>
+          You don't have any saved schedules. You can <%= link_to "create one", root_url %> to see which books you need.
+        <% end %>
       </div>
     </tr>
     <tr>
