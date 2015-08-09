@@ -64,13 +64,13 @@ ActiveRecord::Schema.define(version: 20150808035002) do
     t.text     "additional_info"
     t.boolean  "manual_lock"
     t.string   "professor"
-    t.integer  "prof_id"
-    t.string   "final_time"
-    t.string   "final_date"
-    t.string   "school"
-    t.integer  "schedule_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "final_date"
+    t.string   "final_time"
+    t.string   "school"
+    t.integer  "schedule_id"
+    t.integer  "prof_id"
     t.json     "isbn",                   default: []
     t.boolean  "booklist_locked",        default: false
     t.boolean  "booklist_lock_conflict", default: false
@@ -81,11 +81,10 @@ ActiveRecord::Schema.define(version: 20150808035002) do
   add_index "courses", ["crn"], name: "index_courses_on_crn", unique: true, using: :btree
 
   create_table "courseschedules", force: :cascade do |t|
-    t.string   "name_of_relation"
     t.integer  "course_id"
     t.integer  "schedule_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   add_index "courseschedules", ["course_id"], name: "index_courseschedules_on_course_id", using: :btree
@@ -144,13 +143,13 @@ ActiveRecord::Schema.define(version: 20150808035002) do
   create_table "users", force: :cascade do |t|
     t.string   "name"
     t.string   "provider"
-    t.string   "email"
     t.string   "uid"
     t.text     "subscribed_ids"
-    t.boolean  "admin",          default: false
-    t.integer  "school_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "admin",          default: false
+    t.string   "email"
+    t.integer  "school_id"
     t.boolean  "accepted_terms", default: false
   end
 

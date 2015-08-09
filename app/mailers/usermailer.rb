@@ -11,7 +11,6 @@ class Usermailer < ApplicationMailer
   def schedule(user_id, schedule_id)
     @user = User.find(user_id)
     @schedule = Schedule.find(schedule_id)
-    @courses = @schedule.courses
 
     school = School.find(@user.school.id)
     school.emails_sent = school.emails_sent + 1

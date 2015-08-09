@@ -23,50 +23,9 @@
     <tr>
       <p>Hey,</p>
       <p>Here's the schedule you wanted. Use <a href="https://banweb.gwu.edu/PRODCartridge/twbkwbis.P_WWWLogin"> Banweb </a> to register for courses using the CRN #.</p>
-      <table id="schedule_table">
-        <tr>
-          <td>
-            CRN
-          </td>
-          <td>
-            ID-Section
-          </td>
-          <td>
-            Name
-          </td>
-          <td>
-            Profesor
-          </td>
-          <td>
-            Final Date
-          </td>
-          <td>
-            Final Time
-          </td>
-        </tr>
-        <% @courses.each do |course| %>
-        <tr>
-          <td id="course_crn">
-            <%= course.crn %>
-          </td>
-          <td id="gwid_section">
-            <%= course.gwid %>-<%= course.section %>
-          </td>
-          <td id="course_name">
-            <%= course.course_name %>
-          </td>
-          <td id="professor">
-            <%= course.professor %>
-          </td>
-          <td>
-            <%= course.final_date %>
-          </td>
-          <td>
-            <%= course.final_time %>
-          </td>
-        </tr>
-        <% end %>
-      </table>
+
+      <%= render partial: "usermailer/schedule_email_safe", locals: { schedule: @schedule } %>
+
       <table>
         <tr>
           <td>
@@ -77,7 +36,7 @@
       <p>Don't forget to double-check everything with the <a href="http://www.law.gwu.edu/Students/Records/Fall2015/Pages/Default.aspx">Records Office </a>. Our website is usually updated within 10 minutes of the <a href="http://www.law.gwu.edu/Students/Records/Fall2015/Pages/Default.aspx">Records Office </a> publishing a new schedule, but once in awhile it takes a bit longer.</p>
       <p>Anytime we update our info, it will reflect in your list of schedules on the website, so click <%= link_to "View Schedule", root_url( :schedule => @schedule, :sid => @schedule.unique_string ) %> above to make sure this email is still accurate.</p>
       <p>
-        Rock On, 
+        Rock On,
       </p>
       <p>The ScheduleGW Team</p>
     </tr>
