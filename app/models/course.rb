@@ -42,6 +42,22 @@ class Course < ActiveRecord::Base
   def self.get_books(url)
     yomu = Yomu.new url
     text = yomu.text
+
+    @school = School.find(2) # Make this dynamic later.
+
+    # Check to see if the booklist changed.
+    new_digest = Digest::MD5.hexdigest text
+    old_digest = @school.booklist_scrape_digest
+
+    @school.booklist_last_checked = Time.now
+
+    if new_digest != old_digest
+      @school.booklist_scrape_digest = new_digest
+      @school.booklist_last_scraped = Time.now
+    end
+
+    @school.save!
+
     final_text = text.gsub(/\n+/, " ")
     course_array = final_text.split(/\s(?=6\d{3}-\w{2,3})/)
 

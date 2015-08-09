@@ -30,11 +30,13 @@ Rails.application.routes.draw do
   get '/api/courses/:school', to: 'api#courses'
   get '/api/whoami', to: 'api#whoami'
 
+
   # manual editing etc.
   get '/courses/gwufinals' => 'courses#gwufinals'
   resources :courses
-  get '/courses/:id/edit' => 'courses#edit'
-  get '/courses' => 'courses#index'
+  
+  post 'scrape' => 'scraper#scrape'
+
 
   # allow people to add suggestions to booklistsuggestions model
   get 'addtobooklist/index'

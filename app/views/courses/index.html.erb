@@ -25,7 +25,7 @@
         </ul>
       </div>
       <div class="row">
-        <h2>Most Recent 20:</h2>
+        <h2>20 Most Recent Users:</h2>
       </div>
       <div class="row">
         <ul>
@@ -34,14 +34,16 @@
           <% end %>
         </ul>
       </div>
-      <div class="row">
-        <h2>Submitted Booklist Edit Requests</h2>
-      </div>
-      <div class="row">
-          <% @booklistsuggestions.each do |suggestion| %>
-            <%= render partial: "addtobooklist/suggestion", locals: { suggestion: suggestion } %>
-          <% end %>
-      </div>
+      <% if @booklistsuggestions.count > 0 %>
+        <div class="row">
+          <h2>Submitted Booklist Edit Requests</h2>
+        </div>
+        <div class="row">
+            <% @booklistsuggestions.each do |suggestion| %>
+              <%= render partial: "addtobooklist/suggestion", locals: { suggestion: suggestion } %>
+            <% end %>
+        </div>
+      <% end %>
     </div>
     <div class="col-md-2">
       <ul>
@@ -51,6 +53,14 @@
         <li><%= link_to 'GWU Finals Visualizer', courses_gwufinals_path %></li>
         <li><%= link_to 'Add New Book to Course', addtobooklist_new_path %></li>
       </ul>
+      <h2>Controls</h2>
+      <h4>Do these in Order</h4>
+      <%= link_to('3. Scrape Booklist Now', scrape_path(:source => 'booklist'),
+              method: "post", remote: true, data: { confirm: 'Are you fucking sure?'}, class: 'btn btn-success') %>
+      <br>
+      Booklist last Checked: <%= "#{time_ago_in_words(current_user.school.booklist_last_checked.getlocal)} ago." %><br>
+      Booklist last Changed: <%= "#{time_ago_in_words(current_user.school.booklist_last_scraped.getlocal)} ago." %><br>
+      Be patient waiting for a scrape to finish - it takes 2-3 seconds total.
     </div>
   </div>
 </div>
