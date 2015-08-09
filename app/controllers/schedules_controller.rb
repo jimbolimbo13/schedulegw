@@ -1,5 +1,5 @@
 class SchedulesController < ApplicationController
-	
+
 	before_action :check_login
   before_action :require_permission, only: [:edit, :update, :destroy, :show]
 
@@ -22,24 +22,24 @@ class SchedulesController < ApplicationController
 
     #update stat: total number of times the next button was pressed.
     school = School.find(current_user.school.id)
-    school.schedules_created = school.schedules_created + 1 
-    school.save! 
-    
+    school.schedules_created = school.schedules_created + 1
+    school.save!
+
   	render json: {message: 'Dope'}, status: 200
 
   end
 
   def edit
-  	@schedule = Schedule.find(params[:id]) 
+  	@schedule = Schedule.find(params[:id])
   end
 
   def show
-  	@schedule = Schedule.find(params[:id]) 
+  	@schedule = Schedule.find(params[:id])
   end
 
    def update
     @schedule = Schedule.find(params[:id])
-    
+
     if @schedule.update(update_subscription_params)
     	flash[:notice] = "Updated."
     	redirect_to schedules_path
@@ -58,25 +58,26 @@ class SchedulesController < ApplicationController
   end
 
   def send_schedule_email
-    @schedule = Schedule.find(params[:schedule])
-    if Usermailer.schedule(current_user, @schedule).deliver_now
+    schedule_id = Schedule.find(params[:schedule]).id
+
+		if SendScheduleWorker.perform_async(current_user.id, schedule_id)
       flash[:notice] = "Email Sent to #{current_user.email}."
       redirect_to schedules_path
-    else 
+    else
       flash[:danger] = "Email didn't send - try again."
       redirect_to schedules_path
-    end 
-    
+    end
+
   end
 
 
-  private 
+  private
 
   	def schedule_params
   		params.permit(:courses, :course_ids => [])
   	end
 
-  	def update_subscription_params 
+  	def update_subscription_params
   		params.require(:schedule).permit(:name, :course_ids => [])
   	end
 

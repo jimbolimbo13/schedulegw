@@ -83,3 +83,6 @@ pickle-email-*.html
 
 #ignore local copies of scrape data
 /lib/scrape_texts
+
+# Ignore local Redis dump
+dump.rdb

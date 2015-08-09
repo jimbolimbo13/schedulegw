@@ -53,9 +53,13 @@ Rails.application.routes.draw do
   get 'confirm_terms' => 'static_pages#confirm_terms'
 
 
-
   #GWSBA stuff
   get 'gwsbadata' => 'visitors#gwsbadata'
+
+
+  #for Sidekiq Background Worker monitoring
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/admin/sidekiq' if Rails.env != 'production'
 
 
 end

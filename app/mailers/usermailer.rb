@@ -8,16 +8,16 @@ class Usermailer < ApplicationMailer
   #   en.usermailer.schedule.subject
   #
 
-  def schedule(user, schedule)
-    @user = user
-    @courses = schedule.courses
-    @schedule = schedule
+  def schedule(user_id, schedule_id)
+    @user = User.find(user_id)
+    @schedule = Schedule.find(schedule_id)
+    @courses = @schedule.courses
 
-    school = School.find(user.school.id)
+    school = School.find(@user.school.id)
     school.emails_sent = school.emails_sent + 1
     school.save!
 
-    roadie_mail to: user.email, subject: "Your Schedule From ScheduleGW"
+    roadie_mail to: @user.email, subject: "Your Schedule From ScheduleGW"
   end
 
   def booksemail(user)

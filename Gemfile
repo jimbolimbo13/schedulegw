@@ -17,8 +17,11 @@ gem 'figaro' #puts env variables in config/application.yml
 gem 'yomu' #pulls pdf to text, essential to scraper.
 gem 'roadie-rails' #inlines style for emails
 gem 'sidekiq' # background workers
+gem 'sinatra', :require => nil #required for Sidekiq monitoring panel.
 gem 'vacuum' #Amazon Product API wrapper
 gem 'nokogiri' #HTTP parser
+gem 'unicorn', '4.8.3' #Unicorn for Heroku in production. for large amounts of traffic.
+
 
 group :development do
   gem 'spring'
@@ -31,6 +34,7 @@ group :development do
 end
 
 group :production do
+  gem 'unicorn', '4.8.3' #Unicorn for Heroku in production. for large amounts of traffic.
   gem 'rails_12factor'
   gem 'thin'
   gem 'heroku_rails_deflate' #gzipper for Heroku, reduces pageload time and makes Google happy
