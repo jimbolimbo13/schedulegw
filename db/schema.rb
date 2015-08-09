@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150808035002) do
+ActiveRecord::Schema.define(version: 20150809170836) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -123,19 +123,19 @@ ActiveRecord::Schema.define(version: 20150808035002) do
     t.text     "display_name"
     t.string   "email_stub"
     t.string   "initials"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at",                                             null: false
+    t.datetime "updated_at",                                             null: false
     t.text     "final_date_options"
     t.text     "final_time_options"
-    t.string   "crn_scrape_digest"
-    t.datetime "crn_last_scraped"
-    t.datetime "crn_last_checked"
-    t.string   "exam_scrape_digest"
-    t.datetime "exam_last_scraped"
-    t.datetime "exam_last_checked"
-    t.string   "booklist_scrape_digest"
-    t.datetime "booklist_last_scraped"
-    t.datetime "booklist_last_checked"
+    t.string   "crn_scrape_digest",      default: ""
+    t.datetime "crn_last_scraped",       default: '2015-08-09 17:21:57'
+    t.datetime "crn_last_checked",       default: '2015-08-09 17:21:57'
+    t.string   "exam_scrape_digest",     default: ""
+    t.datetime "exam_last_scraped",      default: '2015-08-09 17:21:57'
+    t.datetime "exam_last_checked",      default: '2015-08-09 17:21:57'
+    t.string   "booklist_scrape_digest", default: ""
+    t.datetime "booklist_last_scraped",  default: '2015-08-09 17:21:57'
+    t.datetime "booklist_last_checked",  default: '2015-08-09 17:21:57'
     t.integer  "emails_sent",            default: 0
     t.integer  "schedules_created",      default: 0
   end
