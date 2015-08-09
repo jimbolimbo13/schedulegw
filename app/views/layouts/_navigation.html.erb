@@ -29,7 +29,7 @@
     </div>
     <div class="nav navbar-nav navbar-right">
       <ul class="nav navbar-nav navbar-right">
-        
+
         <% if user_signed_in? && current_user.schedules.count > 0 %>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Schedules<span class="caret"></span></a>
@@ -64,7 +64,7 @@
           <% else %>
           <li> <%= link_to "Not Logged In", '#' %></li>
         <% end %>
-        
+
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <% if user_signed_in? %>
@@ -76,14 +76,24 @@
               <li><a href="http://issuu.com/gwlawpubs/docs/2014_15_bulletin">Course Catalog </a></li>
               <li><a href="http://www.law.gwu.edu/Students/Records/Fall2015/Pages/Default.aspx">Records Office </a></li>
               <% if user_signed_in? && current_user.school.initials != 'NA' %>
-                <li role="presentation" class="divider"></li>
-                <li role="presentation" class="dropdown-header">Course Recency</li>
-                <li><%= link_to "Checked for course changes #{time_ago_in_words(current_user.school.crn_last_checked.getlocal)} ago", '#' %></li>
-                <li><%= link_to "Nothing new since #{time_ago_in_words(current_user.school.crn_last_scraped.getlocal)} ago", '#' %></li>
-                <li role="presentation" class="divider"></li>
-                <li role="presentation" class="dropdown-header">Exam Recency</li>
-                <li><%= link_to "Checked for exam info changes #{time_ago_in_words(current_user.school.exam_last_checked.getlocal)} ago", '#' %></li>
-                <li><%= link_to "Nothing new since #{time_ago_in_words(current_user.school.exam_last_scraped.getlocal)} ago", '#' %></li>
+                <% if current_user.school.crn_last_checked && current_user.school.crn_last_scraped %>
+                  <li role="presentation" class="divider"></li>
+                  <li role="presentation" class="dropdown-header">Course Recency</li>
+                  <li><%= link_to "Checked for course changes #{time_ago_in_words(current_user.school.crn_last_checked.getlocal)} ago", '#'%></li>
+                  <li><%= link_to "Nothing new since #{time_ago_in_words(current_user.school.crn_last_scraped.getlocal)} ago", '#' %></li>
+                <% end %>
+                <% if current_user.school.exam_last_checked && current_user.school.exam_last_scraped %>
+                  <li role="presentation" class="divider"></li>
+                  <li role="presentation" class="dropdown-header">Exam Recency</li>
+                  <li><%= link_to "Checked for exam info changes #{time_ago_in_words(current_user.school.exam_last_checked.getlocal)} ago", '#' %></li>
+                  <li><%= link_to "Nothing new since #{time_ago_in_words(current_user.school.exam_last_scraped.getlocal)} ago", '#' %></li>
+                <% end %>
+                <% if current_user.school.booklist_last_checked && current_user.school.booklist_last_scraped %>
+                  <li role="presentation" class="divider"></li>
+                  <li role="presentation" class="dropdown-header">Booklist Recency</li>
+                  <li><%= link_to "Checked for exam info changes #{time_ago_in_words(current_user.school.booklist_last_checked.getlocal)} ago", '#' %></li>
+                  <li><%= link_to "Nothing new since #{time_ago_in_words(current_user.school.booklist_last_scraped.getlocal)} ago", '#' %></li>
+                <% end %>
               <% end %>
             </ul>
           </li>
