@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row col-md-12 text-center">
-      <h1>Editing Course</h1>
+      <h1><%= @course.gwid %>-<%= @course.section %> <%= @course.course_name %> - <%= @course.professor %> </h1>
   </div>
   <div class="row col-md-12 text-center">
       <%= render 'course_form' %>

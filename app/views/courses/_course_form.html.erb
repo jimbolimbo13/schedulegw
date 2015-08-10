@@ -16,9 +16,10 @@
 
 	<div class="row">
 		<div class="actions">
+			<%= link_to "All Courses", courses_path, class: 'btn btn-info' %>
 				<%= f.button "Save and previous", name: 'previous_record', value: true, class: 'btn btn-success' %>
 				<%= button_tag(type: 'submit', class: "btn btn-success") do %>
-					<i class="glyphicon glyphicon-floppy-disk"></i> Save
+					<i class="glyphicon glyphicon-floppy-disk"></i> Save and Back
 				<% end %>
 				<%= f.button "Save and next", name: 'next_record', value: true, class: 'btn btn-success' %>
 		</div>
@@ -119,7 +120,7 @@
 				<div class="field">
 					Pinned ISBNs: <br>
 					<% @course.pinned_isbn.each do |pinned_isbn| %>
-						<%= pinned_isbn.to_s %><br> 
+						<%= pinned_isbn.to_s %><br>
 					<% end %>
 				</div>
 				<div class="field">
