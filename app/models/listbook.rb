@@ -5,7 +5,7 @@ class Listbook < ActiveRecord::Base
   has_many :courses, :through => :coursebooks
 
   def get_info_from_amazon
-    # Only hit Amazon if the isbn field changed.
+    # Only hit Amazon if something changed
     if self.changed?
       request = Vacuum.new
       request.configure(
