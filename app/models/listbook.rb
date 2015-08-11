@@ -6,7 +6,7 @@ class Listbook < ActiveRecord::Base
 
   def get_info_from_amazon
     # Only hit Amazon if the isbn field changed.
-    if isbn_changed?
+    if self.changed?
       request = Vacuum.new
       request.configure(
         aws_access_key_id: ENV['aws_access_key_id'],
@@ -33,7 +33,7 @@ class Listbook < ActiveRecord::Base
       @doc = Nokogiri::XML(response.body)
 
       self.title = @doc.at_css('Items Item ItemAttributes Title').text unless @doc.css('Items Item ItemAttributes Title').empty?
-      
+
       self.image_url = @doc.at_css('Items Item LargeImage URL').text unless @doc.css('Items Item LargeImage URL').empty?
 
       self.amzn_url = URI.unescape( @doc.at_css('Items Item DetailPageURL').text ) unless @doc.css('Items Item DetailPageURL').empty?

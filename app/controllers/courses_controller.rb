@@ -63,7 +63,7 @@ class CoursesController < ApplicationController
 					flash[:notice] = "Saved Changes!"
 					format.html { redirect_to "/courses/#{ @course.next.id }/edit" } if params[:next_record]
 					format.html { redirect_to "/courses/#{ @course.previous.id }/edit" } if params[:previous_record]
-					format.html { redirect_to courses_path }
+					format.html { redirect_to edit_course_path }
 					format.json { render :index, status: :ok, location: @course }
 	      else
 					flash[:danger] = "Didn't save!"
