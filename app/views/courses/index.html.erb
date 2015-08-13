@@ -50,7 +50,7 @@
         </div>
         <div class="row">
             <% @most_popular.each do |course| %>
-              <%= "#{course.gwid}-#{course.section} #{course.course_name} (#{course.schedule_count})" %><br>
+              <%= link_to "#{course.gwid}-#{course.section} #{course.course_name} (#{course.schedule_count})", edit_course_path(course.id) %><br>
             <% end %>
         </div>
       <% end %>
