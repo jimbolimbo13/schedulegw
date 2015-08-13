@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150813053721) do
+ActiveRecord::Schema.define(version: 20150813091430) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -151,10 +151,11 @@ ActiveRecord::Schema.define(version: 20150813053721) do
     t.text     "subscribed_ids"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "admin",          default: false
+    t.boolean  "admin",            default: false
     t.string   "email"
     t.integer  "school_id"
-    t.boolean  "accepted_terms", default: false
+    t.boolean  "accepted_terms",   default: false
+    t.datetime "last_email_blast", default: '2015-08-10 09:24:34'
   end
 
 end
