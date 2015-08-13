@@ -3,7 +3,7 @@ task :mail_everyone => :environment do
 
 
  User.find_each do |user|
-   SendBooklistWorker.perform_async(user.id)
+   Usermailer.booksemail(user).deliver_now unless user.last_email_blast > 60.hours.ago
  end
 
 
