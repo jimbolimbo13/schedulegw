@@ -41,13 +41,16 @@ class Course < ActiveRecord::Base
   def add_to_listbooks
     self.isbn.each do |isbn|
       book = Listbook.find_or_create_by(isbn: isbn)
-      book.courses << self unless book.courses.include? self
+      self.listbooks << book unless self.listbooks.include? book
       book.save!
     end
     self.pinned_isbn.each do |isbn|
       book = Listbook.find_or_create_by(isbn: isbn)
+      self.listbooks << book unless self.listbooks.include? book
       book.save!
     end
+
+    self.listbooks.uniq!
   end
 
   def self.get_books(url)
