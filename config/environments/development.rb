@@ -22,13 +22,14 @@ Rails.application.configure do
   # switch to :smtp or :letter_opener depending on delivery requirement.
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-   address:              'smtp.gmail.com',
-   port:                 587,
-   domain:               'https://www.schedulegw.com',
-   user_name:            ENV['gmail_address'],
-   password:             ENV['gmail_password'],
-   authentication:       'plain',
-   enable_starttls_auto: true  }
+    :address        => 'smtp.sendgrid.net',
+     :port           => '587',
+     :authentication => :plain,
+     :user_name      => ENV['SENDGRID_USERNAME'],
+     :password       => ENV['SENDGRID_PASSWORD'],
+     :domain         => 'heroku.com',
+     :enable_starttls_auto => true
+   }
 
 
   # Print deprecation notices to the Rails logger.
