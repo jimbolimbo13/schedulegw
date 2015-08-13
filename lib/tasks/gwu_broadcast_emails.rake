@@ -45,20 +45,22 @@ task :manual_fix => :environment do
    "Nathan Delmar"
    ]
 
-   emailed.map! { |name| name.downcase }
-
    modified = 0
+   error_names = []
 
-   User.find_each do |user|
-     if emailed.include? user.name.downcase
-       user.last_email_blast = Time.now
-       modified = modified + 1
-       puts "Marked User: #{user.name} as already received an email today."
-      #  user.save!
+   emailed.each do |name|
+     user = User.find_by(name: name)
+
+    if user
+      user.last_email_blast = Time.now
+      modified = modified + 1 if user.save!
+     else
+       error_names << name
      end
    end
 
    puts "Users in array: #{emailed.count}"
    puts "Users marked as already received (should match): #{modified}"
+   puts "Names not mapped to a user: #{error_names.inspect}"
 
 end
