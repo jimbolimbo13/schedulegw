@@ -22,8 +22,11 @@ class CoursesController < ApplicationController
 
 		@new_users = User.select(:id, :name, :email).order(created_at: :desc).first(20)
 
+		# Suggestions submitted for missing books.
 		@booklistsuggestions = Booklistsuggestion.all.order(created_at: :desc).first(50)
 
+		# Most popular Courses by how many schedules they appear in.
+		@most_popular = Course.popular_courses
 
 	end
 

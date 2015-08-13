@@ -34,7 +34,7 @@ Rails.application.routes.draw do
   # manual editing etc.
   get '/courses/gwufinals' => 'courses#gwufinals'
   resources :courses
-  
+
   post 'scrape' => 'scraper#scrape'
 
 

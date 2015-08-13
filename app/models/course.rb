@@ -1,10 +1,9 @@
 class Course < ActiveRecord::Base
-  before_save :add_to_listbooks
+  before_save :add_to_listbooks, :update_popularity
 
   #relationship to schedules
   has_many :courseschedules
   has_many :schedules, through: :courseschedules
-
 
   #possibly:
   belongs_to :schools
@@ -27,6 +26,14 @@ class Course < ActiveRecord::Base
 
   def previous
     Course.where("id < ?", id).last.nil? ? Course.last : Course.where("id < ?", id).last
+  end
+
+  def self.popular_courses
+    Course.all.order(schedule_count: :desc)
+  end
+
+  def update_popularity
+    self.schedule_count = self.schedules.count
   end
 
   # This needs to be modified to also subtract a course-book relation to handle cases when a book should NOT
