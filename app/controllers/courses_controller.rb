@@ -4,6 +4,11 @@ class CoursesController < ApplicationController
 	#GET /courses/1/edit
 	def edit
 		@course = Course.find(params[:id])
+		@pinned_books = []
+		@course.pinned_isbn.each do |isbn|
+			@pinned_books << Listbook.find_by(:isbn => isbn.to_s) unless Listbook.find_by(:isbn => isbn.to_s) == nil
+		end
+		@pinned_books.uniq!
 	end
 
 	#GET /courses

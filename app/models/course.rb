@@ -1,5 +1,5 @@
 class Course < ActiveRecord::Base
-  after_save :add_to_listbooks
+  before_save :add_to_listbooks
 
   #relationship to schedules
   has_many :courseschedules
@@ -35,6 +35,10 @@ class Course < ActiveRecord::Base
     self.isbn.each do |isbn|
       book = Listbook.find_or_create_by(isbn: isbn)
       book.courses << self unless book.courses.include? self
+      book.save!
+    end
+    self.pinned_isbn.each do |isbn|
+      book = Listbook.find_or_create_by(isbn: isbn)
       book.save!
     end
   end

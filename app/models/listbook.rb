@@ -11,12 +11,11 @@ class Listbook < ActiveRecord::Base
   end
 
   def update_if_changed
+    # Only hit Amazon if something changed
     self.get_info_from_amazon if self.changed?
   end
 
   def get_info_from_amazon
-    # Only hit Amazon if something changed
-
     request = Vacuum.new
     request.configure(
       aws_access_key_id: ENV['aws_access_key_id'],

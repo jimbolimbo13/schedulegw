@@ -109,18 +109,16 @@
 		<div class="col-md-8">
 			<h2> Books For this Class: </h2>
 			<div class="field booklist_div">
-				<% if @course.listbooks.count > 0 %>
-					<% @course.listbooks.each do |book| %>
-						<%= render partial: "layouts/listbook", locals: { listbook: book, course: @course} %>
-					<% end %>
+				<% @course.listbooks.each do |book| %>
+					<%= render partial: "layouts/listbook", locals: { listbook: book, course: @course} %>
 				<% end %>
 			</div>
 
 			<div class="manual_booklist_div">
 				<div class="field">
 					Pinned ISBNs: <br>
-					<% @course.pinned_isbn.each do |pinned_isbn| %>
-						<%= pinned_isbn.to_s %><br>
+					<% @pinned_books.each do |pinned_book| %>
+						<%= render partial: "layouts/listbook", locals: { listbook: pinned_book } %>
 					<% end %>
 				</div>
 				<div class="field">
