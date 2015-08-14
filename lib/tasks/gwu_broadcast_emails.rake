@@ -20,7 +20,7 @@ task :manual_fix => :environment do
    "Zachariah Johnson",
    "Heba Dafashy",
    "Le Andrew Nguyen",
-   "Channell Khosrowabadi",
+   "Chanell Khosrowabadi",
    "John Werner",
    "James Rippeon",
    "Laura Seferian",
