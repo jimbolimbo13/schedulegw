@@ -49,6 +49,7 @@ class AddtobooklistController < ApplicationController
     if current_user.admin?
       @suggestion = Booklistsuggestion.find(params[:suggestion_id])
       if @suggestion.accept_suggestion
+        @suggestion.destroy!
         respond_to do |format|
           flash[:notice] = "Suggestion Accepted"
           format.html { redirect_to courses_url }
