@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
 	belongs_to :school
+	has_many :feedbacks
 
   has_many :schedules, dependent: :destroy
 	has_many :booklistsuggestions

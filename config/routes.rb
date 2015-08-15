@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+
+
   resources :users
 
   root 'visitors#index'
@@ -46,6 +48,11 @@ Rails.application.routes.draw do
   post 'addtobooklist/accept_suggestion'
   delete 'addtobooklist/destroy'
   get 'addtobooklist/get_course'
+
+  # Feedback Stuff
+  get 'feedback' => 'feedback#new'
+  post 'feedback/update'
+  delete 'feedback/destroy'
 
 
   #staticpages

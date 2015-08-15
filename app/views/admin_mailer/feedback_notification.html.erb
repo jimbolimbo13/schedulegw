@@ -1,0 +1,23 @@
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>User Feedback</title>
+</head>
+
+<body>
+  Hey. <br>
+
+  Here's some unwanted feedback: <br>
+
+  From: <%= @feedback.user ? @feedback.user.name : 'Anonymous' %><br> <br>
+  Commentary: <br>
+  <%= @feedback.comment %>
+  <br> <br>
+  Course: <%= @feedback.gwid %>-<%= @feedback.section %><br>
+  CRN: <%= @feedback.crn %><br>
+  <br>
+  <%= link_to 'Go Check It Out', courses_url %>
+  <br>
+  Sincerely,<br>
+  <br>
+  The Robot <br>
+</body>

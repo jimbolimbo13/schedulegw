@@ -1,7 +1,4 @@
 class AddtobooklistController < ApplicationController
-  def index
-
-  end
 
   def new
     @booklistsuggestion = Booklistsuggestion.new
