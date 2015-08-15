@@ -64,13 +64,13 @@ ActiveRecord::Schema.define(version: 20150813091430) do
     t.text     "additional_info"
     t.boolean  "manual_lock"
     t.string   "professor"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "final_date"
+    t.integer  "prof_id"
     t.string   "final_time"
+    t.string   "final_date"
     t.string   "school"
     t.integer  "schedule_id"
-    t.integer  "prof_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.json     "isbn",                   default: []
     t.boolean  "booklist_locked",        default: false
     t.boolean  "booklist_lock_conflict", default: false
@@ -82,10 +82,11 @@ ActiveRecord::Schema.define(version: 20150813091430) do
   add_index "courses", ["crn"], name: "index_courses_on_crn", unique: true, using: :btree
 
   create_table "courseschedules", force: :cascade do |t|
+    t.string   "name_of_relation"
     t.integer  "course_id"
     t.integer  "schedule_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
   add_index "courseschedules", ["course_id"], name: "index_courseschedules_on_course_id", using: :btree
@@ -129,14 +130,14 @@ ActiveRecord::Schema.define(version: 20150813091430) do
     t.text     "final_date_options"
     t.text     "final_time_options"
     t.string   "crn_scrape_digest",      default: ""
-    t.datetime "crn_last_scraped",       default: '2015-08-09 17:21:57'
-    t.datetime "crn_last_checked",       default: '2015-08-09 17:21:57'
+    t.datetime "crn_last_scraped",       default: '2015-08-14 17:16:45'
+    t.datetime "crn_last_checked",       default: '2015-08-14 17:16:45'
     t.string   "exam_scrape_digest",     default: ""
-    t.datetime "exam_last_scraped",      default: '2015-08-09 17:21:57'
-    t.datetime "exam_last_checked",      default: '2015-08-09 17:21:57'
+    t.datetime "exam_last_scraped",      default: '2015-08-14 17:16:45'
+    t.datetime "exam_last_checked",      default: '2015-08-14 17:16:45'
     t.string   "booklist_scrape_digest", default: ""
-    t.datetime "booklist_last_scraped",  default: '2015-08-09 17:21:57'
-    t.datetime "booklist_last_checked",  default: '2015-08-09 17:21:57'
+    t.datetime "booklist_last_scraped",  default: '2015-08-14 17:16:45'
+    t.datetime "booklist_last_checked",  default: '2015-08-14 17:16:45'
     t.integer  "emails_sent",            default: 0
     t.integer  "schedules_created",      default: 0
     t.string   "crn_url"
@@ -147,15 +148,15 @@ ActiveRecord::Schema.define(version: 20150813091430) do
   create_table "users", force: :cascade do |t|
     t.string   "name"
     t.string   "provider"
+    t.string   "email"
     t.string   "uid"
     t.text     "subscribed_ids"
+    t.boolean  "admin",            default: false
+    t.integer  "school_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "admin",            default: false
-    t.string   "email"
-    t.integer  "school_id"
     t.boolean  "accepted_terms",   default: false
-    t.datetime "last_email_blast", default: '2015-08-10 09:24:34'
+    t.datetime "last_email_blast", default: '2015-08-11 17:16:45'
   end
 
 end

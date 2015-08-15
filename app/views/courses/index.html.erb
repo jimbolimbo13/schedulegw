@@ -66,7 +66,7 @@
       <h2>Controls</h2>
       <h4>Do these in Order</h4>
       <%= link_to('3. Scrape Booklist Now', scrape_path(:source => 'booklist'),
-              method: "post", remote: true, data: { confirm: 'Are you fucking sure?'}, class: 'btn btn-success') %>
+              method: "post", remote: true, data: { confirm: 'Are you sure?'}, class: 'btn btn-success') %>
       <br>
       Booklist last Checked: <%= "#{time_ago_in_words(current_user.school.booklist_last_checked.getlocal)} ago." %><br>
       Booklist last Changed: <%= "#{time_ago_in_words(current_user.school.booklist_last_scraped.getlocal)} ago." %><br>
