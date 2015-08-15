@@ -1,0 +1,11 @@
+<div class="row" style="margin-bottom:1em;">
+  <div class="col-md-6">
+    <%= "#{feedback.gwid}-#{feedback.section}"%><br>
+    <%= "From User: #{ feedback.user ? feedback.user.name : 'anonymous'}" %><br>
+    <%= "#{feedback.comment}" %><br>
+  </div>
+  <div class="btn-group pull-right col-md-6" role="group">
+    <%= link_to('Mark Resolved', feedback_resolve_path(:feedback_id => feedback.id),
+            method: "post", class: 'btn btn-info') %>
+  </div>
+</div>
