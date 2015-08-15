@@ -1,7 +1,7 @@
 <div class="container-fluid">
-  <div class="row">
+  <div class="row add_missing_book_div">
     <div class="text-center">
-        <h1>To Add a Missing Book: </h1>
+        <h1 id="title">To Add a Missing Book: </h1>
     </div>
     <%= form_for @booklistsuggestion, url: addtobooklist_update_path do |f| %>
       <div class="col-md-2 col-md-offset-1">
@@ -21,8 +21,10 @@
       </div>
     <% end %>
   </div>
-  <div class="row text-center col-md-6 col-md-offset-3">
-    <h1>All Other Feedback</h1>
+  <div class="row text-center" id="current_isbn_list_div">
+  </div>
+  <div class="row text-center col-md-6 col-md-offset-3 other_feedback_div">
+    <h1 id="course_name">All Other Feedback</h1>
     <%= form_for @feedback, url: feedback_update_path do |f| %>
     <div class="row text-center">
       <div class="col-md-4">
