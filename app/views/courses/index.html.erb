@@ -44,6 +44,16 @@
             <% end %>
         </div>
       <% end %>
+      <% if @unresolved_feedback.count > 0 %>
+        <div class="row">
+          <h2>Feedback</h2>
+        </div>
+        <div class="row">
+            <% @unresolved_feedback.each do |feedback| %>
+              <%= render partial: "feedback/feedback", locals: { feedback: feedback } %>
+            <% end %>
+        </div>
+      <% end %>
       <% if @most_popular.count > 0 %>
         <div class="row">
           <h2>Most Popular Courses</h2>

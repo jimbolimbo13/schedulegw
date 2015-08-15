@@ -19,8 +19,17 @@ class FeedbackController < ApplicationController
     end
   end
 
-  def destroy
-    @feedback = Feedback.find(params[:id])
+  def resolve
+    if current_user.admin?
+      @feedback = Feedback.find(params[:feedback_id])
+      if @feedback.update_attribute('resolved', true)
+        respond_to do |format|
+          flash[:notice] = "Feedback Marked as Resolved"
+          format.html { redirect_to courses_url }
+          format.json { head :no_content }
+        end
+      end
+    end
   end
 
   private

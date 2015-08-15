@@ -52,6 +52,7 @@ Rails.application.routes.draw do
   # Feedback Stuff
   get 'feedback' => 'feedback#new'
   post 'feedback/update'
+  post 'feedback/resolve'
   delete 'feedback/destroy'
 
 

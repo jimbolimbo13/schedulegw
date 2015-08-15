@@ -28,6 +28,9 @@ class CoursesController < ApplicationController
 		# Most popular Courses by how many schedules they appear in.
 		@most_popular = Course.popular_courses
 
+		# Feedback Submissions
+		@unresolved_feedback = Feedback.all.where(resolved: false)
+
 	end
 
 	def gwufinals
