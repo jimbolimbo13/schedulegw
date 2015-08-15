@@ -1,7 +1,4 @@
 Rails.application.routes.draw do
-
-
-
   resources :users
 
   root 'visitors#index'
@@ -62,14 +59,12 @@ Rails.application.routes.draw do
   get 'terms' => 'static_pages#terms'
   get 'confirm_terms' => 'static_pages#confirm_terms'
 
-
   #GWSBA stuff
   get 'gwsbadata' => 'visitors#gwsbadata'
 
-
   #for Sidekiq Background Worker monitoring
   require 'sidekiq/web'
-  mount Sidekiq::Web => '/admin/sidekiq' if Rails.env != 'production'
-
+  require 'admin_constraint'
+  mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
 
 end
