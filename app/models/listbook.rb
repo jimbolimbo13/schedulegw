@@ -7,8 +7,17 @@ class Listbook < ActiveRecord::Base
   def self.sync_with_amazon
     Listbook.find_each do |book|
       book.get_info_from_amazon
+      book.save!
     end
   end
+
+  def sync_amazon_links
+    Listbook.find_each do |book|
+      book.get_info_from_amazon if book.amzn_url == nil
+      book.save!
+    end
+  end
+
 
   def update_if_changed
     # Only hit Amazon if something changed
