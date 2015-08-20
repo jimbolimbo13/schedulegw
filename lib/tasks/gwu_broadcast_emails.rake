@@ -5,62 +5,33 @@ task :mail_everyone => :environment do
   end
 end
 
+# Removes from the email list emails that bounce
+task :remove_invalid_accounts => :environment do
+  invalid_emails = [
+     'agreenberg@law.gwu.edu',
+      'jmgottesman@law.gwu.edu',
+      'joh@law.gwu.edu',
+      'sking2@law.gwu.edu',
+      'rgagne@law.gwu.edu',
+      'abaze@law.gwu.edu',
+      'mlarywon@law.gwu.edu',
+      'kbergin@law.gwu.edu',
+      'lmorgenstern@law.gwu.edu',
+      'kpowderly@law.gwu.edu',
+      'jpickar@law.gwu.edu',
+      'choughton@law.gwu.edu',
+      'ini@law.gwu.edu',
+      'pafuller@law.gwu.edu',
+      'ehanzich@law.gwu.edu',
+      'emwajert@law.gwu.edu',
+      'kyukevich@law.gwu.edu',
+      'daluise@law.gwu.edu',
+      'ckhosrowabadi@law.gwu.edu'
+  ]
 
-task :manual_fix => :environment do
-  puts "Manually Marking those that already received an email today.  "
-
-   emailed = [ "Danniyal Ahmed",
-   "Natasha Baker",
-   "Kavon Khani",
-   "Rebecca Bonnarens",
-   "Jeremy Buday",
-   "Chelsea Kirkpatrick",
-   "Sung Won Yoon",
-   "Nikki Keeley",
-   "Zachariah Johnson",
-   "Heba Dafashy",
-   "Le Andrew Nguyen",
-   "Chanell Khosrowabadi",
-   "John Werner",
-   "James Rippeon",
-   "Laura Seferian",
-   "Vanessa Hernandez-martinez",
-   "Michael Carpenter",
-   "Haleigh Amant",
-   "Christopher Bair",
-   "Tabatha Blake",
-   "Joseph Tharp",
-   "Ana Morales Murrieta",
-   "Micaela Cohen",
-   "Samantha Lewis",
-   "James Whittle",
-   "Dennis Hui",
-   "Jennifer Junger",
-   "Natalee Allenbaugh",
-   "Robert Pollak",
-   "Zachary Andrews",
-   "Bud Davis",
-   "Jeffrey DePaso",
-   "Corinne Rockoff",
-   "Nathan Delmar"
-   ]
-
-   modified = 0
-   error_names = []
-
-   emailed.each do |name|
-     user = User.find_by(name: name)
-
-    if user
-      user.last_email_blast = Time.now
-      modified = modified + 1 if user.save!
-     else
-       error_names << name
-     end
-   end
-
-   puts "Users in array: #{emailed.count}"
-   puts "Users marked as already received (should match): #{modified}"
-   puts "Names not mapped to a user: #{error_names.inspect}"
+  invalid_emails.each do |email|
+    u = User.find_by(email: email)
+    u.destroy! unless u.nil?
+  end
 
 end
