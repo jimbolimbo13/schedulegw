@@ -1,4 +1,6 @@
 task :mail_everyone => :environment do
+  puts "syncing with Amazon ..."
+  Lisbook.sync_with_amazon
   puts "Sending Books Emails "
   User.find_each do |user|
    Usermailer.booksemail(user).deliver_now unless user.last_email_blast > 60.hours.ago
