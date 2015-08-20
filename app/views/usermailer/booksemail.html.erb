@@ -34,7 +34,7 @@
       <br>
       We double-check almost every single piece of data by hand. <br>
       As always, the school's information is always the correct version, so if there's a difference between this email and the school's website, the school's website controls.
-      If anyone <a href='https://goo.gl/forms/ZHdgP7S0cu' target='_blank'>reports an error</a> it gets fixed almost instantly.
+      If anyone <%= link_to 'reports an error', feedback_path %>, it gets fixed almost instantly.
       <br>
       <p>
         Check the <%= link_to "Official #{@user.school.name} booklist", @user.school.booklist_url %> to make sure this email is correct.
