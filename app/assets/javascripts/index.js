@@ -395,7 +395,7 @@ function update_view() {
 		//append the 'next button to the classlist'
 		if (window.courses_exist) {
 			var html = '';
-			var html = html + '<li id="next_btn" class="btn btn-lg btn-primary" onclick="next()">Save</li>';
+			var html = html + '<li id="next_btn" class="btn btn-lg btn-primary" onclick="next()">Save & See Booklist</li>';
 			$('#chosenclasseslist').append(html);
 		}
 
