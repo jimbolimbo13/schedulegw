@@ -23,7 +23,7 @@ class Usermailer < ApplicationMailer
     @user = user
 
     if user.last_email_blast < 60.hours.ago
-      roadie_mail to: user.email, subject: "Fall 2015 Booklist Links for #{user.name}"
+      roadie_mail to: user.email, subject: "[2-day Shipping Warning] Fall 2015 Booklist Links for #{user.name}"
       # Log the time this was sent so we don't email the same user more than once every 3 days.
       @user.last_email_blast = Time.now
       @user.save!
