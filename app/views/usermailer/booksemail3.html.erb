@@ -1,0 +1,55 @@
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Here's Your Booklist With Links</title>
+  <%= render partial: 'emailstylesheet' %>
+</head>
+
+<body>
+
+<div id="email_container">
+  <div class="body_table">
+  <table>
+    <tr>
+      <%= render 'layouts/email_header' %>
+    </tr>
+    <tr>
+      Hey <%= @user.name %>,<br><br>
+      Here are the links to all of the books for schedules you created on <%= link_to "ScheduleGW.com", root_url %>. The school updates the booklist every few days,
+      so if a class doesn't have any books listed yet check again later. You can command-click the links to open each one in a new window.<br>
+      <br>
+      If the classes you actually registered for aren't listed, you can <%= link_to "make a new schedule", root_url %>.
+    </tr>
+    <tr>
+      <div id="schedules_table">
+        <% @user.schedules.each do |schedule| %>
+          <%= render partial: "usermailer/schedule_email_safe", locals: { schedule: schedule } %>
+        <% end %>
+        <% if @user.schedules.count == 0 %>
+          You don't have any saved schedules. You can <%= link_to "create one", root_url %> to see which books you need.
+        <% end %>
+      </div>
+    </tr>
+    <tr>
+      <br>
+      <br>
+      We double-check almost every single piece of data by hand. <br>
+      As always, the school's information is always the correct version, so if there's a difference between this email and the school's website, the school's website controls.
+      If anyone <%= link_to 'reports an error', feedback_url %>, it gets fixed almost instantly.
+      <br>
+      This is the last email you'll receive this semester, good luck! 
+      <br>
+      <p>
+        Check the <%= link_to "Official #{@user.school.name} booklist", @user.school.booklist_url %> to make sure this email is correct.
+      </p>
+      <br>
+      Party on Wayne, <br>
+      The ScheduleGW Team
+    </tr>
+    <tr>
+      <%= render 'layouts/email_footer' %>
+    </tr>
+  </table>
+</div>
+</div>
+
+</body>

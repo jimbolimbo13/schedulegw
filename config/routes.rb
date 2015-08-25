@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'emailer/send_email'
+
   resources :users
 
   root 'visitors#index'
@@ -36,6 +38,7 @@ Rails.application.routes.draw do
 
   post 'scrape' => 'scraper#scrape'
 
+  post 'send_email' => 'emailer#send_email'
 
   # allow people to add suggestions to booklistsuggestions model
   get 'addtobooklist/index'
