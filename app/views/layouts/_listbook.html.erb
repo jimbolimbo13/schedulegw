@@ -1,5 +1,9 @@
 <div class="row" id="book_#{listbook.isbn}">
   <div class="row email_indent_1">
-    <%= link_to "#{listbook.title}", listbook.amzn_url, :target => "_blank", :class => "email_link_to_amazon" %>
+    <% if listbook.amzn_url %>
+      <%= link_to "#{listbook.title}", listbook.amzn_url, :target => "_blank", :class => "email_link_to_amazon" %>
+    <% else %>
+      <%= link_to "ISBN Doesn't seem to match a book. Click to search by ISBN #{listbook.isbn}", "http://www.amazon.com/gp/search?index=books&keywords=#{listbook.isbn}&linkCode=ur2&tag=scgw-20", :target => "_blank", :class => "email_link_to_amazon" %>
+    <% end %>
   </div>
 </div>
