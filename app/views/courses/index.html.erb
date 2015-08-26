@@ -1,22 +1,23 @@
 <div class="container">
   <div class="row">
     <div class="col-md-4">
-      <h2>All Courses (<%= @courses.count %>)</h2>
-    </div>
-    <div class="col-md-6">
-      <h2>Stats</h2>
-    </div>
-    <div class="col-md-2">
-      <h2>Links</h2>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-4">
-      <ol class="items">
+      <% if @most_popular.count > 0 %>
+        <div class="row">
+          <h2 id="popular_courses_header">Most Popular Courses</h2>
+        </div>
+        <div class="row" id="popular_courses_div" style="display:none">
+            <% @most_popular.each do |course| %>
+              <%= link_to "#{course.gwid}-#{course.section} #{course.course_name} (#{course.schedule_count})", edit_course_path(course.id) %><br>
+            <% end %>
+        </div>
+      <% end %>
+      <h2 id="all_courses_header">All Courses (<%= @courses.count %>)</h2>
+      <ol class="courses" id="all_courses_div" style="display:none">
         <%= render @courses %>
       </ol>
     </div>
     <div class="col-md-6">
+      <h2>Stats</h2>
       <div class="row">
         <ul>
           <% @stats.each do |stat| %>
@@ -54,18 +55,10 @@
             <% end %>
         </div>
       <% end %>
-      <% if @most_popular.count > 0 %>
-        <div class="row">
-          <h2>Most Popular Courses</h2>
-        </div>
-        <div class="row">
-            <% @most_popular.each do |course| %>
-              <%= link_to "#{course.gwid}-#{course.section} #{course.course_name} (#{course.schedule_count})", edit_course_path(course.id) %><br>
-            <% end %>
-        </div>
-      <% end %>
+
     </div>
     <div class="col-md-2">
+      <h2>Links</h2>
       <ul>
         <li><%= link_to 'Amazon Associates', 'https://affiliate-program.amazon.com/gp/associates/network/main.html' %></li>
         <li><%= link_to 'Google Feedback', 'https://docs.google.com/spreadsheets/d/1gqJ2UqTa7dE24SVayQbg4IJG0rtYT42B_V2cOtHMWyM/edit#gid=1060046951' %></li>
@@ -82,15 +75,15 @@
       Booklist last Changed: <%= "#{time_ago_in_words(current_user.school.booklist_last_scraped.getlocal)} ago." %><br>
       Be patient waiting for a scrape to finish - it takes 2-3 seconds total.
       <h2>Sending Emails</h2>
-      <%= link_to('First Booklist Email', emailer_send_email_path(:round => '1'),
+      <%= link_to('First Booklist Email', send_email_path(:round => 1),
               method: "post", remote: true, data: { confirm: 'Are you sure? This will email everyone.'}, class: 'btn btn-warning') %>
       <br>
       <br>
-      <%= link_to('Second Booklist Email', emailer_send_email_path(:round => '2'),
+      <%= link_to('Second Booklist Email', send_email_path(:round => 2),
               method: "post", remote: true, data: { confirm: 'Are you sure? This will email everyone.'}, class: 'btn btn-warning') %>
       <br>
       <br>
-      <%= link_to('Final Booklist Email', emailer_send_email_path(:round => '3'),
+      <%= link_to('Final Booklist Email', send_email_path(:round => 3),
               method: "post", remote: true, data: { confirm: 'Are you sure? This will email everyone.'}, class: 'btn btn-warning') %>
     </div>
   </div>

@@ -1,6 +1,6 @@
 class Usermailer < ApplicationMailer
   include Roadie::Rails::Mailer
-  default from: "noreply@schedulegw.com"
+  default from: "Scheduler@schedulegw.com"
 
   # Subject can be set in your I18n file at config/locales/en.yml
   # with the following lookup:
