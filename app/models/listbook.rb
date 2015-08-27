@@ -46,6 +46,11 @@ class Listbook < ActiveRecord::Base
     self.image_url = @doc.at_css('Items Item LargeImage URL').text unless @doc.css('Items Item LargeImage URL').empty?
 
     self.amzn_url = URI.unescape( @doc.at_css('Items Item DetailPageURL').text ) unless @doc.css('Items Item DetailPageURL').empty?
+
+    # Sometimes Amazon doesn't have the book (usually for specialty books)
+    self.title = 'No Exact Match Found - click to search Amazon by ISBN' if self.title.nil?
+    self.amzn_url = "http://www.amazon.com/gp/search?index=books&keywords=#{self.isbn}&linkCode=ur2&tag=scgw-20" if amzn_url.nil?
+
     sleep(2) # Amazon rate limit = 1 per second.
 
   end
