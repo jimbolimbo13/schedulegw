@@ -15,7 +15,7 @@ class CoreFeatureTest < ActiveSupport::TestCase
     get_variables = "60242,61000"
 
     # #controller logic
-    current_user.build_schedulecourse("60242,61000".split(",").map(&:to_i))
+    current_user.build_schedule("60242,61000".split(",").map(&:to_i))
     schedule = current_user.schedules.create!(:name => "Unnamed Schedule")
     courses = get_variables.split(",").map(&:to_i)
 

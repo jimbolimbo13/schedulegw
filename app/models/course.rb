@@ -57,7 +57,7 @@ class Course < ActiveRecord::Base
     yomu = Yomu.new url
     text = yomu.text
 
-    @school = School.find(2) # Make this dynamic later.
+    @school = School.find_by(name: "GWU") # Make this dynamic later.
 
     # Check to see if the booklist changed.
     new_digest = Digest::MD5.hexdigest text

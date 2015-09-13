@@ -24,13 +24,13 @@ class UsermailerTest < ActionMailer::TestCase
     mail = Usermailer.schedule(@user, @schedule)
     assert_equal "Your Schedule From ScheduleGW", mail.subject
     assert_equal ["gmnelson@law.gwu.edu"], mail.to
-    assert_equal ["noreply@schedulegw.com"], mail.from
+    assert_equal ["Scheduler@schedulegw.com"], mail.from
     assert_match "Here's the schedule you wanted", mail.body.encoded
   end
 
   # Tests for the email that actually makes money.
   test "moneyemail" do
-    mail = Usermailer.booksemail(@user)
+    mail = Usermailer.booksemail1(@user)
     assert_equal "#{@user.name}, Here's Your Booklist", mail.subject
 
     # Test that the email includes all of the necessary schedule names

@@ -18,7 +18,7 @@ class BooklistScraperTest < ActiveSupport::TestCase
     assert course.isbn.include?("9780314279828"), "#{course.course_name} didn't include 9780314279828"
     assert course.isbn.include?("9781454815532"), "#{course.course_name} didn't include 9781454815532"
 
-    
+
 
   end
 
