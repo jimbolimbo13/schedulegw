@@ -1,0 +1,32 @@
+# This file is used when running tests on Travis. It overwrites database.yml prior
+# to running the scripts
+
+development:
+  adapter:  postgresql
+  host:     localhost
+  encoding: unicode
+  database: omniauth_development
+  pool:     5
+  username: omniauth
+  password:
+  template: template0
+
+test:
+  adapter:  postgresql
+  host:     localhost
+  encoding: unicode
+  database: travis_ci_test
+  pool:     5
+  username: postgres
+  password:
+  template: template0
+
+production:
+  adapter:  postgresql
+  host:     localhost
+  encoding: unicode
+  database: omniauth_production
+  pool:     5
+  username: <%= ENV['PG_USERNAME'] %>
+  password:
+  template: template0
