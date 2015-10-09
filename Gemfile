@@ -21,7 +21,7 @@ gem 'sinatra', :require => nil #required for Sidekiq monitoring panel.
 gem 'vacuum' #Amazon Product API wrapper
 gem 'nokogiri' #HTTP parser
 gem 'unicorn', '4.8.3' #Unicorn for Heroku in production. for large amounts of traffic.
-
+gem 'appsignal' # For monitoring and error reporting
 
 group :development do
   gem 'spring'

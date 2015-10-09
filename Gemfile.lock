@@ -37,6 +37,9 @@ GEM
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     addressable (2.3.6)
+    appsignal (0.11.12)
+      rack
+      thread_safe
     arel (6.0.0)
     better_errors (2.1.0)
       coderay (>= 1.0.0)
@@ -237,6 +240,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  appsignal
   better_errors
   binding_of_caller
   bootstrap-sass
@@ -268,3 +272,6 @@ DEPENDENCIES
   unicorn (= 4.8.3)
   vacuum
   yomu
+
+BUNDLED WITH
+   1.10.6
