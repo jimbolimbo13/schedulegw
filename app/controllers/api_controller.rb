@@ -1,7 +1,15 @@
 class ApiController < ApplicationController
 	def courses
 		@school = current_user.school.name
-		@courses = Course.all.where(school: @school)
+
+		# Check to see if semester is defined; if not make it the most recent one.
+		params[:semester] ? @semester = params[:semester] : @semester = Semester.last.name
+
+		# Get the ID of the semester the user wants.
+		@semester_id = Semester.find_by(name: @semester).id ? Semester.find_by(name: @semester).id : Semester.first.id
+
+		# Grab the courses to return as JSON
+		@courses = Course.all.where(school: @school, semester_id: @semester_id)
 
 		respond_to do |format|
 			format.json { render :json => @courses }
@@ -17,6 +25,6 @@ class ApiController < ApplicationController
 		end
 	end
 
-	private 
-		
+	private
+
 end
