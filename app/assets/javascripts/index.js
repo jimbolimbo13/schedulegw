@@ -72,7 +72,7 @@ function render_course_listing(course) {
 
 
 function load_courses() {
-	$.get('/api/courses/courses.json', function(courses){
+	$.get("/api/courses/courses.json?semester=fall2015", function(courses){
 		window.courses = courses
 		populate_course_list();
 		check_for_loaded_schedule();
@@ -594,6 +594,15 @@ function next() {
 
 }
 
+// Usage: geturlvar()["variable name"];
+// e.g. var page = geturlvar()["page"] www.example.com/?page=21
+function geturlvar() {
+	var vars = {};
+	var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+	vars[key] = value;
+	});
+	return vars;
+}
 
 
 
