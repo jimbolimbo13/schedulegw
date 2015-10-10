@@ -8,6 +8,9 @@ class Course < ActiveRecord::Base
   #possibly:
   belongs_to :schools
 
+  # Only one semester per instance of these classes.
+  belongs_to :semester
+
 	has_many :subscriptions
 	has_many :users, through: :subscriptions
 
