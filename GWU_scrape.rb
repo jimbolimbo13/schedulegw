@@ -11,16 +11,17 @@
     exit
   end
 
-  # See which semester we're scraping for. Can't do it strictly by scrape date because we don't know when the school will
-  # post the new pdf of courses
-  # and it could think the semester changed but scrape the OLD URL.
-  
+  $school_name = "GWU" #should change this to be a relation to School.find_by(:name => 'GWU')
+  $school = School.find_by(:name => $school_name)
 
+  # Get the current registration semester.
+  $semester = School.find_by(name: "GWU").semester
 
   # Grab the text to be scraped/parsed.
   if Rails.env != 'development'
-    crn_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Fall2015/Documents/Fa15%20Schedule%20with%20CRNs.pdf'
-    exam_text = Yomu.new 'http://www.law.gwu.edu/Students/Records/Fall2015/Documents/Fall%202015%20Schedule%20with%20Exams.pdf'
+    # Get the URLs we need to scrape for GWU
+    crn_text = Yomu.new Scrapeurl.where(name: "crn_text", semester_id: $semester.id, school_id: $school.id).first.url.to_s
+    exam_text = Yomu.new Scrapeurl.where(name: "exam_text", semester_id: $semester.id, school_id: $school.id).first.url.to_s
   else
     #get local copy if just testing
     puts 'Using local copy bc Env = development or test'
@@ -33,9 +34,6 @@
     @errors.push( {:name => 'File Not Found', :text => 'The file for either the CRN text or the exam text cannot be found. Likely it was moved. Scrapes from now on wont be useful until this is fixed.'} )
     AdminMailer.error_report(@errors).deliver_now unless Rails.env = 'development'
   end
-
-  $school_name = "GWU" #should change this to be a relation to School.find_by(:name => 'GWU')
-  $school = School.find_by(:name => $school_name)
 
   #begin CRN_classlist with checking if changes occurred.
   new_text = crn_text.text
