@@ -14,8 +14,15 @@ $( document ).on('page:change', function() {
 	window.conflicted_courses = [];
 	window.unconflicted_courses = [];
 
+	// Get the semester from server side (moving towards one-way data flow)
+	// This should be value_of_semester_select_field || get_variable || spring2016
+	window.semester = geturlvar()["semester"] || $("#semester_id").val() || "spring2016"
+	if (geturlvar()["semester"] != null) {
+		$('#semester_id').val(geturlvar()["semester"]);
+	}
+
 	//populate courses available
-	load_courses();
+	load_courses(window.semester);
 
 	//This next line only works in Chrome which is bullshit because it's amazing and needs
 	//to work in Safari too. Safari sucks.
@@ -49,6 +56,19 @@ $( document ).on('page:change', function() {
 		search_courses();
 	})
 
+	$( '#semester_select' ).on('change', function(e) {
+		console.log('changd semester');
+
+		// clear the current schedule so no cross-semester schedules are created
+		$.each(window.currentschedulearray, function(index, course){
+			removecourse(index);
+		})
+
+		window.semester = semester = $('#semester_select').val();
+
+		load_courses(semester);
+	})
+
 	// if the user has blocked ads....
  	$.ajax( "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ).fail(function() {
  		//$( '#schedule-container' ).css( 'background', 'url("/td.jpg")' );
@@ -71,8 +91,9 @@ function render_course_listing(course) {
 }
 
 
-function load_courses() {
-	$.get("/api/courses/courses.json?semester=fall2015", function(courses){
+function load_courses(semester) {
+	semester = semester || window.semester;
+	$.get("/api/courses/courses.json?semester=" + semester, function(courses){
 		window.courses = courses
 		populate_course_list();
 		check_for_loaded_schedule();
