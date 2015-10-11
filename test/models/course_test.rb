@@ -5,4 +5,7 @@ class CourseTest < ActiveSupport::TestCase
     assert courses(:evidence).valid?, "Evidence wasnt a valid course"
     assert courses(:pre).valid?, "PRE wasnt a valid course"
   end
+
+  
+
 end

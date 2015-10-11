@@ -105,6 +105,25 @@ class AddSemester < ActiveRecord::Migration
       @scrape_url = Scrapeurl.new
       @scrape_url.school = School.find_by(name: "GWU")
       @scrape_url.semester = Semester.find_by(name: 'spring2016')
+      @scrape_url.name = "gwu_test_crn_spring2016"
+      @scrape_url.url = 'https://www.schedulegw.com/gwu_test_crn_spring2016.pdf'
+      @scrape_url.last_checked = Time.now
+      @scrape_url.last_scraped = Time.now
+      @scrape_url.save!
+
+      @scrape_url = Scrapeurl.new
+      @scrape_url.school = School.find_by(name: "GWU")
+      @scrape_url.semester = Semester.find_by(name: 'spring2016')
+      @scrape_url.name = "gwu_test_exam_spring2016"
+      @scrape_url.url = 'https://www.schedulegw.com/gwu_test_exam_spring2016.pdf'
+      @scrape_url.last_checked = Time.now
+      @scrape_url.last_scraped = Time.now
+      @scrape_url.save!
+
+    ## Spring 2016 LIVE urls.
+      @scrape_url = Scrapeurl.new
+      @scrape_url.school = School.find_by(name: "GWU")
+      @scrape_url.semester = Semester.find_by(name: 'spring2016')
       @scrape_url.name = "crn"
       @scrape_url.url = 'http://www.law.gwu.edu/Students/Records/Spring2016/Documents/Spring%202016%20Schedule%20with%20CRNs.pdf'
       @scrape_url.last_checked = Time.now
