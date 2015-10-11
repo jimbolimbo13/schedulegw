@@ -58,6 +58,24 @@ class AddSemester < ActiveRecord::Migration
     @scrape_url.last_scraped = Time.now
     @scrape_url.save!
 
+    @scrape_url = Scrapeurl.new
+    @scrape_url.school = School.find_by(name: "GWU")
+    @scrape_url.semester = Semester.find_by(name: 'fall2015')
+    @scrape_url.name = "gwu_test_exam_text_fall2015"
+    @scrape_url.url = 'https://www.schedulegw.com/gwu_exam_test_fall2015.pdf'
+    @scrape_url.last_checked = Time.now
+    @scrape_url.last_scraped = Time.now
+    @scrape_url.save!
+
+    @scrape_url = Scrapeurl.new
+    @scrape_url.school = School.find_by(name: "GWU")
+    @scrape_url.semester = Semester.find_by(name: 'fall2015')
+    @scrape_url.name = "gwu_crn_test_fall2015"
+    @scrape_url.url = 'https://www.schedulegw.com/gwu_crn_test_fall2015.pdf'
+    @scrape_url.last_checked = Time.now
+    @scrape_url.last_scraped = Time.now
+    @scrape_url.save!
+
 
   end
   def down

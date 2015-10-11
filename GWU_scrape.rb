@@ -23,7 +23,7 @@
     crn_text = Yomu.new Scrapeurl.where(name: "crn_text", semester_id: $semester.id, school_id: $school.id).first.url.to_s
     exam_text = Yomu.new Scrapeurl.where(name: "exam_text", semester_id: $semester.id, school_id: $school.id).first.url.to_s
   else
-    #get local copy if just testing
+    #get local copy if just testing 
     puts 'Using local copy bc Env = development or test'
     crn_text = Yomu.new Rails.root.join('lib', 'scrape_texts') + "crn_classlist_last.txt"
     exam_text = Yomu.new Rails.root.join('lib', 'scrape_texts') + "exam_schedule_last.txt"
