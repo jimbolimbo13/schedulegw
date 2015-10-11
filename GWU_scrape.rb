@@ -1,7 +1,6 @@
 
   #Compare the School's PDF with the one we have cached most recently. If they match, skip this step. If they don't match, run it.
   #All of the PDFs are scraped at once here at the top.
-  #URLs are all brought together here for convenience.
 
   #only run if its during business-y hours
   t = Time.now
@@ -48,7 +47,6 @@
     puts "New Version of CRN Classlist, running scraper/parser."
     puts "Rails.env is dev so ignoring if docs are the same" unless Rails.env != 'development'
     $file_changed = true
-    #timestamp and save the file formerly known as crn_classlist_last.
 
     $school.crn_last_scraped = $school.crn_last_checked = Time.now
     $school.crn_scrape_digest = new_digest
