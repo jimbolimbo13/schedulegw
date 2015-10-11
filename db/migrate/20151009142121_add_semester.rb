@@ -4,6 +4,10 @@ class AddSemester < ActiveRecord::Migration
       t.string :name
     end
 
+    @sem = Semester.new
+    @sem.name = "spring2015"
+    @sem.save!
+
     @sem1 = Semester.new
     @sem1.name = "fall2015"
     @sem1.save!
@@ -40,41 +44,82 @@ class AddSemester < ActiveRecord::Migration
     end
 
     # Fill in/populate old data for previous scrapes and URLs
-    @scrape_url = Scrapeurl.new
-    @scrape_url.school = School.find_by(name: "GWU")
-    @scrape_url.semester = @sem1
-    @scrape_url.name = "crn_text"
-    @scrape_url.url = 'http://www.law.gwu.edu/Students/Records/Fall2015/Documents/Fa15%20Schedule%20with%20CRNs.pdf'
-    @scrape_url.last_checked = Time.now
-    @scrape_url.last_scraped = Time.now
-    @scrape_url.save!
 
-    @scrape_url = Scrapeurl.new
-    @scrape_url.school = School.find_by(name: "GWU")
-    @scrape_url.semester = @sem1
-    @scrape_url.name = "exam_text"
-    @scrape_url.url = 'http://www.law.gwu.edu/Students/Records/Fall2015/Documents/Fall%202015%20Schedule%20with%20Exams.pdf'
-    @scrape_url.last_checked = Time.now
-    @scrape_url.last_scraped = Time.now
-    @scrape_url.save!
+    ## Spring 2015
+      @scrape_url = Scrapeurl.new
+      @scrape_url.school = School.find_by(name: "GWU")
+      @scrape_url.semester = Semester.find_by(name: 'spring2015')
+      @scrape_url.name = "gwu_test_crn_spring2015"
+      @scrape_url.url = 'https://www.schedulegw.com/gwu_test_crn_spring2015.pdf'
+      @scrape_url.last_checked = Time.now
+      @scrape_url.last_scraped = Time.now
+      @scrape_url.save!
 
-    @scrape_url = Scrapeurl.new
-    @scrape_url.school = School.find_by(name: "GWU")
-    @scrape_url.semester = Semester.find_by(name: 'fall2015')
-    @scrape_url.name = "gwu_test_exam_text_fall2015"
-    @scrape_url.url = 'https://www.schedulegw.com/gwu_exam_test_fall2015.pdf'
-    @scrape_url.last_checked = Time.now
-    @scrape_url.last_scraped = Time.now
-    @scrape_url.save!
+      @scrape_url = Scrapeurl.new
+      @scrape_url.school = School.find_by(name: "GWU")
+      @scrape_url.semester = Semester.find_by(name: 'spring2015')
+      @scrape_url.name = "gwu_test_exam_spring2015"
+      @scrape_url.url = 'https://www.schedulegw.com/gwu_test_exam_spring2015.pdf'
+      @scrape_url.last_checked = Time.now
+      @scrape_url.last_scraped = Time.now
+      @scrape_url.save!
 
-    @scrape_url = Scrapeurl.new
-    @scrape_url.school = School.find_by(name: "GWU")
-    @scrape_url.semester = Semester.find_by(name: 'fall2015')
-    @scrape_url.name = "gwu_crn_test_fall2015"
-    @scrape_url.url = 'https://www.schedulegw.com/gwu_crn_test_fall2015.pdf'
-    @scrape_url.last_checked = Time.now
-    @scrape_url.last_scraped = Time.now
-    @scrape_url.save!
+      @scrape_url = Scrapeurl.new
+      @scrape_url.school = School.find_by(name: "GWU")
+      @scrape_url.semester = Semester.find_by(name: 'spring2015')
+      @scrape_url.name = "gwu_test_booklist_spring2015"
+      @scrape_url.url = 'https://www.schedulegw.com/gwu_test_booklist_spring2015.pdf'
+      @scrape_url.last_checked = Time.now
+      @scrape_url.last_scraped = Time.now
+      @scrape_url.save!
+
+    ## Fall 2015
+      @scrape_url = Scrapeurl.new
+      @scrape_url.school = School.find_by(name: "GWU")
+      @scrape_url.semester = Semester.find_by(name: 'fall2015')
+      @scrape_url.name = "gwu_test_crn_fall2015"
+      @scrape_url.url = 'https://www.schedulegw.com/gwu_test_crn_fall2015.pdf'
+      @scrape_url.last_checked = Time.now
+      @scrape_url.last_scraped = Time.now
+      @scrape_url.save!
+
+      @scrape_url = Scrapeurl.new
+      @scrape_url.school = School.find_by(name: "GWU")
+      @scrape_url.semester = Semester.find_by(name: 'fall2015')
+      @scrape_url.name = "gwu_test_exam_fall2015"
+      @scrape_url.url = 'https://www.schedulegw.com/gwu_test_exam_fall2015.pdf'
+      @scrape_url.last_checked = Time.now
+      @scrape_url.last_scraped = Time.now
+      @scrape_url.save!
+
+      @scrape_url = Scrapeurl.new
+      @scrape_url.school = School.find_by(name: "GWU")
+      @scrape_url.semester = Semester.find_by(name: 'fall2015')
+      @scrape_url.name = "gwu_test_booklist_fall2015"
+      @scrape_url.url = 'https://www.schedulegw.com/gwu_test_booklist_fall2015.pdf'
+      @scrape_url.last_checked = Time.now
+      @scrape_url.last_scraped = Time.now
+      @scrape_url.save!
+
+    ## Spring 2016
+      @scrape_url = Scrapeurl.new
+      @scrape_url.school = School.find_by(name: "GWU")
+      @scrape_url.semester = Semester.find_by(name: 'spring2016')
+      @scrape_url.name = "crn"
+      @scrape_url.url = 'http://www.law.gwu.edu/Students/Records/Spring2016/Documents/Spring%202016%20Schedule%20with%20CRNs.pdf'
+      @scrape_url.last_checked = Time.now
+      @scrape_url.last_scraped = Time.now
+      @scrape_url.save!
+
+      @scrape_url = Scrapeurl.new
+      @scrape_url.school = School.find_by(name: "GWU")
+      @scrape_url.semester = Semester.find_by(name: 'spring2016')
+      @scrape_url.name = "exam"
+      @scrape_url.url = 'http://www.law.gwu.edu/Students/Records/Fall2015/Documents/Spring%202016%20Schedule%20with%20Exams.pdf'
+      @scrape_url.last_checked = Time.now
+      @scrape_url.last_scraped = Time.now
+      @scrape_url.save!
+
 
 
   end

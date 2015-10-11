@@ -18,15 +18,14 @@
   $semester = School.find_by(name: "GWU").semester
 
   # Grab the text to be scraped/parsed.
-  if Rails.env != 'development'
+  if Rails.env == 'production'
     # Get the URLs we need to scrape for GWU
     crn_text = Yomu.new Scrapeurl.where(name: "crn_text", semester_id: $semester.id, school_id: $school.id).first.url.to_s
     exam_text = Yomu.new Scrapeurl.where(name: "exam_text", semester_id: $semester.id, school_id: $school.id).first.url.to_s
   else
-    #get local copy if just testing 
-    puts 'Using local copy bc Env = development or test'
-    crn_text = Yomu.new Rails.root.join('lib', 'scrape_texts') + "crn_classlist_last.txt"
-    exam_text = Yomu.new Rails.root.join('lib', 'scrape_texts') + "exam_schedule_last.txt"
+    # Testing or development mode.
+    crn_text = Yomu.new Scrapeurl.where(name: "gwu_crn_test_fall2015", semester_id: $semester.id, school_id: $school.id).first.url.to_s
+    exam_text = Yomu.new Scrapeurl.where(name: "gwu_test_exam_text_fall2015", semester_id: $semester.id, school_id: $school.id).first.url.to_s
   end
 
   @errors = []

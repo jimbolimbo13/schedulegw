@@ -3,8 +3,12 @@ class ApiController < ApplicationController
 		@school = current_user.school.name
 
 		# Check to see if semester is defined; if not make it the most recent one.
-		params[:semester] ? @semester = params[:semester] : @semester = Semester.last.name
-
+		if params[:semester].present?
+			@semester = Semester.find_by(name: params[:semester]) || Semester.last
+		else
+			@semester = Semester.last
+		end
+		@semester = @semester.name
 		# Get the ID of the semester the user wants.
 		@semester_id = Semester.find_by(name: @semester).id ? Semester.find_by(name: @semester).id : Semester.first.id
 
