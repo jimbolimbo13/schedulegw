@@ -81,7 +81,7 @@ class Course < ActiveRecord::Base
   # result, then test like so:
   # defined_course.is_found_exactly_in?(array_from_scrape_method)
   def is_found_exactly_in?(array_of_courses)
-    # Define the list of attributes to match.
+    # Define the list of attributes to match. This list must be updated regularly.
     key_attributes = [
       "crn",
       "gwid",
@@ -114,20 +114,188 @@ class Course < ActiveRecord::Base
       "final_date",
       "school"
     ]
+    return Course.deep_match_course_attributes(key_attributes, self, array_of_courses)
+  end
 
-    array_of_courses.include?(self) ? true : false
+  def self.deep_match_course_attributes(attributes_list, course, array_of_courses)
+    return false if course.class != Course # Check that the item is a course
+    return false if attributes_list.class != Array
+    return false if array_of_courses.class != Array
+
+    array_of_courses.each do |course_|
+      @mismatch_found = false
+
+      attributes_list.each do |attrib|
+        if ( course_.send(attrib) != course.send(attrib) )
+          @mismatch_found = true
+          break
+        end
+      end
+      return true unless @mismatch_found
+    end
+
+    @mismatch_found ? false : true
 
   end
+
+  def self.slice_into_lines(text)
+    text.scan(/\n.+/).map{ |s| s}
+  end
+
+  def self.line_includes_crn?(line)
+    line =~ /\d{5}/i ? true : false
+  end
+
+  def self.parse_crn(line)
+    line.scan(/\d{5}/)[0]
+  end
+
+  def self.parse_gwid(line)
+    line.scan(/\d\s+(\d{4})\s/).flatten[0]
+  end
+
+  def self.parse_section(line)
+    line.scan(/\d\s+(\d{2})\s/).flatten[0]
+  end
+
+  def self.parse_course_name(line)
+    line.scan(/\d{2}\s+([A-Za-z\/\-]+[^\d]+)/).flatten[0].rstrip
+  end
+
+  def self.parse_hours(line)
+    hours_chunk = line.scan(/(\d\.\d\s+:?(OR)?:?(TO)?(:?(\s+\d\.\d\s+)?))/).flatten[0].rstrip
+    return "variable" if hours_chunk.include?("TO")
+    return "variable" if hours_chunk.include?("OR")
+    return hours_chunk.slice(0,1)
+  end
+
+  def self.parse_days(line)
+    line.scan(/\s([UMTWRFS]+\s?[UMTWRFS]?|TBA)\s/).flatten[0].sub(' ', '')
+  end
+
+  def self.parse_times(line)
+    time_chunk = line.scan(/\s(\d{4}\s-\s\d{4}\s?(am|pm)|TBA)\s/).flatten[0]
+    return "TBA" if time_chunk == "TBA"
+
+    start_time = time_chunk.scan(/\d{4}/)[0].to_i
+    end_time = time_chunk.scan(/\d{4}/)[1].to_i
+
+    if time_chunk.include?("pm")
+      converted_times = Course.convert_times([start_time, end_time], "pm")
+      start_time = converted_times[0]
+      end_time = converted_times[1]
+    end
+    return [start_time, end_time]
+  end
+
+  def self.convert_times(times_array, am_pm)
+    start_time = times_array[0]
+    end_time = times_array[1]
+    if am_pm == "pm"
+      start_time = start_time + 1200 if ( (start_time < end_time) && (start_time < 1200) )
+      end_time = end_time + 1200
+    end
+    return [start_time, end_time]
+  end
+
+  def self.assign_times_to_days(days_string, times_array)
+    return if days_string == "TBA"
+    days_string.scan(/(\w)/) { |s|
+      case $1
+      when 'U'
+        @day1_start = times_array[0]
+        @day1_end = times_array[1]
+      when 'M'
+        @day2_start = times_array[0]
+        @day2_end = times_array[1]
+      when 'T'
+        @day3_start = times_array[0]
+        @day3_end = times_array[1]
+      when 'W'
+        @day4_start = times_array[0]
+        @day4_end = times_array[1]
+      when 'R'
+        @day5_start = times_array[0]
+        @day5_end = times_array[1]
+      when 'F'
+        @day6_start = times_array[0]
+        @day6_end = times_array[1]
+      when 'S'
+        @day7_start = times_array[0]
+        @day7_end = times_array[1]
+      end
+    }
+
+    return {
+      "day1_start": @day1_start,
+      "day1_end": @day1_end,
+      "day2_start": @day2_start,
+      "day2_end": @day2_end,
+      "day3_start": @day3_start,
+      "day3_end": @day3_end,
+      "day4_start": @day4_start,
+      "day4_end": @day4_end,
+      "day5_start": @day5_start,
+      "day5_end": @day5_end,
+      "day6_start": @day6_start,
+      "day6_end": @day6_end,
+      "day7_start": @day7_start,
+      "day7_end": @day7_end,
+    }
+  end
+
+  def self.parse_professor(line)
+    matches = line.scan(/\s?(am|pm|TBA)\s+?(.+)/i).flatten
+    # Split each array element into its words also.
+    @potential_profs = []
+    matches.each do |match|
+      @potential_profs << match.lstrip.rstrip.gsub(/\s/,' ').split(' ')
+    end
+    @potential_profs.flatten!
+
+    return "STAFF" if @potential_profs.include?("STAFF")
+    @potential_profs = @potential_profs - ['am', 'pm', "STAFF", "TBA"] # remove things that are obviously not names
+    return @potential_profs.first
+  end
+
+  def self.parse_additional_classtimes(line)
+    elements = line.scan(/([MTWRF]+)\s+(\d{4})\s+.\s+(\d{4})(\D\D)\s+[A-Za-z\/-]+/).flatten
+    days = elements[0]
+    start_time = elements[1]
+    end_time = elements[2]
+    am_pm = elements[3]
+
+    converted_times = Course.convert_times([start_time, end_time], am_pm)
+    Course.assign_times_to_days(days, converted_times)
+  end
+
+  def self.parse_llm_only?(line)
+    /LL.Ms\s+ONLY/.match(line) ? true : false
+  end
+
+  def self.parse_jd_only?(line)
+    /\(J.D.s only\)/.match(line) ? true : false
+  end
+
+  def self.parse_course_name_2(line)
+    /(\(.+[^J.D.s only]\))/.match(line)
+    # need to lstrip and rstrip these I think
+  end
+
+  def self.parse_alt_schedule?(line)
+    /(alternat|modified)/.match(line) ? true : false
+  end
+
+  def self.parse_additional_info(line)
+
+  end
+
 
   def self.scrape_gwu_crn(text)
     new_text = text
     @response = []
 
-      sliced_text = new_text.scan(/\n.+/).map{ |s| s}
-
-      #nasty regex to capture each line
-      #https://regex101.com/r/aG2xP2/3
-      #this regex is great; just need to edit capturing groups
+      sliced_text = Course.slice_into_lines(new_text)
       # :?\s+(\d{5})\s+(\d{4})\s+(\d{2})\s+([A-Za-z\/\-]+[^\d]+)(\d\.\d)\s+:?(OR)?:?(TO)?(:?(\s+\d\.\d\s+)?)[MTWRFBA]+(:?(\s[MTWRFBA]+)?)\s+(:?(TBA)?)(:?(\d{4})?)(:?(\s+-\s+(\d{4})(\D\D))?)\s+(\w+)\s+?
 
       sliced_text.each { |line|
@@ -144,11 +312,14 @@ class Course < ActiveRecord::Base
           $start_time = nil
           $end_time = nil
           $prof_name = nil
-          $alt_schedule = nil
+          $alt_schedule = false
+          $llm_only = false
+          $jd_only = false
+          $manual_lock = false
           $additional_info = nil
           $course_name_2 = nil
           $professor = nil
-
+          $frag = nil
 
           #reset all of the day start/end times
           $day1_start = nil
@@ -383,11 +554,22 @@ class Course < ActiveRecord::Base
           course.prof_id = $prof_id
           course.school = School.find_by(name: "GWU").name
 
+
+          @response.each do |included_course|
+            if included_course.crn == $crn
+              @already_included = true
+              break
+            end
+          end
+
           # Add this course to the return object
-          @response << course
+          @response << course unless @already_included
+
       }
+
       # Return an array of every class in this crn pdf scrape.
       return @response
+
   end
 
 
