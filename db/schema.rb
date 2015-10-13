@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(version: 20150814235613) do
     t.integer  "schedule_count",         default: 0
   end
 
-  add_index "courses", ["crn"], name: "index_courses_on_crn", unique: true, using: :btree
+  add_index "courses", ["crn"], name: "index_courses_on_crn", using: :btree
 
   create_table "courseschedules", force: :cascade do |t|
     t.string   "name_of_relation"
