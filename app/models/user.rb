@@ -10,6 +10,8 @@ class User < ActiveRecord::Base
 
 	serialize :subscribed_ids, Array
 
+	# bump
+	# bump
 
   def self.create_with_omniauth(auth)
 	    create! do |user|
