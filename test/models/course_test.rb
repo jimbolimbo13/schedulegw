@@ -41,73 +41,54 @@ class CourseTest < ActiveSupport::TestCase
   end
 
   test "line_includes_crn?" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[6].include?(40948.to_s)
-    assert Course.line_includes_crn?(lines[6])
+    line = "\n 40948   6203    11  Contracts II                     3.0         MTW         0140 - 0235pm                Selmi"
+    assert Course.line_includes_crn?(line)
   end
 
   test "parse_crn" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[6].include?(40948.to_s)
-    assert Course.parse_crn(lines[6]) == "40948"
+    line = "\n 40948   6203    11  Contracts II                     3.0         MTW         0140 - 0235pm                Selmi"
+    assert Course.parse_crn(line) == "40948"
   end
 
   test "parse_gwid" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[6].include?(6203.to_s)
-    assert Course.parse_gwid(lines[6]) == "6203"
+    line = "\n 40948   6203    11  Contracts II                     3.0         MTW         0140 - 0235pm                Selmi"
+    assert Course.parse_gwid(line) == "6203"
   end
 
   test "parse_section" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[6].include?(11.to_s)
-    assert Course.parse_section(lines[6]) == "11"
+    line = "\n 40948   6203    11  Contracts II                     3.0         MTW         0140 - 0235pm                Selmi"
+    assert Course.parse_section(line) == "11"
   end
 
   test "parse course_name" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[6].include?("Contracts II".to_s)
-    assert Course.parse_course_name(lines[6]) == "Contracts II"
+    line = "\n 40948   6203    11  Contracts II                     3.0         MTW         0140 - 0235pm                Selmi"
+    assert Course.parse_course_name(line) == "Contracts II"
   end
 
   test "parse hours" do
+    line = "\n 40948   6203    11  Contracts II                     3.0         MTW         0140 - 0235pm                Selmi"
     source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[6].include?("3.0".to_s)
-    assert Course.parse_hours(lines[6]) == "3"
+    assert Course.parse_hours(line) == "3"
   end
 
   test "parse hours [case: 'or']" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[461].include?("1.0 OR 2.0".to_s)
-    assert Course.parse_hours(lines[461]) == "variable"
+    line = "\n 41009   6696    25  Graduate Indep Legal Writing     1.0 OR 2.0  TBA         TBA                          STAFF"
+    assert Course.parse_hours(lines) == "variable"
   end
 
   test "parse hours [case: 'to']" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[463].include?("1.0 TO 4.0".to_s)
-    assert Course.parse_hours(lines[463]) == "variable"
+    line = "\n 41010   6697    25  Graduate Clinical Studies        1.0 TO 4.0  TBA         TBA                          STAFF"
+    assert Course.parse_hours(line) == "variable"
   end
 
   test "parse days" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[6].include?("MTW".to_s)
-    assert Course.parse_days(lines[6]) == "MTW"
+    line = "\n 40948   6203    11  Contracts II                     3.0         MTW         0140 - 0235pm                Selmi"
+    assert Course.parse_days(line) == "MTW"
   end
 
   test "parse days [case: 'TBA']" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[461].include?("TBA".to_s)
-    assert Course.parse_days(lines[461]) == "TBA"
+    line = "\n 41009   6696    25  Graduate Indep Legal Writing     1.0 OR 2.0  TBA         TBA                          STAFF"
+    assert Course.parse_days(line) == "TBA"
   end
 
   test "parse days [case: 'T W' (space)]" do
@@ -118,11 +99,8 @@ class CourseTest < ActiveSupport::TestCase
   end
 
   test "parse times [case: both start and end are pm]" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[6].include?("0140 - 0235pm".to_s) # Times each day
-    assert lines[6].include?("MTW".to_s) # Days of the week
-    assert Course.parse_times(lines[6]) == [1340, 1435]
+    line = "\n 40948   6203    11  Contracts II                     3.0         MTW         0140 - 0235pm                Selmi"
+    assert Course.parse_times(line) == ["1340", "1435"]
   end
 
   test "parse times [case: both start and end are am]" do
@@ -133,31 +111,23 @@ class CourseTest < ActiveSupport::TestCase
   end
 
   test "parse times [case: 'TBA']" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[461].include?("TBA".to_s) # Times each day
-    assert Course.parse_times(lines[461]) == "TBA"
+    line = "\n 41009   6696    25  Graduate Indep Legal Writing     1.0 OR 2.0  TBA         TBA                          STAFF"
+    assert Course.parse_times(line) == "TBA"
   end
 
   test "parse professor" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[6].include?("Selmi".to_s) # Times each day
-    assert Course.parse_professor(lines[6]) == "Selmi"
+    line = "\n 40948   6203    11  Contracts II                     3.0         MTW         0140 - 0235pm                Selmi"
+    assert Course.parse_professor(line) == "Selmi"
   end
 
   test "parse professor 2" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[60].include?("Turilli".to_s) # Times each day
-    assert Course.parse_professor(lines[60]) == "Turilli"
+    line = "\n 43218   6254    10  Corporate Finance                2.0         R           0140 - 0340pm                Turilli"
+    assert Course.parse_professor(line) == "Turilli"
   end
 
   test "parse professor [case: 'STAFF']" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[461].include?("STAFF".to_s) # Times each day
-    assert Course.parse_professor(lines[461]) == "STAFF"
+    line = "\n 41009   6696    25  Graduate Indep Legal Writing     1.0 OR 2.0  TBA         TBA                          STAFF"
+    assert Course.parse_professor(line) == "STAFF"
   end
 
   test "parse additional class times (line 2)" do
@@ -169,7 +139,161 @@ class CourseTest < ActiveSupport::TestCase
     assert Course.parse_additional_classtimes(lines[8])[:day6_end] == "1155"
   end
 
-  
+  # Makes sure courses with classtimes on two diff. lines get combined correctly.
+  test "combine attribute hashes" do
+    @course = Course.new
+    @week_schedule_1 = {
+      "day1_start": 1200,
+      "day1_end": 1300,
+      "day2_start": nil,
+      "day2_end": nil,
+      "day3_start": nil,
+      "day3_end": nil,
+      "day4_start": 1100,
+      "day4_end": 1200,
+      "day5_start": nil,
+      "day5_end": nil,
+      "day6_start": nil,
+      "day6_end": nil,
+      "day7_start": nil,
+      "day7_end": nil,
+    }
+
+    @week_schedule_2 = {
+      "day1_start": nil,
+      "day1_end": nil,
+      "day2_start": nil,
+      "day2_end": nil,
+      "day3_start": nil,
+      "day3_end": nil,
+      "day4_start": nil,
+      "day4_end": nil,
+      "day5_start": nil,
+      "day5_end": nil,
+      "day6_start": 1345,
+      "day6_end": 1435,
+      "day7_start": nil,
+      "day7_end": nil,
+    }
+
+    @expected_schedule = {
+      "day1_start": 1200,
+      "day1_end": 1300,
+      "day2_start": nil,
+      "day2_end": nil,
+      "day3_start": nil,
+      "day3_end": nil,
+      "day4_start": 1100,
+      "day4_end": 1200,
+      "day5_start": nil,
+      "day5_end": nil,
+      "day6_start": nil,
+      "day6_end": 1345,
+      "day7_start": 1435,
+      "day7_end": nil,
+    }
+
+    @combined_schedule = @course.combine_attribute_hashes(@week_schedule_1, @week_schedule_2)
+    assert @combined_schedule = @expected_schedule
+  end
+
+  test "assign_hash_to_attrs" do
+    @course = Course.new
+
+    @classtimes = {
+      "day1_start": 1200,
+      "day1_end": 1300,
+      "day2_start": nil,
+      "day2_end": nil,
+      "day3_start": nil,
+      "day3_end": nil,
+      "day4_start": 1100,
+      "day4_end": 1200,
+      "day5_start": nil,
+      "day5_end": nil,
+      "day6_start": nil,
+      "day6_end": 1345,
+      "day7_start": 1435,
+      "day7_end": nil,
+    }
+
+    @course.assign_hash_to_attrs(@classtimes)
+
+    @classtimes.each { |k, v|
+      assert @course.send(k) == v.to_s, "Expected #{k}(#{k.class}) to be #{v}(#{k.class}) but it was #{@course.send(k)}(#{@course.send(k).class})"
+    }
+
+  end
+
+  test "[gwu_parse_crn_line] smoke test for runtime errors" do
+    @course = Course.new
+    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
+    lines = Course.slice_into_lines(source.text)
+    lines.each do |line|
+      Course.gwu_parse_crn_line(line, @course)
+    end
+  end
+
+  test "[gwu_parse_crn_line] crn-containing line, standard" do
+    @course = Course.new
+    @line = "\n 40948   6203    11  Contracts II                     3.0         MTW         0140 - 0235pm                Selmi"
+    @parsed_course = Course.gwu_parse_crn_line(@line, @course)
+    assert @parsed_course.crn = '40948'
+    assert @parsed_course.gwid = '6203'
+    assert @parsed_course.section = '11'
+    assert @parsed_course.course_name = "Contracts II"
+    assert @parsed_course.hours = "3"
+    assert @parsed_course.days = "MTW"
+    assert @parsed_course.day2_start = 1340
+    assert @parsed_course.day2_end = 1435
+    assert @parsed_course.day3_start = 1340
+    assert @parsed_course.day3_end = 1435
+    assert @parsed_course.day4_start = 1340
+    assert @parsed_course.day4_end = 1435
+    assert @parsed_course.professor = "Selmi"
+  end
+
+  test "[gwu_parse_crn_line] - additional classtimes line" do
+    @course = Course.new
+    @line = "\n                                                                  F           1100 - 1155am                Fairfax"
+    @parsed_course = Course.gwu_parse_crn_line(@line, @course)
+    assert @parsed_course.day6_start = 1100
+    assert @parsed_course.day6_end = 1155
+  end
+
+  test "[gwu_parse_crn_line] - llm only v1" do
+    @course = Course.new
+    @line = "\n                            LL.M.s Only"
+    @parsed_course = Course.gwu_parse_crn_line(@line, @course)
+    assert @parsed_course.llm_only
+  end
+
+  test "[gwu_parse_crn_line] - llm only v2" do
+    @course = Course.new
+    @line = "\n                            OPEN ONLY TO LLMs"
+    @parsed_course = Course.gwu_parse_crn_line(@line, @course)
+    assert @parsed_course.llm_only
+  end
+
+  test "[gwu_parse_crn_line] - jd only" do
+    @course = Course.new
+    @line = "\n                       (J.D.s only)                                                                        Rainey   Gardner"
+    @parsed_course = Course.gwu_parse_crn_line(@line, @course)
+    assert @parsed_course.jd_only
+  end
+
+  test "[gwu_parse_crn_line] - alternate schedule" do
+    @course = Course.new
+    @line = "\n                           Course meets Tuesdays and alternate Wednesdays"
+    @parsed_course = Course.gwu_parse_crn_line(@line, @course)
+    assert @parsed_course.alt_schedule
+  end
+
+
+
+
+
+
 
 
 

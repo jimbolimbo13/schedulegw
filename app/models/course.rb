@@ -163,7 +163,7 @@ class Course < ActiveRecord::Base
 
   def self.parse_times(line)
     time_chunk = line.scan(/\s(\d{4}\s-\s\d{4}\s?(am|pm)|TBA)\s/).flatten[0]
-    return "TBA" if time_chunk == "TBA"
+    return "TBA" if time_chunk == "TBA" # This is problematic.
 
     start_time = time_chunk.scan(/\d{4}/)[0].to_i
     end_time = time_chunk.scan(/\d{4}/)[1].to_i
@@ -177,17 +177,18 @@ class Course < ActiveRecord::Base
   end
 
   def self.convert_times(times_array, am_pm)
-    start_time = times_array[0]
-    end_time = times_array[1]
+    start_time = times_array[0].to_i
+    end_time = times_array[1].to_i
     if am_pm == "pm"
       start_time = start_time + 1200 if ( (start_time < end_time) && (start_time < 1200) )
       end_time = end_time + 1200
     end
-    return [start_time, end_time]
+    return [start_time.to_s, end_time.to_s]
   end
 
   def self.assign_times_to_days(days_string, times_array)
     return if days_string == "TBA"
+    return if days_string.nil?
     days_string.scan(/(\w)/) { |s|
       case $1
       when 'U'
@@ -257,12 +258,24 @@ class Course < ActiveRecord::Base
     Course.assign_times_to_days(days, converted_times)
   end
 
+  # Merges 2 into 1. 2 will overwrite 1 if 2 is defined.
+  def combine_attribute_hashes(attribute_hash_1, attribute_hash_2)
+    # Get rid of any in 2 that are nil
+    attribute_hash_2.reject!{ |k,v| v.nil? }
+    attribute_hash_1.merge(attribute_hash_2)
+  end
+
+  def assign_hash_to_attrs(attrs_hash)
+    attrs_hash.each { |k, v| self.update_attribute(k, v.to_s)}
+  end
+
   def self.includes_additional_classtimes?(line)
     /([MTWRF]+)\s+(\d{4})\s+.\s+(\d{4})(\D\D)\s+[A-Za-z\/-]+/.match(line) ? true : false
   end
 
   def self.parse_llm_only?(line)
-    /LL.Ms\s+ONLY/.match(line) ? true : false
+    return true if /LL.M.?s\s+ONLY/i.match(line)
+    /OPEN\s+ONLY\s+TO\s+LLMs/i.match(line) ? true : false
   end
 
   def self.parse_jd_only?(line)
@@ -283,104 +296,126 @@ class Course < ActiveRecord::Base
   end
 
   def self.scrape_gwu!
-    source = Yomu.new Scrapeurl.find_by(name: "crn").url
-    Course.scrape_gwu_crn(source.text)
+    @school = School.find_by(name: "GWU")
+    @semester = Semester.find_by(name: "spring2016")
+    source = Scrapeurl.where(name: "crn", school:@school, semester:@semester).first
+    Course.scrape_gwu_crn(source)
+  end
+
+  def self.scrape_gwu_crn_2(scrape_url_object)
+    src = Yomu.new scrape_url_object.url
+    @school = scrape_url_object.school.name.to_s
+    @semester = scrape_url_object.name.to_s
+    new_text = src.text
+
+    lines = Course.slice_into_lines(new_text)
+
+    @last_course = Course.new # a blank one for the first go-round
+    lines.each do |line|
+      @course = Course.gwu_parse_crn_line(line, @last_course)
+
+      @last_course = @last_course.combine_attribute_hashes(@last_course, @course)
+      @last_course.assign_hash_to_attrs(@last_course) # This line makes zero sense.
+      @last_course = Course.find_or_initialize_by(crn: @last_course.crn, school: @school, semester: @semester)
+      @last_course.save!
+
+    end
+
+
+  end
+
+  def self.gwu_parse_crn_line(line, course_obj)
+    @course = course_obj
+    case
+    when Course.line_includes_crn?(line) # First line of a course listing.
+      @crn = Course.parse_crn(line)
+      @course = Course.new(crn: @crn.to_s, school:"GWU")
+      @course.gwid = Course.parse_gwid(line)
+      @course.section = Course.parse_section(line)
+      @course.course_name = Course.parse_course_name(line)
+      @course.hours = Course.parse_hours(line)
+      @course.days = Course.parse_days(line)
+      @class_time = Course.parse_times(line) # Type array returned, or string "TBA"
+      @week_schedule_hash = Course.assign_times_to_days(@course.days, @class_time) unless @class_time == "TBA"
+      @course.assign_hash_to_attrs(@week_schedule_hash) unless @week_schedule_hash.nil?
+      @course.professor = Course.parse_professor(line)
+
+    when Course.includes_additional_classtimes?(line) # Line 2 if it contains classtimes info.
+      @week_schedule_hash = Course.parse_additional_classtimes(line)
+      @week_schedule_hash.reject!{ |k,v| v.nil? } #reject any nil values to avoid overwriting
+      @course.assign_hash_to_attrs(@week_schedule_hash)
+
+    when Course.parse_llm_only?(line)
+      @course.llm_only = true
+
+    when Course.parse_jd_only?(line)
+      @course.jd_only = true
+
+    when Course.parse_alt_schedule?(line)
+      @course.alt_schedule = true
+
+    else
+      @course.additional_info = line.to_s #uncategorized.
+    end
+    return @course
   end
 
 
 
-  def self.scrape_gwu_crn(text)
-    new_text = text
+
+  def self.scrape_gwu_crn(scrape_url_object)
+    src = Yomu.new scrape_url_object.url
+    new_text = src.text
     @response = []
 
     sliced_text = Course.slice_into_lines(new_text)
 
     # if starts with CRN
-    sliced_text.each_with_index do |i, line|
+    sliced_text.each do |line|
 
       if Course.line_includes_crn?(line)
         # Clear anything that might be residual
-
         @crn = Course.parse_crn(line)
-        @gwid = Course.parse_gwid(line)
-        @section = Course.parse_section(line)
-        @course_name = Course.parse_course_name(line)
-        @hours = Course.parse_hours(line)
-        @days = Course.parse_days(line)
-        @class_time = Course.parse_times(line)
+
+        # These 3 attributes make the course object unique
+        attributes = {
+          school: scrape_url_object.school.name.to_s,
+          semester: scrape_url_object.semester.name.to_s,
+          crn: @crn
+        }
+
+        @course = Course.where(attributes).first_or_initialize
+
+        @course.crn = @crn
+        @course.gwid = Course.parse_gwid(line)
+        @course.section = Course.parse_section(line)
+        @course.course_name = Course.parse_course_name(line)
+        @course.hours = Course.parse_hours(line)
+        @course.days = Course.parse_days(line)
+        @class_time = Course.parse_times(line) # Type array returned.
         @week_schedule = Course.assign_times_to_days(@days, @class_time) # type hash returned
-        @professor = Course.parse_professor(line)
+        @course.professor = Course.parse_professor(line)
       else
         # The line isn't one with a CRN in it. Might be junk, might be part of the previous line's info.
+        @week_schedule_2 = nil
         if Course.includes_additional_classtimes?(line)
           @week_schedule_2 = Course.parse_additional_classtimes(line)
         end
-        @llm_only = true if Course.parse_llm_only?(line)
-        @jd_only = true if Course.parse_jd_only?(line)
-        @alt_schedule = true if Course.parse_alt_schedule?(line)
+        @course.llm_only = true if Course.parse_llm_only?(line)
+        @course.jd_only = true if Course.parse_jd_only?(line)
+        @course.alt_schedule = true if Course.parse_alt_schedule?(line)
       end
 
+      # If there's a course in the works
+      if @course
+        @schedule_hash = @week_schedule
+        @schedule_hash = Course.combine_classtimes(@week_schedule, @week_schedule_2) if @week_schedule_2
+
+        @course.assign_hash_to_attrs(@schedule_hash)
+        @response << @course
+      end
     end
-
-
-        ## match the professor to Professorlist. Lastname
-        $prof_id = Professorlist.find_by(last_name: $professor) ? Professorlist.find_by(last_name: $professor).prof_id : 0
-
-        # Create the object to return.
-
-        course = Course.new
-          course.crn = $crn
-          course.course_name = $course_name
-          course.course_name_2 = $course_name_2
-          course.gwid = $gwid
-          course.section = $section
-          course.hours = $hours
-
-          course.day1_start = $day1_start
-          course.day1_end = $day1_end
-
-          course.day2_start = $day2_start
-          course.day2_end = $day2_end
-
-          course.day3_start = $day3_start
-          course.day3_end = $day3_end
-
-          course.day4_start = $day4_start
-          course.day4_end = $day4_end
-
-          course.day5_start = $day5_start
-          course.day5_end = $day5_end
-
-          course.day6_start = $day6_start
-          course.day6_end = $day6_end
-
-          course.day7_start = $day7_start
-          course.day7_end = $day7_end
-
-          course.llm_only = $llm_only
-          course.jd_only = $jd_only
-          course.alt_schedule = $alt_schedule
-          course.additional_info = $additional_info
-          course.professor = $professor
-          course.prof_id = $prof_id
-          course.school = School.find_by(name: "GWU").name
-
-
-          @response.each do |included_course|
-            if included_course.crn == $crn
-              @already_included = true
-              break
-            end
-          end
-
-          # Add this course to the return object
-          @response << course unless @already_included
-
-      }
-
-      # Return an array of every class in this crn pdf scrape.
-      return @response
-
+    return @response
   end
 
 
