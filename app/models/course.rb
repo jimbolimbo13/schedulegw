@@ -147,11 +147,15 @@ class Course < ActiveRecord::Base
   end
 
   def self.parse_course_name(line)
-    line.scan(/\d{2}\s+([A-Za-z\/\-]+[^\d]+)/).flatten[0].rstrip
+    name = line.scan(/\d{2}\s+([A-Za-z\/\-]+[^\d]+)/)
+    name = name.flatten[0].lstrip.rstrip unless name.flatten.empty?
+    return name
   end
 
   def self.parse_hours(line)
-    hours_chunk = line.scan(/(\d\.\d\s+:?(OR)?:?(TO)?(:?(\s+\d\.\d\s+)?))/).flatten[0].rstrip
+    hours_chunk = line.scan(/(\d\.\d\s+:?(OR)?:?(TO)?(:?(\s+\d\.\d\s+)?))/).flatten[0]
+    return 0 if hours_chunk.nil?
+    hours_chunk = hours_chunk.rstrip
     return "variable" if hours_chunk.include?("TO")
     return "variable" if hours_chunk.include?("OR")
     return hours_chunk.slice(0,1)

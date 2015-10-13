@@ -35,6 +35,6 @@ class CreateCourses < ActiveRecord::Migration
         t.integer :schedule_id
       	t.timestamps
     end
-    add_index(:courses, :crn, unique: true)
+    add_index(:courses, :crn)
   end
 end

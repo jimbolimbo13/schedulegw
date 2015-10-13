@@ -73,7 +73,7 @@ class CourseTest < ActiveSupport::TestCase
 
   test "parse hours [case: 'or']" do
     line = "\n 41009   6696    25  Graduate Indep Legal Writing     1.0 OR 2.0  TBA         TBA                          STAFF"
-    assert Course.parse_hours(lines) == "variable"
+    assert Course.parse_hours(line) == "variable"
   end
 
   test "parse hours [case: 'to']" do
@@ -92,10 +92,8 @@ class CourseTest < ActiveSupport::TestCase
   end
 
   test "parse days [case: 'T W' (space)]" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[12].include?("T W".to_s)
-    assert Course.parse_days(lines[12]) == "TW"
+    line = "\n 40951   6203    21  Contracts II                     3.0         T W         0600 - 0800pm                Wilmarth"
+    assert Course.parse_days(line) == "TW"
   end
 
   test "parse times [case: both start and end are pm]" do
@@ -104,10 +102,8 @@ class CourseTest < ActiveSupport::TestCase
   end
 
   test "parse times [case: both start and end are am]" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[32].include?("0850 - 0945am".to_s) # Times each day
-    assert Course.parse_times(lines[32]) == [850, 945]
+    line =  "\n 40958   6214    14  Constitutional Law I             3.0         MWR         0850 - 0945am                Smith"
+    assert Course.parse_times(line) == [850, 945]
   end
 
   test "parse times [case: 'TBA']" do
@@ -131,12 +127,9 @@ class CourseTest < ActiveSupport::TestCase
   end
 
   test "parse additional class times (line 2)" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines[8].include?("1100 - 1155am".to_s) # Times each day
-
-    assert Course.parse_additional_classtimes(lines[8])[:day6_start] == "1100"
-    assert Course.parse_additional_classtimes(lines[8])[:day6_end] == "1155"
+    line = "\n                                                                  F           1100 - 1155am                Fairfax"
+    assert Course.parse_additional_classtimes(line)[:day6_start] == "1100"
+    assert Course.parse_additional_classtimes(line)[:day6_end] == "1155"
   end
 
   # Makes sure courses with classtimes on two diff. lines get combined correctly.
@@ -225,9 +218,25 @@ class CourseTest < ActiveSupport::TestCase
 
   end
 
+  # This just runs every single line through the parser to find errors.
   test "[gwu_parse_crn_line] smoke test for runtime errors" do
+    # spring 2015
     @course = Course.new
     source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
+    lines = Course.slice_into_lines(source.text)
+    lines.each do |line|
+      Course.gwu_parse_crn_line(line, @course)
+    end
+    # fall 2015
+    @course = Course.new
+    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_fall2015.pdf"
+    lines = Course.slice_into_lines(source.text)
+    lines.each do |line|
+      Course.gwu_parse_crn_line(line, @course)
+    end
+    # spring 2016
+    @course = Course.new
+    source = Yomu.new "http://www.law.gwu.edu/Students/Records/Spring2016/Documents/Spring%202016%20Schedule%20with%20CRNs.pdf"
     lines = Course.slice_into_lines(source.text)
     lines.each do |line|
       Course.gwu_parse_crn_line(line, @course)

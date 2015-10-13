@@ -43,10 +43,6 @@ class AddSemester < ActiveRecord::Migration
       t.datetime :last_checked
     end
 
-    # Need to remove the crn as a unique field on courses
-    execute "ALTER TABLE courses DROP INDEX unique_courses_name"
-    remove_index :courses, :crn
-    add_index :courses, :crn, unique: false
     # Fill in/populate old data for previous scrapes and URLs
 
     ## Spring 2015
