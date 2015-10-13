@@ -13,7 +13,7 @@
 					<span class='ratings'>Ratings</span>
 				</div>
 				<ul id='classlisttarget'>
-					
+
 				</ul>
 				<div style='text-align:center; width:100%; margin:auto'>Hold Shift and Click to Flag any class as Incorrect.</div>
 			</div>
@@ -61,7 +61,7 @@
 					<div class="dotted_line_10 dotted_line"></div>
 					<div class="dotted_line_11 dotted_line"></div>
 					<div class="dotted_line_12 dotted_line"></div>
-					<div class="dotted_line_13 dotted_line"></div> 
+					<div class="dotted_line_13 dotted_line"></div>
 				<div class="schedule_column" id="day2_column"></div>
 					<div class="dotted_line_0 dotted_line"></div>
 					<div class="dotted_line_1 dotted_line"></div>
@@ -76,7 +76,7 @@
 					<div class="dotted_line_10 dotted_line"></div>
 					<div class="dotted_line_11 dotted_line"></div>
 					<div class="dotted_line_12 dotted_line"></div>
-					<div class="dotted_line_13 dotted_line"></div> 	
+					<div class="dotted_line_13 dotted_line"></div>
 				<div class="schedule_column" id="day3_column"></div>
 					<div class="dotted_line_0 dotted_line"></div>
 					<div class="dotted_line_1 dotted_line"></div>
@@ -91,7 +91,7 @@
 					<div class="dotted_line_10 dotted_line"></div>
 					<div class="dotted_line_11 dotted_line"></div>
 					<div class="dotted_line_12 dotted_line"></div>
-					<div class="dotted_line_13 dotted_line"></div> 
+					<div class="dotted_line_13 dotted_line"></div>
 				<div class="schedule_column" id="day4_column"></div>
 					<div class="dotted_line_0 dotted_line"></div>
 					<div class="dotted_line_1 dotted_line"></div>
@@ -106,7 +106,7 @@
 					<div class="dotted_line_10 dotted_line"></div>
 					<div class="dotted_line_11 dotted_line"></div>
 					<div class="dotted_line_12 dotted_line"></div>
-					<div class="dotted_line_13 dotted_line"></div> 
+					<div class="dotted_line_13 dotted_line"></div>
 				<div class="schedule_column" id="day5_column"></div>
 					<div class="dotted_line_0 dotted_line"></div>
 					<div class="dotted_line_1 dotted_line"></div>
@@ -121,7 +121,7 @@
 					<div class="dotted_line_10 dotted_line"></div>
 					<div class="dotted_line_11 dotted_line"></div>
 					<div class="dotted_line_12 dotted_line"></div>
-					<div class="dotted_line_13 dotted_line"></div> 
+					<div class="dotted_line_13 dotted_line"></div>
 				<div class="schedule_column" id="day6_column"></div>
 					<div class="dotted_line_0 dotted_line"></div>
 					<div class="dotted_line_1 dotted_line"></div>
@@ -136,7 +136,7 @@
 					<div class="dotted_line_10 dotted_line"></div>
 					<div class="dotted_line_11 dotted_line"></div>
 					<div class="dotted_line_12 dotted_line"></div>
-					<div class="dotted_line_13 dotted_line"></div> 
+					<div class="dotted_line_13 dotted_line"></div>
 				<div class="schedule_column" id="day7_column"></div>
 					<div class="dotted_line_0 dotted_line"></div>
 					<div class="dotted_line_1 dotted_line"></div>
@@ -151,16 +151,17 @@
 					<div class="dotted_line_10 dotted_line"></div>
 					<div class="dotted_line_11 dotted_line"></div>
 					<div class="dotted_line_12 dotted_line"></div>
-					<div class="dotted_line_13 dotted_line"></div> 
+					<div class="dotted_line_13 dotted_line"></div>
 			</div>
 		</div>
 	</div>
 </div>
 <div id="bottom_google_ad_container">
-		<ins class="adsbygoogle"
+		<%= image_tag("tonic_ad_horizontal.jpg") %>
+		<!-- <ins class="adsbygoogle"
      style="display:inline-block;width:728px;height:90px"
      data-ad-client="ca-pub-2138846449062972"
-     data-ad-slot="8506528421"></ins>
+     data-ad-slot="8506528421"></ins> -->
 </div>
 
 <% if @schedule %>
@@ -175,7 +176,7 @@
 <% if @sid %>
 <% @schedule = Schedule.find_by(:unique_string => @sid) %>
 	<script>
-			window.load_these = []; 
+			window.load_these = [];
 			<% @schedule.courses.each do |course| %>
 				window.load_these.push(<%= course.crn %>);
 			<% end %>
