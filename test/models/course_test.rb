@@ -270,6 +270,40 @@ class CourseTest < ActiveSupport::TestCase
     assert scraped_courses.count >= 300 # Actual count is 307
   end
 
+  test "self.scrape_gwu_crn_pdf has crns of courses near page breaks" do
+    edge_crns = [
+      "44815",
+      "41173",
+      "41172",
+      "43300",
+      "43299",
+      "43298",
+      "43300",
+      "40999",
+      "41170",
+      "43537",
+      "45890",
+      "44795",
+      "41923",
+      "45773",
+      "44786",
+      "44776",
+      "44873",
+      "43218",
+      "43217",
+      "40948",
+      "41807"
+    ]
+
+    ob = scrapeurls(:gwu_test_crn_spring2015)
+    scraped_courses = Course.scrape_gwu_crn_pdf(ob)
+    scraped_courses.map! {|c| c.crn }
+    edge_crns.each do |ec|
+      assert scraped_courses.include?(ec)
+    end
+
+  end
+
   test "self.scrape_gwu_crn_pdf first course spring2015" do
     ob = scrapeurls(:gwu_test_crn_spring2015)
     scraped_courses = Course.scrape_gwu_crn_pdf(ob)
@@ -290,6 +324,7 @@ class CourseTest < ActiveSupport::TestCase
     end
   end
 
+  
 
 
 
