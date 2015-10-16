@@ -13,7 +13,7 @@ Rails.application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
-  # Don't care if the mailer can't send.
+  # Should I care (and raise an error) if the mailer hits an error?
   config.action_mailer.raise_delivery_errors = true
 
   config.action_mailer.asset_host = 'localhost'
