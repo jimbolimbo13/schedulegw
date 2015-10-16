@@ -319,6 +319,10 @@ class Course < ActiveRecord::Base
     lines.each do |line|
 
       @new_course_data = Course.gwu_parse_crn_line(line, @last_course)
+      # Assign attributes to the course not found in the pdf.
+      @new_course_data.semester = @semester
+      @new_course_data.school = @school.name.to_s
+
 
       if @new_course_data.crn == @last_course.crn
         @attributes = @last_course.combine_attribute_hashes(@last_course.attributes, @new_course_data.attributes)
@@ -335,6 +339,16 @@ class Course < ActiveRecord::Base
     return scraped_courses
   end
 
+  # This actually commits the scraped courses to the database. This is separated
+  # from the last step so we can easily test that the scraper is finding the correct
+  # classes and returning them.
+  def self.save_courses_to_db(courses_array)
+    courses_array.each do |c|
+      next if c.manual_lock # Don't save if it's manually locked.
+      course = Course.find_or_initialize_by(crn: c.crn, semester_id: c.semester_id, school: c.school)
+      course.save!
+    end
+  end
 
   # Returns a Course object with the attributes added as found in each line.
   # If the line is the start of a new course, it starts a new Course object.
