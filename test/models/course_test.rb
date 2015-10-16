@@ -190,34 +190,6 @@ class CourseTest < ActiveSupport::TestCase
     assert @combined_schedule = @expected_schedule
   end
 
-  test "assign_hash_to_attrs" do
-    @course = Course.new
-
-    @classtimes = {
-      "day1_start": 1200,
-      "day1_end": 1300,
-      "day2_start": nil,
-      "day2_end": nil,
-      "day3_start": nil,
-      "day3_end": nil,
-      "day4_start": 1100,
-      "day4_end": 1200,
-      "day5_start": nil,
-      "day5_end": nil,
-      "day6_start": nil,
-      "day6_end": 1345,
-      "day7_start": 1435,
-      "day7_end": nil,
-    }
-
-    @course.assign_hash_to_attrs(@classtimes)
-
-    @classtimes.each { |k, v|
-      assert @course.send(k) == v.to_s, "Expected #{k}(#{k.class}) to be #{v}(#{k.class}) but it was #{@course.send(k)}(#{@course.send(k).class})"
-    }
-
-  end
-
   # This just runs every single line through the parser to find errors.
   test "[gwu_parse_crn_line] smoke test for runtime errors" do
     # spring 2015
@@ -297,6 +269,16 @@ class CourseTest < ActiveSupport::TestCase
     @parsed_course = Course.gwu_parse_crn_line(@line, @course)
     assert @parsed_course.alt_schedule
   end
+
+  test "self.scrape_gwu_crn_pdf(scrape_url_object) total course count (coarse)" do
+    ob = Scrapeurl.find_by(name: "gwu_test_crn_spring2015")
+    scraped_courses = Course.scrape_gwu_crn_pdf(ob)
+    assert scraped_courses.count <= 310 # Actual count is 307
+    assert scraped_courses.count >= 300 # Actual count is 307
+    
+  end
+
+
 
 
 

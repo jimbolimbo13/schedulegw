@@ -269,10 +269,6 @@ class Course < ActiveRecord::Base
     attribute_hash_1.merge(attribute_hash_2)
   end
 
-  def assign_hash_to_attrs(attrs_hash)
-    attrs_hash.each { |k, v| self.update_attribute(k, v.to_s)}
-  end
-
   def self.includes_additional_classtimes?(line)
     /([MTWRF]+)\s+(\d{4})\s+.\s+(\d{4})(\D\D)\s+[A-Za-z\/-]+/.match(line) ? true : false
   end
@@ -306,30 +302,45 @@ class Course < ActiveRecord::Base
     Course.scrape_gwu_crn(source)
   end
 
-  def self.scrape_gwu_crn_2(scrape_url_object)
+
+  # Given an object from model Scrapeurls, this will go through it line-by-line and
+  # return an array of model Course objects. This method does not save the objects
+  # to the database.
+  def self.scrape_gwu_crn_pdf(scrape_url_object)
     src = Yomu.new scrape_url_object.url
-    @school = scrape_url_object.school.name.to_s
-    @semester = scrape_url_object.name.to_s
+    @school = scrape_url_object.school
+    @semester = scrape_url_object.semester
     new_text = src.text
 
     lines = Course.slice_into_lines(new_text)
 
-    @last_course = Course.new # a blank one for the first go-round
+    @last_course = Course.new
+    scraped_courses = []
     lines.each do |line|
-      @course = Course.gwu_parse_crn_line(line, @last_course)
 
-      @last_course = @last_course.combine_attribute_hashes(@last_course, @course)
-      @last_course.assign_hash_to_attrs(@last_course) # This line makes zero sense.
-      @last_course = Course.find_or_initialize_by(crn: @last_course.crn, school: @school, semester: @semester)
-      @last_course.save!
+      @new_course_data = Course.gwu_parse_crn_line(line, @last_course)
 
+      if @new_course_data.crn == @last_course.crn
+        @attributes = @last_course.combine_attribute_hashes(@last_course.attributes, @new_course_data.attributes)
+        @last_course.assign_attributes(@attributes)
+      else
+        @last_course = @new_course_data
+      end
+      scraped_courses << @last_course
     end
 
+    scraped_courses.reject! { |course| course.crn.nil? }
+    scraped_courses.uniq! { |c| c.crn }
 
+    return scraped_courses
   end
 
+
+  # Returns a Course object with the attributes added as found in each line.
+  # If the line is the start of a new course, it starts a new Course object.
+  # course_obj is the in-progress Course object (this method resets new Course obj if appropriate)
   def self.gwu_parse_crn_line(line, course_obj)
-    @course = course_obj
+    @course = course_obj ? course_obj : Course.new
     case
     when Course.line_includes_crn?(line) # First line of a course listing.
       @crn = Course.parse_crn(line)
@@ -341,13 +352,13 @@ class Course < ActiveRecord::Base
       @course.days = Course.parse_days(line)
       @class_time = Course.parse_times(line) # Type array returned, or string "TBA"
       @week_schedule_hash = Course.assign_times_to_days(@course.days, @class_time) unless @class_time == "TBA"
-      @course.assign_hash_to_attrs(@week_schedule_hash) unless @week_schedule_hash.nil?
+      @course.assign_attributes(@week_schedule_hash) unless @week_schedule_hash.nil?
       @course.professor = Course.parse_professor(line)
 
     when Course.includes_additional_classtimes?(line) # Line 2 if it contains classtimes info.
       @week_schedule_hash = Course.parse_additional_classtimes(line)
       @week_schedule_hash.reject!{ |k,v| v.nil? } #reject any nil values to avoid overwriting
-      @course.assign_hash_to_attrs(@week_schedule_hash)
+      @course.assign_attributes(@week_schedule_hash)
 
     when Course.parse_llm_only?(line)
       @course.llm_only = true
@@ -363,70 +374,6 @@ class Course < ActiveRecord::Base
     end
     return @course
   end
-
-
-
-
-  def self.scrape_gwu_crn(scrape_url_object)
-    src = Yomu.new scrape_url_object.url
-    new_text = src.text
-    @response = []
-
-    sliced_text = Course.slice_into_lines(new_text)
-
-    # if starts with CRN
-    sliced_text.each do |line|
-
-      if Course.line_includes_crn?(line)
-        # Clear anything that might be residual
-        @crn = Course.parse_crn(line)
-
-        # These 3 attributes make the course object unique
-        attributes = {
-          school: scrape_url_object.school.name.to_s,
-          semester: scrape_url_object.semester.name.to_s,
-          crn: @crn
-        }
-
-        @course = Course.where(attributes).first_or_initialize
-
-        @course.crn = @crn
-        @course.gwid = Course.parse_gwid(line)
-        @course.section = Course.parse_section(line)
-        @course.course_name = Course.parse_course_name(line)
-        @course.hours = Course.parse_hours(line)
-        @course.days = Course.parse_days(line)
-        @class_time = Course.parse_times(line) # Type array returned.
-        @week_schedule = Course.assign_times_to_days(@days, @class_time) # type hash returned
-        @course.professor = Course.parse_professor(line)
-      else
-        # The line isn't one with a CRN in it. Might be junk, might be part of the previous line's info.
-        @week_schedule_2 = nil
-        if Course.includes_additional_classtimes?(line)
-          @week_schedule_2 = Course.parse_additional_classtimes(line)
-        end
-        @course.llm_only = true if Course.parse_llm_only?(line)
-        @course.jd_only = true if Course.parse_jd_only?(line)
-        @course.alt_schedule = true if Course.parse_alt_schedule?(line)
-      end
-
-      # If there's a course in the works
-      if @course
-        @schedule_hash = @week_schedule
-        @schedule_hash = Course.combine_classtimes(@week_schedule, @week_schedule_2) if @week_schedule_2
-
-        @course.assign_hash_to_attrs(@schedule_hash)
-        @response << @course
-      end
-    end
-    return @response
-  end
-
-
-
-
-
-
 
 
 
