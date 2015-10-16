@@ -310,33 +310,25 @@ class Course < ActiveRecord::Base
     src = Yomu.new scrape_url_object.url
     @school = scrape_url_object.school
     @semester = scrape_url_object.semester
-    new_text = src.text
 
-    lines = Course.slice_into_lines(new_text)
+    course_array = Course.split_by_crns(src.text)
 
     @last_course = Course.new
-    scraped_courses = []
-    lines.each do |line|
+    scraped_courses = [] << @last_course
 
-      @new_course_data = Course.gwu_parse_crn_line(line, @last_course)
-      # Assign attributes to the course not found in the pdf.
-      @new_course_data.semester = @semester
-      @new_course_data.school = @school.name.to_s
-
-
-      if @new_course_data.crn == @last_course.crn
-        @attributes = @last_course.combine_attribute_hashes(@last_course.attributes, @new_course_data.attributes)
-        @last_course.assign_attributes(@attributes)
-      else
-        @last_course = @new_course_data
-      end
-      scraped_courses << @last_course
+    course_array.each do |course|
+      scraped_courses << Course.gwu_parse_crn_line(course, nil)
     end
 
     scraped_courses.reject! { |course| course.crn.nil? }
-    scraped_courses.uniq! { |c| c.crn }
 
     return scraped_courses
+  end
+
+  # Method 2 of splitting up the pdf: recognizing text between 5-digit bookends.
+  def self.split_by_crns(text)
+    final_text = text.gsub(/\n+/, " ")
+    course_array = final_text.split(/(?=\d{5})/i)
   end
 
   # This actually commits the scraped courses to the database. This is separated
@@ -345,8 +337,8 @@ class Course < ActiveRecord::Base
   def self.save_courses_to_db(courses_array)
     courses_array.each do |c|
       next if c.manual_lock # Don't save if it's manually locked.
-      course = Course.find_or_initialize_by(crn: c.crn, semester_id: c.semester_id, school: c.school)
-      course.save!
+      course = Course.find_by(crn: c.crn, semester_id: c.semester_id)
+
     end
   end
 

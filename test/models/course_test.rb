@@ -33,13 +33,6 @@ class CourseTest < ActiveSupport::TestCase
     assert_not Course.deep_match_course_attributes(@attributes_list, @course, @course_list)
   end
 
-  test "Split pdf into lines" do
-    source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
-    lines = Course.slice_into_lines(source.text)
-    assert lines.last == "\nupdated January 7, 2015"
-    assert lines.first == "\n                                                  Schedule of Classes - Spring, 2015                               PAGE 1"
-  end
-
   test "line_includes_crn?" do
     line = "\n 40948   6203    11  Contracts II                     3.0         MTW         0140 - 0235pm                Selmi"
     assert Course.line_includes_crn?(line)
@@ -270,13 +263,34 @@ class CourseTest < ActiveSupport::TestCase
     assert @parsed_course.alt_schedule
   end
 
-  test "self.scrape_gwu_crn_pdf(scrape_url_object) total course count (coarse)" do
-    ob = Scrapeurl.find_by(name: "gwu_test_crn_spring2015")
+  test "self.scrape_gwu_crn_pdf total course count (coarse)" do
+    ob = scrapeurls(:gwu_test_crn_spring2015)
     scraped_courses = Course.scrape_gwu_crn_pdf(ob)
     assert scraped_courses.count <= 310 # Actual count is 307
     assert scraped_courses.count >= 300 # Actual count is 307
-    
   end
+
+  test "self.scrape_gwu_crn_pdf first course spring2015" do
+    ob = scrapeurls(:gwu_test_crn_spring2015)
+    scraped_courses = Course.scrape_gwu_crn_pdf(ob)
+    scraped_courses.each do |c|
+      if c.crn == "40948"
+        assert c.course_name = "Contracts II"
+        assert c.days = "MTW"
+        assert c.day1_start = ""
+        assert c.day1_end = ""
+        assert c.day2_start = "1340"
+        assert c.day2_end = "1435"
+        assert c.day3_start = "1340"
+        assert c.day3_end = "1435"
+        assert c.day4_start = "1340"
+        assert c.day4_end = "1435"
+        assert c.professor = "Selmi"
+      end
+    end
+  end
+
+
 
 
 

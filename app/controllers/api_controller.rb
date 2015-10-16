@@ -1,6 +1,6 @@
 class ApiController < ApplicationController
 	def courses
-		@school = current_user.school.name
+		@school = current_user.school.name.to_s
 
 		# Check to see if semester is defined; if not make it the most recent one.
 		if params[:semester].present?
