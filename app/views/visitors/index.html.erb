@@ -168,7 +168,7 @@
 	<script>
 			window.load_these = [];
 			<% @schedule.courses.each do |course| %>
-				window.load_these.push(<%= course.crn %>);
+				window.load_these.push(<%= course.id %>);
 			<% end %>
 	</script>
 <% end %>
@@ -178,7 +178,7 @@
 	<script>
 			window.load_these = [];
 			<% @schedule.courses.each do |course| %>
-				window.load_these.push(<%= course.crn %>);
+				window.load_these.push(<%= course.id %>);
 			<% end %>
 	</script>
 <% end %>
