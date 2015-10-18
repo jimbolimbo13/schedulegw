@@ -74,7 +74,6 @@ $( document ).on('page:change', function() {
 })
 
 //renders html for a course.
-//commented out because people are stupid and dont make sure its not a prof with a different last name. Will fix when algorithm is smarter.
 //goes right before the closing li below
 
 function render_course_listing(course) {
