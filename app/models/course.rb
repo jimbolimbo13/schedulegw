@@ -343,6 +343,8 @@ class Course < ActiveRecord::Base
     source = Scrapeurl.where(name: "crn", school:@school, semester:@semester).first
     scraped_courses = Course.scrape_gwu_crn_pdf(source)
     Course.save_courses_to_db(scraped_courses)
+    exam_source = Scrapeurl.where(name: "exam", school:@school, semester:@semester).first
+    Course.scrape_gwu_exam_pdf!(exam_source)
   end
 
   # Given an object from model Scrapeurls, this will go through it line-by-line and
