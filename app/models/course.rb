@@ -443,10 +443,74 @@ class Course < ActiveRecord::Base
     return @attrs
   end
 
+  def self.scrape_gwu_exam_dates_times(scrape_url_object)
+    src = Yomu.new scrape_url_object.url
+    new_text = src.text
 
+    @school = School.find_by(name: "GWU")
+    @semester = scrape_url_object.semester
 
+    # process:
+    # 1. capture everything after and including "EXAMINATION SCHEDULE" in new_text
+    exam_page_text = new_text.match(/(EXAMINATION SCHEDULE.+)/m).to_s
 
+    #find times of the form '9:30 A.M. 2:00 P.M. 6:30 P.M.' which are the timeslots.
+    @final_time_options = []
+    exam_page_text.scan(/(\d:\d{2}\s\D.\D.)\s(\d:\d{2}\s\D.\D.)\s(\d:\d{2}\s\D.\D.)/) { |m|
+      @final_time_options << $1 << $2 << $3
+    }
 
+    @final_date_options = []
+    exam_page_text.scan(/(\d\d?\/\d\d?)/) { |m|
+      @final_date_options << m
+    }
+    @final_date_options.flatten!
+
+    @school.final_time_options = @final_time_options
+    @school.final_date_options = @final_date_options
+    @school.save!
+  end
+
+  def self.scrape_gwu_exam_pdf!(scrape_url_object)
+    src = Yomu.new scrape_url_object.url
+    new_text = src.text
+
+    @school = School.find_by(name: "GWU")
+    Course.scrape_gwu_exam_dates_times(scrape_url_object) if @school.final_date_options.nil? || @school.final_time_options.nil?
+
+    @semester = scrape_url_object.semester
+    @final_date_options = @school.final_date_options
+    @final_time_options = @school.final_time_options
+
+    # process:
+    # 1. capture everything after and including "EXAMINATION SCHEDULE" in new_text
+    exam_page_text = new_text.match(/(EXAMINATION SCHEDULE.+)/m).to_s
+
+    # figure out which courses have finals on which day based on which ones are between date_options
+    @final_date_options.each_with_index do |start_day, index|
+      @start = @final_date_options[index]
+
+      if @final_time_options.size - 1 == index.to_i #if it's the last day, the end will just be the end of the document.
+        @end = ''
+      else
+        @end = @final_date_options[index+1]
+      end
+      @days_courses = exam_page_text.match(/#{@start}(.+)#{@end}/m)[1]
+
+      @days_courses.scan(/((\d{4})-(\d{2}))/) { |gwid|
+        # find the course with the gwid, check it's final date and if it's different than this guess and manual_lock is false, change it.
+        @gwid = $2
+        @section = $3
+
+        #get the course's info and update it if the scraper has new info
+        if course = Course.find_by(gwid: @gwid, section: @section, semester_id: @semester.id)
+          course.final_date != @start ? course.final_date = @start : course.final_date = course.final_date
+          course.save! unless course.manual_lock == true
+        end
+
+      }
+    end
+  end
 
 
   def self.get_books(url)
