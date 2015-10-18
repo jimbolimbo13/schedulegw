@@ -21,10 +21,24 @@ class Course < ActiveRecord::Base
     @school = School.find_by(name: "GWU")
     @semester = Semester.find_by(name: "spring2016")
     source = Scrapeurl.where(name: "crn", school:@school, semester:@semester).first
-    scraped_courses = Course.scrape_gwu_crn_pdf(source)
-    Course.save_courses_to_db(scraped_courses)
-    ob = Scrapeurl.where(name: "exam", school:@school, semester:@semester).first
-    Course.scrape_gwu_exam_pdf!(ob)
+    if source.source_changed?
+      scraped_courses = Course.scrape_gwu_crn_pdf(source)
+      Course.save_courses_to_db(scraped_courses)
+      source.update_digest!
+      source.update_last_scraped!
+    end
+    source.last_checked = Time.now
+    source.save!
+
+    src = Scrapeurl.where(name: "exam", school:@school, semester:@semester).first
+    if src.source_changed?
+      Course.scrape_gwu_exam_pdf!(src)
+      src.update_digest!
+      src.update_last_scraped!
+    end
+    src.last_checked = Time.now
+    src.save!
+
   end
 
   def next

@@ -13,11 +13,17 @@ class Scrapeurl < ActiveRecord::Base
     new_digest == self.scrape_digest ? false : true
   end
 
-  def update_digest
+  def update_digest!
     new_text = Yomu.new self.url
     self.scrape_digest = Digest::MD5.hexdigest new_text.text
     self.save!
   end
+
+  def update_last_scraped!
+    self.update_attribute("last_scraped", Time.now)
+    self.save!
+  end
+
 
 
 
