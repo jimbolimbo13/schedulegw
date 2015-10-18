@@ -16,10 +16,7 @@ $( document ).on('page:change', function() {
 
 	// Get the semester from server side (moving towards one-way data flow)
 	// This should be value_of_semester_select_field || get_variable || spring2016
-	window.semester = geturlvar()["semester"] || $("#semester_id").val() || 3
-	if (geturlvar()["semester"] != null) {
-		$('#semester_select').val(geturlvar()["semester"]);
-	}
+	window.semester = $("#semester_select").val()
 
 	//populate courses available
 	load_courses(window.semester);

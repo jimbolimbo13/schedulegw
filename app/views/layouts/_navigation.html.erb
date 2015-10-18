@@ -26,7 +26,7 @@
           <input type="checkbox" class="filter_option" id="hx" value="true" checked>variable
         </div>
         <div class="nav navbar-right">
-          <%= select_tag('semester_select', options_from_collection_for_select(Semester.all, :id, :display_name), class:'form-control', id:'semester_select')  %>
+          <%= select_tag('semester_select', options_from_collection_for_select(Semester.all, :id, :display_name, Semester.last.id), class:'form-control', id:'semester_select')  %>
         </div>
       </div>
     </div>
