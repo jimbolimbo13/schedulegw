@@ -15,7 +15,7 @@ class SchedulesController < ApplicationController
     courses = schedule_params[:courses].split(",").map(&:to_i)
 
     courses.each do |course|
-      schedule.courses << Course.find_by(crn: course)
+      schedule.courses << Course.find(course)
     end
 
     schedule.save!

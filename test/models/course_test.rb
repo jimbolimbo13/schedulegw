@@ -159,7 +159,6 @@ class CourseTest < ActiveSupport::TestCase
   end
 
 
-
   # Makes sure courses with classtimes on two diff. lines get combined correctly.
   test "combine attribute hashes" do
     @week_schedule_1 = {
