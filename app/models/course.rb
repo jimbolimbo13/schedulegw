@@ -5,11 +5,9 @@ class Course < ActiveRecord::Base
   has_many :courseschedules
   has_many :schedules, through: :courseschedules
 
-  #possibly:
-  belongs_to :schools
-
   # Only one semester per instance of these classes.
   belongs_to :semester
+  # belongs_to :school # Someday. Currently course.school is a string :(
 
 	has_many :subscriptions
 	has_many :users, through: :subscriptions
@@ -263,10 +261,17 @@ class Course < ActiveRecord::Base
   end
 
   # Merges 2 into 1. 2 will overwrite 1 if 2 is defined.
-  def combine_attribute_hashes(attribute_hash_1, attribute_hash_2)
+  def self.combine_attribute_hashes(attribute_hash_1, attribute_hash_2)
     # Get rid of any in 2 that are nil
-    attribute_hash_2.reject!{ |k,v| v.nil? }
+    attribute_hash_2.reject!{ |k,v| v.blank? }
     attribute_hash_1.merge(attribute_hash_2)
+  end
+
+  # This allows two incomplete @course objects' attributes to be merged.
+  def safe_merge_course!(new_course)
+    @new_attrs = new_course.attributes.reject { |k, v| v.nil? }
+    @new_attrs.reject! { |k, v| v.blank? }
+    self.attributes = @new_attrs
   end
 
   def self.includes_additional_classtimes?(line)
@@ -299,7 +304,8 @@ class Course < ActiveRecord::Base
     @school = School.find_by(name: "GWU")
     @semester = Semester.find_by(name: "spring2016")
     source = Scrapeurl.where(name: "crn", school:@school, semester:@semester).first
-    Course.scrape_gwu_crn(source)
+    scraped_courses = Course.scrape_gwu_crn_pdf(source)
+
   end
 
 
@@ -308,16 +314,19 @@ class Course < ActiveRecord::Base
   # to the database.
   def self.scrape_gwu_crn_pdf(scrape_url_object)
     src = Yomu.new scrape_url_object.url
-    @school = scrape_url_object.school
+    # "https://schedulegw.com/gwu_test_crn_spring2015.pdf"
+    @school = scrape_url_object.school.name
     @semester = scrape_url_object.semester
 
     course_array = Course.split_by_crns(src.text)
+    puts "Course array is #{course_array.count} entries long."
 
-    @last_course = Course.new
-    scraped_courses = [] << @last_course
-
-    course_array.each do |course|
-      scraped_courses << Course.gwu_parse_crn_line(course, nil)
+    scraped_courses = []
+    course_array.each do |course_chunk|
+      @course = Course.parse_course_chunk(course_chunk)
+      @course.semester_id = @semester.id
+      @course.school = @school
+      scraped_courses << @course
     end
 
     scraped_courses.reject! { |course| course.crn.nil? }
@@ -325,10 +334,25 @@ class Course < ActiveRecord::Base
     return scraped_courses
   end
 
-  # Method 2 of splitting up the pdf: recognizing text between 5-digit bookends.
+  def self.parse_course_chunk(course_chunk)
+    course_lines = course_chunk.split(/\n+/)
+    @attributes = {}
+    course_lines.each do |course_line|
+      next if course_line.blank?
+      next if course_line.empty?
+      @attributes = @attributes.merge(Course.gwu_parse_crn_line(course_line))
+    end
+    @course = Course.new(@attributes)
+    @course
+  end
+
+  # Splits the pdf and returns the parts between 5-digit bookends, including the first
+  # 5-digit sequence (crn)
   def self.split_by_crns(text)
-    final_text = text.gsub(/\n+/, " ")
-    course_array = final_text.split(/(?=\d{5})/i)
+    nl_text = text.gsub(/\n/, "[newline]") # remove newlines but note their place
+    courses_array = nl_text.split(/\[newline\]\s?(?=\d{5})/m) #split into strings starting with 5-digit strings but end before the next
+    courses_array.map! { |c| c.gsub("[newline]", "\n")} # replace the newlines where they were.
+    courses_array
   end
 
   # This actually commits the scraped courses to the database. This is separated
@@ -337,48 +361,48 @@ class Course < ActiveRecord::Base
   def self.save_courses_to_db(courses_array)
     courses_array.each do |c|
       next if c.manual_lock # Don't save if it's manually locked.
-      course = Course.find_by(crn: c.crn, semester_id: c.semester_id)
-
+      course = Course.find_or_initialize_by(crn: c.crn, semester_id: c.semester_id)
+      course.assign_attributes(c.attributes.reject! { |k, v| v.nil? } )
+      course.save!
     end
   end
 
   # Returns a Course object with the attributes added as found in each line.
   # If the line is the start of a new course, it starts a new Course object.
   # course_obj is the in-progress Course object (this method resets new Course obj if appropriate)
-  def self.gwu_parse_crn_line(line, course_obj)
-    @course = course_obj ? course_obj : Course.new
+  def self.gwu_parse_crn_line(line)
+    @attrs = {days: nil}
     case
     when Course.line_includes_crn?(line) # First line of a course listing.
-      @crn = Course.parse_crn(line)
-      @course = Course.new(crn: @crn.to_s, school:"GWU")
-      @course.gwid = Course.parse_gwid(line)
-      @course.section = Course.parse_section(line)
-      @course.course_name = Course.parse_course_name(line)
-      @course.hours = Course.parse_hours(line)
-      @course.days = Course.parse_days(line)
+      @attrs[:crn] = Course.parse_crn(line)
+      @attrs[:gwid] = Course.parse_gwid(line)
+      @attrs[:section] = Course.parse_section(line)
+      @attrs[:course_name] = Course.parse_course_name(line)
+      @attrs[:hours] = Course.parse_hours(line)
+      @attrs[:days] = Course.parse_days(line)
       @class_time = Course.parse_times(line) # Type array returned, or string "TBA"
       @week_schedule_hash = Course.assign_times_to_days(@course.days, @class_time) unless @class_time == "TBA"
-      @course.assign_attributes(@week_schedule_hash) unless @week_schedule_hash.nil?
-      @course.professor = Course.parse_professor(line)
+      @attrs.merge!(@week_schedule_hash) unless @week_schedule_hash.nil?
+      @attrs[:professor] = Course.parse_professor(line)
 
     when Course.includes_additional_classtimes?(line) # Line 2 if it contains classtimes info.
       @week_schedule_hash = Course.parse_additional_classtimes(line)
       @week_schedule_hash.reject!{ |k,v| v.nil? } #reject any nil values to avoid overwriting
-      @course.assign_attributes(@week_schedule_hash)
+      @attrs.merge!(@week_schedule_hash)
 
     when Course.parse_llm_only?(line)
-      @course.llm_only = true
+      @attrs[:llm_only] = true
 
     when Course.parse_jd_only?(line)
-      @course.jd_only = true
+      @attrs[:jd_only] = true
 
     when Course.parse_alt_schedule?(line)
-      @course.alt_schedule = true
+      @attrs[:alt_schedule] = true
 
     else
-      @course.additional_info = line.to_s #uncategorized.
+      @attrs[:additional_info] = line.to_s #uncategorized.
     end
-    return @course
+    return @attrs
   end
 
 

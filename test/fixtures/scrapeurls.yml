@@ -1,7 +1,11 @@
-
-
-
 gwu_test_crn_spring2015:
   name: gwu_test_crn_spring2015
   url: https://www.schedulegw.com/gwu_test_crn_spring2015.pdf
   school: GWU
+  semester: spring2015
+
+gwu_test_crn_spring2016:
+  name: gwu_test_crn_spring2016
+  url: https://schedulegw.com/gwu_test_crn_spring2016.pdf
+  school: GWU
+  semester: spring2016

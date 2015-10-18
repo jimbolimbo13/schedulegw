@@ -19,6 +19,6 @@ class Scrapeurl < ActiveRecord::Base
     self.save!
   end
 
-  
+
 
 end

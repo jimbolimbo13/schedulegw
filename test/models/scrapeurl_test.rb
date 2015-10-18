@@ -2,6 +2,24 @@ require 'test_helper'
 
 class ScrapeurlTest < ActiveSupport::TestCase
 
+
+  test "fixtures are valid" do
+    @scrapeurl = scrapeurls(:gwu_test_crn_spring2015)
+    assert @scrapeurl.valid?
+
+    @scrapeurl = scrapeurls(:gwu_test_crn_spring2016)
+    assert @scrapeurl.valid?
+  end
+
+  # The scrapeurls might be causing problems on the course scraping tests. This
+  # is part of the attempt to diagnose it. (error: semester_id is unknown attribute (??))
+  test "fixtures have proper associations" do
+    @scrapeurl = scrapeurls(:gwu_test_crn_spring2015)
+    assert @scrapeurl.semester = semesters(:spring2015)
+    @scrapeurl = scrapeurls(:gwu_test_crn_spring2016)
+    assert @scrapeurl.semester = semesters(:spring2016)
+  end
+
   # Check to see if the source document has been updated since the last scrape by
   # comparing hashes
   test "source_changed?" do
@@ -19,5 +37,6 @@ class ScrapeurlTest < ActiveSupport::TestCase
     # Make the method find out for itself that the scrape_digests don't match.
     assert @scrape_url.source_changed?
   end
+
 
 end
