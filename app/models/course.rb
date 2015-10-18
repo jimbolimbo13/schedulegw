@@ -16,10 +16,16 @@ class Course < ActiveRecord::Base
   has_many :coursebooks
   has_many :listbooks, :through => :coursebooks
 
-	def self.scrape
-    #load the scrapers here.
-		load Dir.pwd + '/GWU_scrape.rb'
-	end
+  # The primary scrape routine.
+  def self.scrape_gwu!
+    @school = School.find_by(name: "GWU")
+    @semester = Semester.find_by(name: "spring2016")
+    source = Scrapeurl.where(name: "crn", school:@school, semester:@semester).first
+    scraped_courses = Course.scrape_gwu_crn_pdf(source)
+    Course.save_courses_to_db(scraped_courses)
+    ob = Scrapeurl.where(name: "exam", school:@school, semester:@semester).first
+    Course.scrape_gwu_exam_pdf!(ob)
+  end
 
   def next
     Course.where("id > ?", id).first.nil? ? Course.first : Course.where("id > ?", id).first
@@ -337,15 +343,6 @@ class Course < ActiveRecord::Base
 
   end
 
-  def self.scrape_gwu!
-    @school = School.find_by(name: "GWU")
-    @semester = Semester.find_by(name: "spring2016")
-    source = Scrapeurl.where(name: "crn", school:@school, semester:@semester).first
-    scraped_courses = Course.scrape_gwu_crn_pdf(source)
-    Course.save_courses_to_db(scraped_courses)
-    exam_source = Scrapeurl.where(name: "exam", school:@school, semester:@semester).first
-    Course.scrape_gwu_exam_pdf!(exam_source)
-  end
 
   # Given an object from model Scrapeurls, this will go through it line-by-line and
   # return an array of model Course objects. This method does not save the objects
@@ -478,7 +475,7 @@ class Course < ActiveRecord::Base
     new_text = src.text
 
     @school = School.find_by(name: "GWU")
-    Course.scrape_gwu_exam_dates_times(scrape_url_object) if @school.final_date_options.nil? || @school.final_time_options.nil?
+    Course.scrape_gwu_exam_dates_times(scrape_url_object)
 
     @semester = scrape_url_object.semester
     @final_date_options = @school.final_date_options
