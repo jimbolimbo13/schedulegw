@@ -418,7 +418,7 @@ class Course < ActiveRecord::Base
     courses_array.each do |c|
       course = Course.find_or_initialize_by(crn: c.crn, semester_id: c.semester_id)
       course.assign_attributes(c.attributes.reject! { |k, v| v.nil? } )
-      course.save! unless course.manual_lock
+      course.save! unless course.manual_lock == true
     end
   end
 
