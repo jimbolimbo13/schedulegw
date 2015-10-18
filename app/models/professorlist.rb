@@ -16,7 +16,8 @@ class Professorlist < ActiveRecord::Base
       scores[possible_prof.id] = Course.where(gwid: @gwid, professor: @lastname).count
     end
     ordered = scores.sort_by {|k,v| v}.reverse # faster according to the internet.
-    prof_id = ordered[0][0] # key of the first response [first][key]
+    winner = ordered[0]
+    prof_id = winner[0].to_i # key of the first response [first][key]
     return prof_id
 
   end
