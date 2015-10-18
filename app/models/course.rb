@@ -364,7 +364,6 @@ class Course < ActiveRecord::Base
 
   end
 
-
   # Given an object from model Scrapeurls, this will go through it line-by-line and
   # return an array of model Course objects. This method does not save the objects
   # to the database.
@@ -382,6 +381,7 @@ class Course < ActiveRecord::Base
       @course = Course.parse_course_chunk(course_chunk)
       @course.semester_id = @semester.id
       @course.school = @school
+      @course.prof_id = Professorlist.assign_prof_id(@course)
       scraped_courses << @course
     end
 
