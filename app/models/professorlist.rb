@@ -2,23 +2,29 @@ class Professorlist < ActiveRecord::Base
 
   def self.assign_prof_id(course)
     return if course.professor.nil?
-    return if course.gwid.nil?
 
     @lastname = course.professor
     @gwid = course.gwid
 
     # Find all that match the lastname.
     @profs = Professorlist.where(last_name: @lastname)
-    return @profs.first.prof_id if @profs.count == 1 # If we found only one, we win.
+    if @profs.count == 1
+      return @profs.first.prof_id  # If we found only one, we win.
+    elsif @profs.count == 0
+      return nil
+    elsif @profs.count > 1
+      return if course.gwid.nil?
 
-    scores = {}
-    @profs.each do |possible_prof|
-      scores[possible_prof.id] = Course.where(gwid: @gwid, professor: @lastname).count
+      scores = {}
+      @profs.each do |pp|
+        scores[pp.id] = Course.where(gwid: @gwid, professor: pp.last_name).count
+      end
+      ordered = scores.sort_by {|k,v| v}.reverse # faster according to the internet.
+      winner = Professor.find(ordered[0][0])
+      prof_id = winner.prof_id # key of the first response [first][key]
+      return prof_id
     end
-    ordered = scores.sort_by {|k,v| v}.reverse # faster according to the internet.
-    winner = ordered[0]
-    prof_id = winner[0].to_i # key of the first response [first][key]
-    return prof_id
+
 
   end
 
