@@ -399,7 +399,9 @@ function update_view() {
 			var id = index;
 			// console.log('index: '+index);
 			// console.info(course);
-			if ( (course.final_date == null) || (course.final_time == null) ) { course.final_date = 'unknown'; course.final_time = ''; }
+			if (course.final_date == null) { course.final_date = 'date unknown'; }
+			if (course.final_time == null) { course.final_time = 'time unknown'; }
+			if ( (course.final_time == null) && (course.final_date) ) { course.final_time = 'time TBD'; }
 			var html = '';
 			var html = html+ '<li>';
 			var html = html+ '<span class="fa fa-remove fa-2x" style="color:red;" onclick=removecourse('+course.id+')></span>';
