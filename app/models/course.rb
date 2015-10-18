@@ -26,18 +26,25 @@ class Course < ActiveRecord::Base
       Course.save_courses_to_db(scraped_courses)
       source.update_digest!
       source.update_last_scraped!
+      @school.crn_last_scraped = Time.now
     end
     source.last_checked = Time.now
     source.save!
+
+    @school.crn_last_checked = Time.now
 
     src = Scrapeurl.where(name: "exam", school:@school, semester:@semester).first
     if src.source_changed?
       Course.scrape_gwu_exam_pdf!(src)
       src.update_digest!
       src.update_last_scraped!
+      @school.exam_last_scraped = Time.now
     end
     src.last_checked = Time.now
     src.save!
+
+    @school.exam_last_checked = Time.now
+    @school.save!
 
   end
 
