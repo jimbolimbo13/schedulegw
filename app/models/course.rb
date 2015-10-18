@@ -305,9 +305,8 @@ class Course < ActiveRecord::Base
     @semester = Semester.find_by(name: "spring2016")
     source = Scrapeurl.where(name: "crn", school:@school, semester:@semester).first
     scraped_courses = Course.scrape_gwu_crn_pdf(source)
-
+    Course.save_courses_to_db(scraped_courses)
   end
-
 
   # Given an object from model Scrapeurls, this will go through it line-by-line and
   # return an array of model Course objects. This method does not save the objects
@@ -360,10 +359,9 @@ class Course < ActiveRecord::Base
   # classes and returning them.
   def self.save_courses_to_db(courses_array)
     courses_array.each do |c|
-      next if c.manual_lock # Don't save if it's manually locked.
       course = Course.find_or_initialize_by(crn: c.crn, semester_id: c.semester_id)
       course.assign_attributes(c.attributes.reject! { |k, v| v.nil? } )
-      course.save!
+      course.save! unless course.manual_lock
     end
   end
 
