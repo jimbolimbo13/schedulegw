@@ -21,6 +21,8 @@ evidence:
   day4_start: nil
   day4_end: nil
   day5_start: nil
+  day5_end: nil
+  day6_start: nil
   day6_end: nil
   day7_start: nil
   day7_end: nil
@@ -54,6 +56,8 @@ pre:
   day4_start: 1340
   day4_end: 1435
   day5_start: nil
+  day5_end: nil
+  day6_start: nil
   day6_end: nil
   day7_start: nil
   day7_end: nil
@@ -87,6 +91,43 @@ contractsII:
   day4_start: 1340
   day4_end: 1435
   day5_start: nil
+  day5_end: nil
+  day6_start: nil
+  day6_end: nil
+  day7_start: nil
+  day7_end: nil
+  llm_only: false
+  jd_only: false
+  course_name_2: nil
+  alt_schedule: false
+  additional_info: nil
+  manual_lock: false
+  professor: Selmi
+  prof_id: 13519
+  final_time: nil
+  final_time: nil
+  school: "GWU"
+  created_at: <%= Time.zone.now %>
+  isbn: []
+
+employmentlaw:
+  crn: 71460
+  gwid: 6268
+  section: 10
+  course_name: Employment Law
+  hours: 3
+  days: TR
+  day1_start: nil
+  day1_end: nil
+  day2_start: nil
+  day2_end: nil
+  day3_start: 1205
+  day3_end: 1330
+  day4_start: nil
+  day4_end: nil
+  day5_start: 1205
+  day5_end: 1330
+  day6_start: nil
   day6_end: nil
   day7_start: nil
   day7_end: nil

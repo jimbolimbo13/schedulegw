@@ -1,5 +1,5 @@
 class Course < ActiveRecord::Base
-  before_save :add_to_listbooks, :update_popularity
+  before_save :add_to_listbooks, :update_popularity, :coerce_times_to_string
 
   #relationship to schedules
   has_many :courseschedules
@@ -35,6 +35,29 @@ class Course < ActiveRecord::Base
 
   def update_popularity
     self.schedule_count = self.schedules.count
+  end
+
+  def coerce_times_to_string
+    attrs = [
+      "day1_start",
+      "day1_end",
+      "day2_start",
+      "day2_end",
+      "day3_start",
+      "day3_end",
+      "day4_start",
+      "day4_end",
+      "day5_start",
+      "day5_end",
+      "day6_start",
+      "day6_end",
+      "day7_start",
+      "day7_end"
+    ]
+
+    ## Fill this out later
+
+
   end
 
   # This needs to be modified to also subtract a course-book relation to handle cases when a book should NOT
@@ -188,34 +211,47 @@ class Course < ActiveRecord::Base
     return [start_time.to_s, end_time.to_s]
   end
 
+  # Returns a hash of the times.
   def self.assign_times_to_days(days_string, times_array)
     return if days_string == "TBA"
-    return if days_string.nil?
-    days_string.scan(/(\w)/) { |s|
-      case $1
-      when 'U'
+    return unless days_string.present?
+    times_array[0] = times_array[0].to_i unless times_array[0].class == Fixnum
+    times_array[1] = times_array[1].to_i unless times_array[1].class == Fixnum
+
+    # Zero them all out.
+    @day1_start = @day2_start = @day3_start = @day4_start = @day5_start = @day6_start = @day7_start = nil
+    @day1_end = @day2_end = @day3_end = @day4_end = @day5_end = @day6_end = @day7_end = nil
+
+    days_string.scan(/\w/).each do |day|
+      if day == 'U'
         @day1_start = times_array[0]
         @day1_end = times_array[1]
-      when 'M'
+      end
+      if day == 'M'
         @day2_start = times_array[0]
         @day2_end = times_array[1]
-      when 'T'
+      end
+      if day == 'T'
         @day3_start = times_array[0]
         @day3_end = times_array[1]
-      when 'W'
+      end
+      if day == 'W'
         @day4_start = times_array[0]
         @day4_end = times_array[1]
-      when 'R'
+      end
+      if day == 'R'
         @day5_start = times_array[0]
         @day5_end = times_array[1]
-      when 'F'
+      end
+      if day == 'F'
         @day6_start = times_array[0]
         @day6_end = times_array[1]
-      when 'S'
+      end
+      if day == 'S'
         @day7_start = times_array[0]
         @day7_end = times_array[1]
       end
-    }
+    end
 
     return {
       "day1_start": @day1_start,
@@ -249,6 +285,7 @@ class Course < ActiveRecord::Base
     return @potential_profs.first
   end
 
+  # returns a what?
   def self.parse_additional_classtimes(line)
     elements = line.scan(/([MTWRF]+)\s+(\d{4})\s+.\s+(\d{4})(\D\D)\s+[A-Za-z\/-]+/).flatten
     days = elements[0]
@@ -318,10 +355,10 @@ class Course < ActiveRecord::Base
     @semester = scrape_url_object.semester
 
     course_array = Course.split_by_crns(src.text)
-    puts "Course array is #{course_array.count} entries long."
 
     scraped_courses = []
     course_array.each do |course_chunk|
+      @course = nil
       @course = Course.parse_course_chunk(course_chunk)
       @course.semester_id = @semester.id
       @course.school = @school
@@ -339,7 +376,7 @@ class Course < ActiveRecord::Base
     course_lines.each do |course_line|
       next if course_line.blank?
       next if course_line.empty?
-      @attributes = @attributes.merge(Course.gwu_parse_crn_line(course_line))
+      @attributes.merge!(Course.gwu_parse_crn_line(course_line))
     end
     @course = Course.new(@attributes)
     @course
@@ -369,7 +406,9 @@ class Course < ActiveRecord::Base
   # If the line is the start of a new course, it starts a new Course object.
   # course_obj is the in-progress Course object (this method resets new Course obj if appropriate)
   def self.gwu_parse_crn_line(line)
-    @attrs = {days: nil}
+    @attrs = {}
+    @class_time = nil
+    @week_schedule_hash = nil
     case
     when Course.line_includes_crn?(line) # First line of a course listing.
       @attrs[:crn] = Course.parse_crn(line)
@@ -379,11 +418,12 @@ class Course < ActiveRecord::Base
       @attrs[:hours] = Course.parse_hours(line)
       @attrs[:days] = Course.parse_days(line)
       @class_time = Course.parse_times(line) # Type array returned, or string "TBA"
-      @week_schedule_hash = Course.assign_times_to_days(@course.days, @class_time) unless @class_time == "TBA"
+      @week_schedule_hash = Course.assign_times_to_days(@attrs[:days], @class_time) unless @class_time == "TBA"
       @attrs.merge!(@week_schedule_hash) unless @week_schedule_hash.nil?
       @attrs[:professor] = Course.parse_professor(line)
 
     when Course.includes_additional_classtimes?(line) # Line 2 if it contains classtimes info.
+      @week_schedule_hash = nil
       @week_schedule_hash = Course.parse_additional_classtimes(line)
       @week_schedule_hash.reject!{ |k,v| v.nil? } #reject any nil values to avoid overwriting
       @attrs.merge!(@week_schedule_hash)

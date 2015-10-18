@@ -89,6 +89,32 @@ class CourseTest < ActiveSupport::TestCase
     assert Course.parse_days(line) == "TW"
   end
 
+  test "convert times (am and pm)" do
+    times_array = ["0935", "1050"]
+    am_pm = "am"
+    times = Course.convert_times(times_array, am_pm)
+    assert times[0] = "0935"
+    assert times[0] = "1050"
+
+    # Just change am to pm
+    am_pm = "pm"
+    times = Course.convert_times(times_array, am_pm)
+    assert times[0] = "1735"
+    assert times[1] = "2250"
+  end
+
+  test "assign_times_to_days" do
+    days_string = "MTW"
+    times_array = ["935", "1050"]
+    result_hash = Course.assign_times_to_days(days_string, times_array)
+    assert result_hash[:day2_start] = "935"
+    assert result_hash[:day2_end] = "1050"
+    assert result_hash[:day3_start] = "935"
+    assert result_hash[:day3_end] = "1050"
+    assert result_hash[:day4_start] = "935"
+    assert result_hash[:day4_end] = "1050"
+  end
+
   test "parse times [case: both start and end are pm]" do
     line = "\n 40948   6203    11  Contracts II                     3.0         MTW         0140 - 0235pm                Selmi"
     assert Course.parse_times(line) == ["1340", "1435"]
@@ -102,6 +128,11 @@ class CourseTest < ActiveSupport::TestCase
   test "parse times [case: 'TBA']" do
     line = "\n 41009   6696    25  Graduate Indep Legal Writing     1.0 OR 2.0  TBA         TBA                          STAFF"
     assert Course.parse_times(line) == "TBA"
+  end
+
+  test "parse times [case: 'MWR']" do
+    line = "70900   6214    14  Constitutional Law I             3.0         MWR         0850 - 0945am                Fontana\n"
+    assert Course.parse_times(line) == [850, 945]
   end
 
   test "parse professor" do
@@ -121,9 +152,13 @@ class CourseTest < ActiveSupport::TestCase
 
   test "parse additional class times (line 2)" do
     line = "\n                                                                  F           1100 - 1155am                Fairfax"
-    assert Course.parse_additional_classtimes(line)[:day6_start] == "1100"
-    assert Course.parse_additional_classtimes(line)[:day6_end] == "1155"
+    day6_start = Course.parse_additional_classtimes(line)[:day6_start]
+    day6_end = Course.parse_additional_classtimes(line)[:day6_end]
+    assert day6_start = "1100", "Expected 1100, was: #{day6_start}"
+    assert day6_end = "1155", "expected 1155, was: #{day6_end}"
   end
+
+
 
   # Makes sure courses with classtimes on two diff. lines get combined correctly.
   test "combine attribute hashes" do
@@ -436,7 +471,7 @@ class CourseTest < ActiveSupport::TestCase
     assert @course.semester.name = Semester.first.name
   end
 
-  test "parse course chunk" do
+  test "parse course chunk with two lines" do
     ob = scrapeurls(:gwu_test_crn_spring2015)
     src = Yomu.new ob.url
     course_array = Course.split_by_crns(src.text)
@@ -451,6 +486,24 @@ class CourseTest < ActiveSupport::TestCase
 
   end
 
+  test "parsing times 4" do
+    course_chunk = "70900   6214    14  Constitutional Law I             3.0         MWR         0850 - 0945am                Fontana\n"
+    @course = Course.parse_course_chunk(course_chunk)
+    assert @course.day1_start.nil?, "expected nil - day1, was #{@course.day1_start}"
+    assert @course.day1_end.nil?, "expected nil - day1"
+    assert @course.day2_start = "850"
+    assert @course.day2_end = "945"
+    assert @course.day3_start.nil?, "expected nil - day3"
+    assert @course.day3_end.nil?, "expected nil - day3"
+    assert @course.day4_start = "850"
+    assert @course.day4_end = "945"
+    assert @course.day5_start = "850"
+    assert @course.day5_end = "945"
+    assert @course.day6_start.nil?, "expected nil - day6"
+    assert @course.day6_end.nil?, "expected nil - day6"
+    assert @course.day7_start.nil?, "expected nil - day7"
+    assert @course.day7_end.nil?, "expected nil - day7"
+  end
 
 
 
