@@ -16,7 +16,7 @@ $( document ).on('page:change', function() {
 
 	// Get the semester from server side (moving towards one-way data flow)
 	// This should be value_of_semester_select_field || get_variable || spring2016
-	window.semester = $("#semester_select").val() ||= 3;
+	window.semester = parseInt( $("#semester_select").val() );
 
 	//populate courses available
 	load_courses(window.semester);
