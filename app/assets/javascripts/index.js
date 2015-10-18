@@ -37,7 +37,7 @@ $( document ).on('page:change', function() {
 
 		if (e.shiftKey) {
 			// if shift is held down, it means user is trying to flag this listing as incorrect.
-        	c = confirm("Mark this class as incorrect?");
+        	c = confirm("Use the Feedback Link to Report Mistakes!");
         	if (c == true){
 
         		//flag_incorrect(id);
