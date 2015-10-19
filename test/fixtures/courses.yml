@@ -39,6 +39,8 @@ evidence:
   school: "GWU"
   created_at: <%= Time.zone.now %>
   isbn: [1422495388]
+  semester: fall2015
+  locked_attributes: []
 
 pre:
   crn: 60242
@@ -74,6 +76,7 @@ pre:
   school: "GWU"
   created_at: <%= Time.zone.now %>
   isbn: [9781634592086]
+  locked_attributes: []
 
 contractsII:
   crn: 40948
@@ -109,6 +112,7 @@ contractsII:
   school: "GWU"
   created_at: <%= Time.zone.now %>
   isbn: []
+  locked_attributes: []
 
 employmentlaw:
   crn: 71460
@@ -144,3 +148,5 @@ employmentlaw:
   school: "GWU"
   created_at: <%= Time.zone.now %>
   isbn: []
+  locked_attributes: []
+  semester: spring2016

@@ -416,6 +416,22 @@ class ScraperTest < ActiveSupport::TestCase
     assert @course.day7_end.nil?, "expected nil - day7"
   end
 
+  test "it should only save unlocked attributes to the database" do
+    # course = courses(:employmentlaw)
+    # course.locked_attributes << "course_name"
+    # course.course_name = "DONT OVERWRITE"
+    # course.hours = 1000
+    # course.save!
+    # course = nil
+    # 
+    # source = scrapeurls(:gwu_test_crn_spring2016)
+    # scraped_courses = Scraper.scrape_gwu_crn_pdf(source)
+    # Scraper.save_courses_to_db(scraped_courses)
+    #
+    # assert courses(:employmentlaw).course_name == "DONT OVERWRITE", "Course Title Wasn't DONT OVERWRITE"
+    # assert courses(:employmentlaw).hours == "3", "Course hours should be 3, but was #{courses(:employmentlaw).hours}"
+
+  end
 
 
 

@@ -16,9 +16,6 @@ class Course < ActiveRecord::Base
   has_many :coursebooks
   has_many :listbooks, :through => :coursebooks
 
-  # The primary scrape routine.
-
-
   def next
     Course.where("id > ?", id).first.nil? ? Course.first : Course.where("id > ?", id).first
   end

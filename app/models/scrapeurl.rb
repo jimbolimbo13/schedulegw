@@ -5,6 +5,7 @@ class Scrapeurl < ActiveRecord::Base
 
   # Compare hash of the new source with the one on file.
   def source_changed?
+    return true if Rails.env == "development"
     new_text = Yomu.new self.url
     new_text = new_text.text
     new_digest = Digest::MD5.hexdigest new_text

@@ -91,10 +91,51 @@ class Scraper < ActiveRecord::Base
   # classes and returning them.
   def self.save_courses_to_db(courses_array)
     courses_array.each do |c|
-      course = Course.find_or_initialize_by(crn: c.crn, semester_id: c.semester_id)
-      course.assign_attributes(c.attributes.reject! { |k, v| v.nil? } )
-      course.save! unless course.manual_lock == true
+      record = Course.find_or_initialize_by(crn: c.crn, semester_id: c.semester_id)
+      attributes_to_write = c.attributes.select { |k, v| Scraper.scrape_attributes.include?(k) }
+      attributes_to_write = attributes_to_write.reject { |k, v| k == "id" }
+      attributes_to_write.each do |k, v|
+        record.send("#{k}=", v) unless record.locked_attributes.include?("#{k}")
+      end
+
+      record.save! unless record.manual_lock == true
     end
+  end
+
+  # The list of attributes we may be able to change via scraping.
+  def self.scrape_attributes
+    [
+      "crn",
+      "gwid",
+      "section",
+      "course_name",
+      "hours",
+      "days",
+      "day1_start",
+      "day1_end",
+      "day2_start",
+      "day2_end",
+      "day3_start",
+      "day3_end",
+      "day4_start",
+      "day4_end",
+      "day5_start",
+      "day5_end",
+      "day6_start",
+      "day6_end",
+      "day7_start",
+      "day7_end",
+      "llm_only",
+      "jd_only",
+      "course_name_2",
+      "alt_schedule",
+      "additional_info",
+      "professor",
+      "prof_id",
+      "final_time",
+      "final_date",
+      "school"
+    ]
   end
 
   # Returns an incomplete Course object with the attributes added as found in each line.

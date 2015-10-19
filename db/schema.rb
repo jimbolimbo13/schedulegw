@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151009142121) do
+ActiveRecord::Schema.define(version: 20151019064252) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,6 +78,7 @@ ActiveRecord::Schema.define(version: 20151009142121) do
     t.json     "pinned_isbn",            default: []
     t.integer  "schedule_count",         default: 0
     t.integer  "semester_id"
+    t.json     "locked_attributes",      default: []
   end
 
   add_index "courses", ["crn"], name: "index_courses_on_crn", using: :btree
