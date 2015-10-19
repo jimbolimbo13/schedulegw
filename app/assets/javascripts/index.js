@@ -5,7 +5,7 @@
 
 $( document ).on('page:change', function() {
 	// prevent jquery from caching results - want new json from courses to update instantly.
-	$.ajaxSetup({ cache: false });
+	// $.ajaxSetup({ cache: false });
 
 	//load courses.
 	window.courses = null;

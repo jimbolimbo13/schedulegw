@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
+  before_action :add_appsignal_tags
 
   helper_method :current_user
   helper_method :user_signed_in?
@@ -32,5 +33,16 @@ class ApplicationController < ActionController::Base
         redirect_to root_url, :alert => 'You need to sign in for access to this page.'
       end
     end
+
+    def add_appsignal_tags
+      if Rails.env == 'production' && current_user
+        Appsignal.tag_request(
+           :user_email => current_user.email,
+           :user_id => current_user.id,
+           :user_school_name => current_user.school.name
+        )
+      end
+   	end
+
 
 end
