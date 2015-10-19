@@ -4,6 +4,9 @@
 //
 
 $( document ).on('page:change', function() {
+	// prevent jquery from caching results - want new json from courses to update instantly.
+	$.ajaxSetup({ cache: false });
+
 	//load courses.
 	window.courses = null;
 
@@ -15,7 +18,7 @@ $( document ).on('page:change', function() {
 	window.unconflicted_courses = [];
 
 	// Get the semester from server side (moving towards one-way data flow)
-	// This should be value_of_semester_select_field || get_variable || spring2016
+	// This should be value of semester_select field || get_variable || spring2016
 	window.semester = parseInt( $("#semester_select").val() );
 
 	//populate courses available
@@ -33,7 +36,6 @@ $( document ).on('page:change', function() {
 	//handly any course plus button being clicked. ul must be static/extant when the page loads, whereas the li can be added dynamically later and this will still fire.
 	$('body #classlisttarget').on('click', 'li .fa-plus-square', function(e) {
 		var id = $(this).attr('id');
-		console.log('clicked an li its id is '+id);
 
 		if (e.shiftKey) {
 			// if shift is held down, it means user is trying to flag this listing as incorrect.
@@ -131,6 +133,7 @@ function search_courses() {
 		var wednesday = document.getElementById("wednesday").checked;
 		var thursday = document.getElementById("thursday").checked;
 		var friday = document.getElementById("friday").checked;
+		var wknd = document.getElementById("wknd").checked;
 
 		var h1 = document.getElementById("h1").checked;
 		var h2 = document.getElementById("h2").checked;
@@ -155,11 +158,20 @@ function search_courses() {
 				&&
 
 				(
+					(wknd && course.day1_start) ||
 					(monday && course.day2_start) ||
 					(tuesday && course.day3_start) ||
 					(wednesday && course.day4_start) ||
 					(thursday && course.day5_start) ||
-					(friday && course.day6_start)
+					(friday && course.day6_start) ||
+					(wknd && course.day7_start) ||
+							(course.day1_start == null &&
+							course.day2_start == null &&
+							course.day3_start == null &&
+							course.day4_start == null &&
+							course.day5_start == null &&
+							course.day6_start == null &&
+							course.day7_start == null) // If the course has NO hours set yet.
 				)
 
 				&&
@@ -169,12 +181,12 @@ function search_courses() {
 					(h2 && (course.hours == 2)) ||
 					(h3 && (course.hours == 3)) ||
 					(h4 && (course.hours == 4)) ||
-					(hx && (course.hours == "variable"))
+					(hx && (course.hours == "variable")) ||
+					(hx && (course.hours < 1) || (course.hours > 4))
 				)
 			);
 
 			//other options
-
 
 
 			if (match) {
@@ -428,10 +440,6 @@ function update_view() {
 	}
 }
 
-function course_search() {
-
-}
-
 //this is rough and probably can be optimized
 function check_schedule_conflicts() {
 	var selected_courses = window.currentschedulearray;
@@ -445,7 +453,6 @@ function check_schedule_conflicts() {
 
 	//this makes the minimum number of comparisons :) :) :)
 	for (i=0; i<selected.length; i++) {
-		console.log('length: '+selected.length);
 		if (selected.length < 2) {
 			window.conflicted_courses = [];
 			$.each(selected_courses, function (index, unconflicted_course) {
@@ -610,8 +617,6 @@ function next() {
 		console.log('adding courses post call returned: ' + result);
 		window.location = '/schedules';
 	})
-
-
 }
 
 // Usage: geturlvar()["variable name"];
@@ -626,12 +631,12 @@ function geturlvar() {
 
 function test() {
 	display_all_test();
-	comparison_test();
 }
 
 function display_all_test() {
-	console.log("Testing display of every single class. This may take a long time. ")
 	var l = window.courses.length;
+	console.log("Testing display of every single class. This may take a long time. ");
+	console.log("It will take: " + l*500 + " Seconds ");
 	var i=0;
 	setInterval(function() {
 		if (i<l) {

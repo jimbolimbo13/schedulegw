@@ -198,7 +198,7 @@ class Scraper < ActiveRecord::Base
 
   def self.parse_hours(line)
     hours_chunk = line.scan(/(\d\.\d\s+:?(OR)?:?(TO)?(:?(\s+\d\.\d\s+)?))/).flatten[0]
-    return 0 if hours_chunk.nil?
+    return "variable" if hours_chunk.nil?
     hours_chunk = hours_chunk.rstrip
     return "variable" if hours_chunk.include?("TO")
     return "variable" if hours_chunk.include?("OR")

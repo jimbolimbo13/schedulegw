@@ -1,5 +1,6 @@
 class ApiController < ApplicationController
 	def courses
+		expires_in 1.minutes, :public => true
 		@school = current_user.school.name.to_s
 
 		# Check to see if semester is defined; if not make it the most recent one.
