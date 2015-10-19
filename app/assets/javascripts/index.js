@@ -88,16 +88,14 @@ function render_course_listing(course) {
 	return html
 }
 
-
 function load_courses(semester) {
 	semester = semester || window.semester;
-	$.get("/api/courses/courses.json?semester=" + semester, function(courses){
+	$.get("/api/courses/c.json?semester=" + semester, function(courses){
 		window.courses = courses
 		populate_course_list();
 		check_for_loaded_schedule();
 	})
 }
-
 
 //fills classlisttarget with all of the courses.
 function populate_course_list() {
