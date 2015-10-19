@@ -4,8 +4,8 @@ class BooklistScraperTest < ActiveSupport::TestCase
   def setup
     # Run the scrape before each test.
     Course.delete_all
-    test_pdf = Rails.root.join('lib', 'scrape_texts') + "fall2015booklist.pdf"
-    Course.get_books(test_pdf)
+    pdf_url = scrapeurls(:gwu_test_booklist_fall2015).url
+    Course.get_books(pdf_url)
   end
 
   # test "the truth" do

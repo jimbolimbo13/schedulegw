@@ -9,3 +9,9 @@ gwu_test_crn_spring2016:
   url: https://schedulegw.com/gwu_test_crn_spring2016.pdf
   school: GWU
   semester: spring2016
+
+gwu_test_booklist_fall2015:
+  name: gwu_test_booklist_fall2015
+  url: https://schedulegw.com/gwu_test_booklist_fall2015.pdf
+  school: GWU
+  semester: fall2015

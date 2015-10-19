@@ -2,7 +2,7 @@ require 'test_helper'
 
 class AdminMailerTest < ActionMailer::TestCase
   test "scrape_complete" do
-    @email_dat = {}
+    @email_data = {}
     @email_data['school'] = 'GWU'
     mail = AdminMailer.scrape_complete(@email_data)
     assert_equal "Scrape complete", mail.subject
