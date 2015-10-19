@@ -51,7 +51,6 @@ class SchedulesController < ApplicationController
     @schedule = Schedule.find(params[:id])
     @schedule.destroy
     respond_to do |format|
-      flash[:notice] = "Schedule Deleted"
       format.html { redirect_to schedules_url }
       format.json { head :no_content }
     end

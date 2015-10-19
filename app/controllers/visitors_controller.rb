@@ -5,7 +5,6 @@ class VisitorsController < ApplicationController
 	def index
 		if params[:schedule]
 			@schedule = current_user.schedules.find_by(id: params[:schedule].to_i)
-			flash[:notice] = "Loading Schedule"
 		end
 	end
 
