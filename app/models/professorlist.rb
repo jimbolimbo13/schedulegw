@@ -13,16 +13,16 @@ class Professorlist < ActiveRecord::Base
     elsif @profs.count == 0
       return nil
     elsif @profs.count > 1
-      return if course.gwid.nil?
 
       scores = {}
-      @profs.each do |pp|
-        scores[pp.id] = Course.where(gwid: @gwid, professor: pp.last_name).count
+      @profs.each do |contender|
+        scores[contender.id] = Course.where(gwid: course.gwid, professor: @lastname).count
       end
-      ordered = scores.sort_by {|k,v| v}.reverse # faster according to the internet.
-      winner = Professor.find(ordered[0][0])
-      prof_id = winner.prof_id # key of the first response [first][key]
-      return prof_id
+
+      ordered = scores.sort_by {|k,v| v}.reverse
+      winner = Professorlist.find(ordered[0][0])
+      return winner.prof_id
+
     end
 
 

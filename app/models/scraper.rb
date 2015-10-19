@@ -54,7 +54,7 @@ class Scraper < ActiveRecord::Base
       @course = Scraper.parse_course_chunk(course_chunk)
       @course.semester_id = @semester.id
       @course.school = @school
-      # @course.prof_id = Professorlist.assign_prof_id(@course)
+      @course.prof_id = Professorlist.assign_prof_id(@course)
       scraped_courses << @course
     end
 
