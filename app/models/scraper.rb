@@ -5,35 +5,35 @@ class Scraper < ActiveRecord::Base
   # Call this method to initialize a scrape of GWU's courses data. OK to call
   # this method repeatedly/often.
   def self.scrape_gwu!
-    return unless Scraper.business_hours? && Rails.env == "production"
+    # return unless (Scraper.business_hours? && Rails.env == "production")
 
-    @school = School.find_by(name: "GWU")
+    school = School.find_by(name: "GWU")
     @semester = Semester.find_by(name: "spring2016")
-    source = Scrapeurl.where(name: "crn", school:@school, semester:@semester).first
+    source = Scrapeurl.where(name: "crn", school:school, semester:@semester).first
     if source.source_changed?
       scraped_courses = Scraper.scrape_gwu_crn_pdf(source)
       Scraper.save_courses_to_db(scraped_courses)
       source.update_digest!
       source.update_last_scraped!
-      @school.crn_last_scraped = Time.now
+      school.crn_last_scraped = Time.now
     end
     source.last_checked = Time.now
     source.save!
 
-    @school.crn_last_checked = Time.now
+    school.crn_last_checked = Time.now
 
-    src = Scrapeurl.where(name: "exam", school:@school, semester:@semester).first
+    src = Scrapeurl.where(name: "exam", school:school, semester:@semester).first
     if src.source_changed?
-      Course.scrape_gwu_exam_pdf!(src)
+      Scraper.scrape_gwu_exam_pdf!(src)
       src.update_digest!
       src.update_last_scraped!
-      @school.exam_last_scraped = Time.now
+      school.exam_last_scraped = Time.now
     end
     src.last_checked = Time.now
     src.save!
 
-    @school.exam_last_checked = Time.now
-    @school.save!
+    school.exam_last_checked = Time.now
+    school.save!
 
   end
 
@@ -351,6 +351,18 @@ class Scraper < ActiveRecord::Base
 
   def self.parse_additional_info(line)
 
+  end
+
+  # Spits out the chunk corresponding to the given CRN that's fed
+  # into parse_course_chunk.
+  def self.inspect_crn_chunk(source, crn)
+    url = source.url
+    crn = crn.to_s # Might be unnecessary bc of Ruby magic
+    src = Yomu.new url
+    chunks = Scraper.split_by_crns(src.text)
+    chunks.each do |chunk|
+      return chunk if chunk.include?(crn)
+    end
   end
 
   def self.scrape_gwu_exam_pdf!(scrape_url_object)
