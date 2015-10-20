@@ -53,6 +53,11 @@ class ScraperTest < ActiveSupport::TestCase
     assert Scraper.parse_course_name(line) == "Contracts II"
   end
 
+  test "parse course_name (random edge case with US in title getting confused with days)" do
+    line = "77506   6594    10  History of the US Constitution   3.0         TR          0350 - 0515pm                Wilmarth\n"
+    assert Scraper.parse_course_name(line) == "History of the US Constitution"
+  end
+
   test "parse hours" do
     line = "\n 40948   6203    11  Contracts II                     3.0         MTW         0140 - 0235pm                Selmi"
     source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
@@ -82,6 +87,11 @@ class ScraperTest < ActiveSupport::TestCase
   test "parse days [case: 'T W' (space)]" do
     line = "\n 40951   6203    21  Contracts II                     3.0         T W         0600 - 0800pm                Wilmarth"
     assert Scraper.parse_days(line) == "TW"
+  end
+
+  test "parse days [case: US appears in course title]" do
+    line = "77506   6594    10  History of the US Constitution   3.0         TR          0350 - 0515pm                Wilmarth\n"
+    assert Scraper.parse_days(line) == "TR"
   end
 
   test "convert times (am and pm)" do

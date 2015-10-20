@@ -247,7 +247,9 @@ class Scraper < ActiveRecord::Base
   end
 
   def self.parse_days(line)
-    line.scan(/\s([UMTWRFS]+\s?[UMTWRFS]?|TBA)\s/).flatten[0].sub(' ', '')
+    # line.scan(/\s([UMTWRFS]+\s?[UMTWRFS]?|TBA)\s/).flatten[0].sub(' ', '') # Working one
+
+    line.scan(/(\d|ARR)\s+([UMTWRFS]+\s?[UMTWRFS]?|TBA)\s/).flatten[1].sub(' ', '') # Experimental one
   end
 
   def self.parse_times(line)
