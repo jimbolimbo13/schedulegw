@@ -232,7 +232,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def self.parse_course_name(line)
-    name = line.scan(/\d{2}\s+([A-Za-z\/\-]+[^\d]+)/)
+    name = line.scan(/\d{2}[A-Z]?\s+([A-Za-z\/\-]+[^\d]+)/)
     name = name.flatten[0].lstrip.rstrip unless name.flatten.empty?
     return name
   end

@@ -63,6 +63,11 @@ class ScraperTest < ActiveSupport::TestCase
     assert Scraper.parse_course_name(line) == "History of the US Constitution"
   end
 
+  test "parse course_name - When Section includes a letter" do
+    line = "77506   6594    10A  History of the US Constitution   3.0         TR          0350 - 0515pm                Wilmarth\n"
+    assert Scraper.parse_course_name(line) == "History of the US Constitution"
+  end
+
   test "parse hours" do
     line = "\n 40948   6203    11  Contracts II                     3.0         MTW         0140 - 0235pm                Selmi"
     source = Yomu.new "https://www.schedulegw.com/gwu_test_crn_spring2015.pdf"
