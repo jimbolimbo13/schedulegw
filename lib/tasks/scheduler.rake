@@ -5,3 +5,10 @@ task :scrape => :environment do
  puts "Finished Scrape."
  puts "Did not scrape booklist!"
 end
+
+task :clear_scrape_digest => :environment do
+  Scrapeurl.find_each do |src|
+    src.scrape_digest = ""
+    puts "cleared: #{src.name} " if src.save!
+  end
+end
