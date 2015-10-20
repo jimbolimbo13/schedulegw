@@ -416,20 +416,23 @@ class ScraperTest < ActiveSupport::TestCase
     assert @course.day7_end.nil?, "expected nil - day7"
   end
 
-  test "it should only save unlocked attributes to the database" do
-    # course = courses(:employmentlaw)
-    # course.locked_attributes << "course_name"
-    # course.course_name = "DONT OVERWRITE"
-    # course.hours = 1000
-    # course.save!
-    # course = nil
-    # 
-    # source = scrapeurls(:gwu_test_crn_spring2016)
-    # scraped_courses = Scraper.scrape_gwu_crn_pdf(source)
-    # Scraper.save_courses_to_db(scraped_courses)
-    #
-    # assert courses(:employmentlaw).course_name == "DONT OVERWRITE", "Course Title Wasn't DONT OVERWRITE"
-    # assert courses(:employmentlaw).hours == "3", "Course hours should be 3, but was #{courses(:employmentlaw).hours}"
+  test "it should reject overwriting a locked attribute" do
+    c = Course.second # The 'new' attributes.
+
+    record = Course.first # the 'current' course info
+    record.course_name = "This should remain"
+    record.locked_attributes << "course_name"
+    record.save!
+
+    attributes_to_write = c.attributes.select { |k, v| Scraper.scrape_attributes.include?(k) }
+    attributes_to_write = attributes_to_write.reject { |k, v| k == "id" }
+    attributes_to_write.each do |k, v|
+      record.send("#{k}=", v) unless record.locked_attributes.include?("#{k}")
+    end
+    record.save!
+
+    assert record.course_name == "This should remain", "Failed to preserve a locked attribute"
+    assert record.crn == c.crn, "Failed to overwrite the CRN"
 
   end
 

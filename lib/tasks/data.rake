@@ -36,6 +36,8 @@ task :assign_2016_final_times => :environment do
     [6252, 10],
     [6400, 13],
 
+    [6601, 10],
+
     [6230, 11],
     [6449, 10],
     [6486, 10],
@@ -149,22 +151,24 @@ task :assign_2016_final_times => :environment do
     [6503, 20]
   ]
 
+  semester_id = Semester.find_by(name: "spring2016").id
+
   first_session.each do |dat|
-    course = Course.find_by(gwid: dat[0], section: dat[1])
+    course = Course.find_by(gwid: dat[0], section: dat[1], semester_id: semester_id)
     course.final_time = School.find_by(name: "GWU").final_time_options.first
     course.locked_attributes << "final_time"
     course.save!
   end
 
   second_session.each do |dat|
-    course = Course.find_by(gwid: dat[0], section: dat[1])
+    course = Course.find_by(gwid: dat[0], section: dat[1], semester_id: semester_id)
     course.final_time = School.find_by(name: "GWU").final_time_options.second
     course.locked_attributes << "final_time"
     course.save!
   end
 
   third_session.each do |dat|
-    course = Course.find_by(gwid: dat[0], section: dat[1])
+    course = Course.find_by(gwid: dat[0], section: dat[1], semester_id: semester_id)
     course.final_time = School.find_by(name: "GWU").final_time_options.third
     course.locked_attributes << "final_time"
     course.save!
