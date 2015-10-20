@@ -3,6 +3,7 @@
     <%= "#{feedback.gwid}-#{feedback.section}"%><br>
     <%= "From User: #{ feedback.user ? feedback.user.name : 'anonymous'}" %><br>
     <%= "#{feedback.comment}" %><br>
+    <%= link_to "#{ feedback.user ? feedback.user.email : 'unavailable'}", "mailto:#{feedback.user.email unless feedback.user.nil?}" %>
   </div>
   <div class="btn-group pull-right col-md-6" role="group">
     <%= link_to('Mark Resolved', feedback_resolve_path(:feedback_id => feedback.id),

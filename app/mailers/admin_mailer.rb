@@ -15,8 +15,8 @@ class AdminMailer < ApplicationMailer
     roadie_mail to: @admin, subject: "!  SCRAPE ERROR - ADDRESS IMMEDIATELY  !"
   end
 
-	def feedback_notification(feedback)
-		@feedback = feedback
+	def feedback_notification(feedback_id)
+		@feedback = Feedback.find(feedback_id)
 		@admin = User.find_by(email: 'gmnelson@law.gwu.edu')
 		roadie_mail to: @admin.email, subject: "[ScheduleGW] -- Unwanted Feedback!"
 	end

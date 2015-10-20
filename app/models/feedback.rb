@@ -8,13 +8,14 @@ class Feedback < ActiveRecord::Base
   end
 
   def blank?
-    return true if
-          self.comment = '' &&
-          self.crn = '' &&
-          self.section = '' &&
-          self.gwid = ''
-
-    return false
+    if  (self.comment == '') &&
+        (self.crn == '') &&
+        (self.section == '') &&
+        (self.gwid == '')
+      return true
+    else
+      return false
+    end
   end
 
 end
