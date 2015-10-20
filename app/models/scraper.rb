@@ -228,7 +228,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def self.parse_section(line)
-    line.scan(/\d\s+(\d{2})\s/).flatten[0]
+    line.scan(/\d\s+(\d{2}[A-Z]?)\s/).flatten[0]
   end
 
   def self.parse_course_name(line)

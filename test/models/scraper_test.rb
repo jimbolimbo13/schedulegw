@@ -48,6 +48,11 @@ class ScraperTest < ActiveSupport::TestCase
     assert Scraper.parse_section(line) == "11"
   end
 
+  test "it should find sections format 25A 26B etc. " do
+    line = "71841   6656    25A Independent Legal Writing        1.0 OR 2.0  TBA         TBA                          STAFF\n"
+    assert Scraper.parse_section(line) == "25A"
+  end
+
   test "parse course_name" do
     line = "\n 40948   6203    11  Contracts II                     3.0         MTW         0140 - 0235pm                Selmi"
     assert Scraper.parse_course_name(line) == "Contracts II"
