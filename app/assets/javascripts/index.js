@@ -383,22 +383,6 @@ function update_view() {
 			});
 
 			var html = '';
-			function set_hours(hours) {
-				if (hours > 0) {
-					var html = hours+' hour';
-					if (hours > 1) {
-						var html = hours+' hours';
-					}
-				} else {
-					var html = 'No Hours';
-				}
-
-				if (window.variable_hours == true) {
-					var html = html+'++';
-				}
-
-				$('#hours_total').html(html);
-			}
 
 		window.courses_exist = false;
 		$.each(window.currentschedulearray, function(index, course){
@@ -436,6 +420,23 @@ function update_view() {
 	} else {
 		$('#chosenclasseslist').empty();
 	}
+}
+
+function set_hours(hours) {
+	if (hours > 0) {
+		var html = hours+' hour';
+		if (hours > 1) {
+			var html = hours+' hours';
+		}
+	} else {
+		var html = 'No Hours';
+	}
+
+	if (window.variable_hours == true) {
+		var html = html+'++';
+	}
+
+	$('#hours_total').html(html);
 }
 
 //this is rough and probably can be optimized
