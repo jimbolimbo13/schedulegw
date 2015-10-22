@@ -371,18 +371,8 @@ function update_view() {
 		$('#chosenclasseslist').append('<li id="hours_total"></li>');
 
 			//update hours counter
-			window.hours = 0;
-			window.variable_hours = false;
-			$.each(window.currentschedulearray, function(index, course){
-				if (course.hours !== 'variable') {
-					window.hours = window.hours + parseInt(course.hours);
-					set_hours(window.hours);
-				} else {
-					window.variable_hours = true;
-				}
-			});
-
-			var html = '';
+			var html = get_hours_html();
+			$('#hours_total').html(html);
 
 		window.courses_exist = false;
 		$.each(window.currentschedulearray, function(index, course){
@@ -405,14 +395,12 @@ function update_view() {
 			window.courses_exist = true;
 		});
 
-
 		//append the 'next button to the classlist'
 		if (window.courses_exist) {
 			var html = '';
 			var html = html + '<li id="next_btn" class="btn btn-lg btn-primary" onclick="next()">Save & See Booklist</li>';
 			$('#chosenclasseslist').append(html);
 		}
-
 
 		//update striped classes etc.
 		check_schedule_conflicts();
@@ -422,7 +410,18 @@ function update_view() {
 	}
 }
 
-function set_hours(hours) {
+var get_hours_html = function () {
+	window.hours = 0;
+	window.variable_hours = false;
+	$.each(window.currentschedulearray, function(index, course){
+		if (course.hours !== 'variable') {
+			window.hours = window.hours + parseInt(course.hours);
+		} else {
+			window.variable_hours = true;
+		}
+	});
+
+	var html = '';
 	if (hours > 0) {
 		var html = hours+' hour';
 		if (hours > 1) {
@@ -436,7 +435,7 @@ function set_hours(hours) {
 		var html = html+'++';
 	}
 
-	$('#hours_total').html(html);
+	return html
 }
 
 //this is rough and probably can be optimized
