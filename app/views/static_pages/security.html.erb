@@ -6,47 +6,36 @@
 	</div>
 
 	<div class="row">
-		<br><br><%= link_to 'Sign in with Law School Account', signin_path, class: "btn btn-lg btn-primary" %><br><br>
+		<%= image_tag("homepage.gif", size:"600x400") %>
 	</div>
 
 	<div class="row">
-		<h2>Why Login?</h2>
+		<br><%= link_to 'Sign in with Law School Account', signin_path, class: "btn btn-lg btn-primary" %><br><br>
+	</div>
+	<div class="row">
+				<br><br><span style="font-size:2em">See Schedule and Final Conflicts</span>
+				<br><br><span style="font-size:2em">Data Updated Every 10 Minutes</span>
+				<br><br><span style="font-size:2em">Sends Links to Books for Each Class.</span>
 	</div>
 
 	<div class="row">
-			Verfies All Users Are Actually Students
-			<span class="glyphicon glyphicon-ok" aria-hidden="true" style="color:green;"></span>
-	</div>
-
-	<div class="row">
-		We Don't Store Passwords
-		<span class="glyphicon glyphicon-ok" aria-hidden="true" style="color:green;"></span>
-	</div>
-
-	<div class="row">
-		No 'verify your email' Email
-		<span class="glyphicon glyphicon-ok" aria-hidden="true" style="color:green;"></span>
-	</div>
-
-	<div class="row">
-		Automatic Account Deletion - 3 years from the day you first login.
-		<span class="glyphicon glyphicon-ok" aria-hidden="true" style="color:green;"></span>
+		<br><br><i><span style="font-size:2em">"Your website has saved my sanity."</span><i>
+		<br><br><i><span style="font-size:2em">"It saves so much time and makes registration infinitely easier!!"</span><i>
 	</div>
 
 	<div class="row">
 		<% if @users > 50 %>
-					<br><br><span style="font-size:2em">Current Users: <%= @users %> </span>
+					<br><br><span style="font-size:2em"><%= @users %> people are using it already. </span>
 		<% end %>
 	</div>
 	<div class="row">
 		<% if @schedules > 50 %>
-					<br><br><span style="font-size:2em"><%= @schedules %> Schedules Created </span>
+					<br><br><span style="font-size:2em">They've created <%= @schedules %> Schedules. </span>
 		<% end %>
 	</div>
 
 	<div class="row">
 		<br><br><br><br>
-		<p>This website only requests the minimum permissions.</p><br><br><br>
 	</div>
 	<div class="row">
 		<%= link_to 'Privacy Policy', privacy_path %>
