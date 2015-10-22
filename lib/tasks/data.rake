@@ -181,19 +181,19 @@ task :cleanup_spring2016 => :environment do
   course.save!
 
   # Advanced Evidence Seminar
-  course.Course.find_by(gwid: 6231, section: 10, semester_id: semester_id)
+  course = Course.find_by(gwid: 6231, section: 10, semester_id: semester_id)
   course.prof_id = 13830
   course.locked_attributes << "prof_id"
   course.save!
 
   # 6203-13 Contracts II with Lisa Fairfax
-  course.Course.find_by(gwid: 6203, section: 13, semester_id: semester_id)
+  course = Course.find_by(gwid: 6203, section: 13, semester_id: semester_id)
   course.prof_id = 13485
   course.locked_attributes << "prof_id"
   course.save!
 
   # 6264-10 Securities Reg Seminar with Lisa Fairfax
-  course.Course.find_by(gwid: 6264, section: 10, semester_id: semester_id)
+  course = Course.find_by(gwid: 6264, section: 10, semester_id: semester_id)
   course.prof_id = 13485
   course.locked_attributes << "prof_id"
   course.save!
