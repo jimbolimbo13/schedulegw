@@ -1,4 +1,4 @@
-task :assign_2016_final_times => :environment do
+task :cleanup_spring2016 => :environment do
   puts "Assigning final times for Spring 2016"
 
   first_session = [
@@ -173,5 +173,14 @@ task :assign_2016_final_times => :environment do
     course.locked_attributes << "final_time"
     course.save!
   end
+
+  # Other Manual Edits. This is AKA list of things to fix.
+  course = Course.find_by(course_name: "Evidence", professor: "Kirkpatrick", semester_id: semester_id)
+  course.prof_id = 13830
+  course.locked_attributes << "prof_id"
+  course.save!
+
+
+
 
 end
