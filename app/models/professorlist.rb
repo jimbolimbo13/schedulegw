@@ -19,8 +19,8 @@ class Professorlist < ActiveRecord::Base
         scores[contender.id] = Course.where(gwid: course.gwid, professor: @lastname).count
       end
 
-      ordered = scores.sort_by {|k,v| v}.reverse
-      winner = Professorlist.find(ordered[0][0])
+      ordered = scores.sort.reverse
+      winner = Professorlist.find(ordered.first[0])
       return winner.prof_id
 
     end

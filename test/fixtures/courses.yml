@@ -150,3 +150,117 @@ employmentlaw:
   isbn: []
   locked_attributes: []
   semester: spring2016
+
+contractsIIFairfax:
+    crn: 71567
+    gwid: 6203
+    section: 13
+    course_name: Contracts II
+    hours: 3
+    days: W
+    day1_start: nil
+    day1_end: nil
+    day2_start: nil
+    day2_end: nil
+    day3_start: nil
+    day3_end: nil
+    day4_start: 850
+    day4_end: 945
+    day5_start: 1100
+    day5_end: 1155
+    day6_start: 1100
+    day6_end: 1155
+    day7_start: nil
+    day7_end: nil
+    llm_only: false
+    jd_only: false
+    course_name_2: nil
+    alt_schedule: false
+    additional_info: nil
+    manual_lock: false
+    professor: Fairfax
+    prof_id: nil
+    final_time: 2:00 P.M.
+    final_time: 4/26
+    school: "GWU"
+    created_at: <%= Time.zone.now %>
+    isbn: []
+    locked_attributes: []
+    semester: spring2016
+
+
+# This one is not correct; only used to check prof assignment.
+contractsIIFairfax15:
+    crn: 70890
+    gwid: 6203
+    section: 11
+    course_name: Contracts II
+    hours: 3
+    days: W
+    day1_start: nil
+    day1_end: nil
+    day2_start: 1205
+    day2_end: 1300
+    day3_start: 1100
+    day3_end: 1155
+    day4_start: 955
+    day4_end: 1050
+    day5_start: nil
+    day5_end: nil
+    day6_start: nil
+    day6_end: nil
+    day7_start: nil
+    day7_end: nil
+    llm_only: false
+    jd_only: false
+    course_name_2: nil
+    alt_schedule: false
+    additional_info: nil
+    manual_lock: false
+    professor: Fairfax
+    prof_id: nil
+    final_time: nil
+    final_time: nil
+    school: "GWU"
+    created_at: <%= Time.zone.now %>
+    isbn: []
+    locked_attributes: []
+    semester: fall2015
+
+# Only to check that the correct Fairfax gets assigned
+thewirefairfax:
+      crn: 74113
+      gwid: 6379
+      section: 11
+      course_name: Criminal Law/Procedure Seminar
+      hours: 2
+      days: W
+      day1_start: nil
+      day1_end: nil
+      day2_start: nil
+      day2_end: nil
+      day3_start: nil
+      day3_end: nil
+      day4_start: 955
+      day4_end: 1155
+      day5_start: nil
+      day5_end: nil
+      day6_start: nil
+      day6_end: nil
+      day7_start: nil
+      day7_end: nil
+      llm_only: false
+      jd_only: false
+      course_name_2: nil
+      alt_schedule: false
+      additional_info: nil
+      manual_lock: false
+      professor: Fairfax
+      prof_id: nil
+      final_time: nil
+      final_time: nil
+      school: "GWU"
+      created_at: <%= Time.zone.now %>
+      isbn: []
+      locked_attributes: []
+      semester: spring2016
